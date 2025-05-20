@@ -1,0 +1,4080 @@
+/**
+ * This file has no copyright assigned and is placed in the Public Domain.
+ * This file is part of the w64 mingw-runtime package.
+ * No warranty is given; refer to the file DISCLAIMER within this package.
+ */
+#se_não_definido _WINGDI_
+#defina _WINGDI_
+
+#defina WINGDIAPI DECLSPEC_IMPORT
+#defina WINSPOOLAPI DECLSPEC_IMPORT
+
+#se_definido __cplusplus
+externo "C" {
+#fim_se
+
+#se_não_definido WINVER
+#defina WINVER 0x0502
+#fim_se
+
+#se_não_definido NOGDI
+#se_não_definido NORASTEROPS
+#defina R2_BLACK 1
+#defina R2_NOTMERGEPEN 2
+#defina R2_MASKNOTPEN 3
+#defina R2_NOTCOPYPEN 4
+#defina R2_MASKPENNOT 5
+#defina R2_NOT 6
+#defina R2_XORPEN 7
+#defina R2_NOTMASKPEN 8
+#defina R2_MASKPEN 9
+#defina R2_NOTXORPEN 10
+#defina R2_NOP 11
+#defina R2_MERGENOTPEN 12
+#defina R2_COPYPEN 13
+#defina R2_MERGEPENNOT 14
+#defina R2_MERGEPEN 15
+#defina R2_WHITE 16
+#defina R2_LAST 16
+
+#defina SRCCOPY (DWORD)0x00CC0020
+#defina SRCPAINT (DWORD)0x00EE0086
+#defina SRCAND (DWORD)0x008800C6
+#defina SRCINVERT (DWORD)0x00660046
+#defina SRCERASE (DWORD)0x00440328
+#defina NOTSRCCOPY (DWORD)0x00330008
+#defina NOTSRCERASE (DWORD)0x001100A6
+#defina MERGECOPY (DWORD)0x00C000CA
+#defina MERGEPAINT (DWORD)0x00BB0226
+#defina PATCOPY (DWORD)0x00F00021
+#defina PATPAINT (DWORD)0x00FB0A09
+#defina PATINVERT (DWORD)0x005A0049
+#defina DSTINVERT (DWORD)0x00550009
+#defina BLACKNESS (DWORD)0x00000042
+#defina WHITENESS (DWORD)0x00FF0062
+#defina NOMIRRORBITMAP (DWORD)0x80000000
+#defina CAPTUREBLT (DWORD)0x40000000
+#defina MAKEROP4(fore,back) (DWORD)((((back) << 8) & 0xFF000000) | (fore))
+#fim_se
+
+#defina GDI_ERROR (0xFFFFFFFFL)
+#defina HGDI_ERROR (LongToHandle(0xFFFFFFFFL))
+
+#defina ERROR 0
+#defina NULLREGION 1
+#defina SIMPLEREGION 2
+#defina COMPLEXREGION 3
+#defina RGN_ERROR ERROR
+
+#defina RGN_AND 1
+#defina RGN_OR 2
+#defina RGN_XOR 3
+#defina RGN_DIFF 4
+#defina RGN_COPY 5
+#defina RGN_MIN RGN_AND
+#defina RGN_MAX RGN_COPY
+
+#defina BLACKONWHITE 1
+#defina WHITEONBLACK 2
+#defina COLORONCOLOR 3
+#defina HALFTONE 4
+#defina MAXSTRETCHBLTMODE 4
+
+#defina STRETCH_ANDSCANS BLACKONWHITE
+#defina STRETCH_ORSCANS WHITEONBLACK
+#defina STRETCH_DELETESCANS COLORONCOLOR
+#defina STRETCH_HALFTONE HALFTONE
+
+#defina ALTERNATE 1
+#defina WINDING 2
+#defina POLYFILL_LAST 2
+
+#defina LAYOUT_RTL 0x00000001
+#defina LAYOUT_BTT 0x00000002
+#defina LAYOUT_VBH 0x00000004
+#defina LAYOUT_ORIENTATIONMASK (LAYOUT_RTL | LAYOUT_BTT | LAYOUT_VBH)
+#defina LAYOUT_BITMAPORIENTATIONPRESERVED 0x00000008
+
+#defina TA_NOUPDATECP 0
+#defina TA_UPDATECP 1
+
+#defina TA_LEFT 0
+#defina TA_RIGHT 2
+#defina TA_CENTER 6
+
+#defina TA_TOP 0
+#defina TA_BOTTOM 8
+#defina TA_BASELINE 24
+#defina TA_RTLREADING 256
+#defina TA_MASK (TA_BASELINE+TA_CENTER+TA_UPDATECP+TA_RTLREADING)
+
+#defina VTA_BASELINE TA_BASELINE
+#defina VTA_LEFT TA_BOTTOM
+#defina VTA_RIGHT TA_TOP
+#defina VTA_CENTER TA_CENTER
+#defina VTA_BOTTOM TA_RIGHT
+#defina VTA_TOP TA_LEFT
+
+#defina ETO_OPAQUE 0x0002
+#defina ETO_CLIPPED 0x0004
+#defina ETO_GLYPH_INDEX 0x0010
+#defina ETO_RTLREADING 0x0080
+#defina ETO_NUMERICSLOCAL 0x0400
+#defina ETO_NUMERICSLATIN 0x0800
+#defina ETO_IGNORELANGUAGE 0x1000
+#defina ETO_PDY 0x2000
+
+#defina ASPECT_FILTERING 0x0001
+
+#defina DCB_RESET 0x0001
+#defina DCB_ACCUMULATE 0x0002
+#defina DCB_DIRTY DCB_ACCUMULATE
+#defina DCB_SET (DCB_RESET | DCB_ACCUMULATE)
+#defina DCB_ENABLE 0x0004
+#defina DCB_DISABLE 0x0008
+
+#se_não_definido NOMETAFILE
+
+#defina META_SETBKCOLOR 0x0201
+#defina META_SETBKMODE 0x0102
+#defina META_SETMAPMODE 0x0103
+#defina META_SETROP2 0x0104
+#defina META_SETRELABS 0x0105
+#defina META_SETPOLYFILLMODE 0x0106
+#defina META_SETSTRETCHBLTMODE 0x0107
+#defina META_SETTEXTCHAREXTRA 0x0108
+#defina META_SETTEXTCOLOR 0x0209
+#defina META_SETTEXTJUSTIFICATION 0x020A
+#defina META_SETWINDOWORG 0x020B
+#defina META_SETWINDOWEXT 0x020C
+#defina META_SETVIEWPORTORG 0x020D
+#defina META_SETVIEWPORTEXT 0x020E
+#defina META_OFFSETWINDOWORG 0x020F
+#defina META_SCALEWINDOWEXT 0x0410
+#defina META_OFFSETVIEWPORTORG 0x0211
+#defina META_SCALEVIEWPORTEXT 0x0412
+#defina META_LINETO 0x0213
+#defina META_MOVETO 0x0214
+#defina META_EXCLUDECLIPRECT 0x0415
+#defina META_INTERSECTCLIPRECT 0x0416
+#defina META_ARC 0x0817
+#defina META_ELLIPSE 0x0418
+#defina META_FLOODFILL 0x0419
+#defina META_PIE 0x081A
+#defina META_RECTANGLE 0x041B
+#defina META_ROUNDRECT 0x061C
+#defina META_PATBLT 0x061D
+#defina META_SAVEDC 0x001E
+#defina META_SETPIXEL 0x041F
+#defina META_OFFSETCLIPRGN 0x0220
+#defina META_TEXTOUT 0x0521
+#defina META_BITBLT 0x0922
+#defina META_STRETCHBLT 0x0B23
+#defina META_POLYGON 0x0324
+#defina META_POLYLINE 0x0325
+#defina META_ESCAPE 0x0626
+#defina META_RESTOREDC 0x0127
+#defina META_FILLREGION 0x0228
+#defina META_FRAMEREGION 0x0429
+#defina META_INVERTREGION 0x012A
+#defina META_PAINTREGION 0x012B
+#defina META_SELECTCLIPREGION 0x012C
+#defina META_SELECTOBJECT 0x012D
+#defina META_SETTEXTALIGN 0x012E
+#defina META_CHORD 0x0830
+#defina META_SETMAPPERFLAGS 0x0231
+#defina META_EXTTEXTOUT 0x0a32
+#defina META_SETDIBTODEV 0x0d33
+#defina META_SELECTPALETTE 0x0234
+#defina META_REALIZEPALETTE 0x0035
+#defina META_ANIMATEPALETTE 0x0436
+#defina META_SETPALENTRIES 0x0037
+#defina META_POLYPOLYGON 0x0538
+#defina META_RESIZEPALETTE 0x0139
+#defina META_DIBBITBLT 0x0940
+#defina META_DIBSTRETCHBLT 0x0b41
+#defina META_DIBCREATEPATTERNBRUSH 0x0142
+#defina META_STRETCHDIB 0x0f43
+#defina META_EXTFLOODFILL 0x0548
+#defina META_SETLAYOUT 0x0149
+#defina META_DELETEOBJECT 0x01f0
+#defina META_CREATEPALETTE 0x00f7
+#defina META_CREATEPATTERNBRUSH 0x01F9
+#defina META_CREATEPENINDIRECT 0x02FA
+#defina META_CREATEFONTINDIRECT 0x02FB
+#defina META_CREATEBRUSHINDIRECT 0x02FC
+#defina META_CREATEREGION 0x06FF
+
+  defina_tipo estrutura _DRAWPATRECT {
+    POINT ptPosition;
+    POINT ptSize;
+    WORD wStyle;
+    WORD wPattern;
+  } DRAWPATRECT,*PDRAWPATRECT;
+#fim_se
+
+#defina NEWFRAME 1
+#defina ABORTDOC 2
+#defina NEXTBAND 3
+#defina SETCOLORTABLE 4
+#defina GETCOLORTABLE 5
+#defina FLUSHOUTPUT 6
+#defina DRAFTMODE 7
+#defina QUERYESCSUPPORT 8
+#defina SETABORTPROC 9
+#defina STARTDOC 10
+#defina ENDDOC 11
+#defina GETPHYSPAGESIZE 12
+#defina GETPRINTINGOFFSET 13
+#defina GETSCALINGFACTOR 14
+#defina MFCOMMENT 15
+#defina GETPENWIDTH 16
+#defina SETCOPYCOUNT 17
+#defina SELECTPAPERSOURCE 18
+#defina DEVICEDATA 19
+#defina PASSTHROUGH 19
+#defina GETTECHNOLGY 20
+#defina GETTECHNOLOGY 20
+#defina SETLINECAP 21
+#defina SETLINEJOIN 22
+#defina SETMITERLIMIT 23
+#defina BANDINFO 24
+#defina DRAWPATTERNRECT 25
+#defina GETVECTORPENSIZE 26
+#defina GETVECTORBRUSHSIZE 27
+#defina ENABLEDUPLEX 28
+#defina GETSETPAPERBINS 29
+#defina GETSETPRINTORIENT 30
+#defina ENUMPAPERBINS 31
+#defina SETDIBSCALING 32
+#defina EPSPRINTING 33
+#defina ENUMPAPERMETRICS 34
+#defina GETSETPAPERMETRICS 35
+#defina POSTSCRIPT_DATA 37
+#defina POSTSCRIPT_IGNORE 38
+#defina MOUSETRAILS 39
+#defina GETDEVICEUNITS 42
+
+#defina GETEXTENDEDTEXTMETRICS 256
+#defina GETEXTENTTABLE 257
+#defina GETPAIRKERNTABLE 258
+#defina GETTRACKKERNTABLE 259
+#defina EXTTEXTOUT 512
+#defina GETFACENAME 513
+#defina DOWNLOADFACE 514
+#defina ENABLERELATIVEWIDTHS 768
+#defina ENABLEPAIRKERNING 769
+#defina SETKERNTRACK 770
+#defina SETALLJUSTVALUES 771
+#defina SETCHARSET 772
+
+#defina STRETCHBLT 2048
+#defina METAFILE_DRIVER 2049
+#defina GETSETSCREENPARAMS 3072
+#defina QUERYDIBSUPPORT 3073
+#defina BEGIN_PATH 4096
+#defina CLIP_TO_PATH 4097
+#defina END_PATH 4098
+#defina EXT_DEVICE_CAPS 4099
+#defina RESTORE_CTM 4100
+#defina SAVE_CTM 4101
+#defina SET_ARC_DIRECTION 4102
+#defina SET_BACKGROUND_COLOR 4103
+#defina SET_POLY_MODE 4104
+#defina SET_SCREEN_ANGLE 4105
+#defina SET_SPREAD 4106
+#defina TRANSFORM_CTM 4107
+#defina SET_CLIP_BOX 4108
+#defina SET_BOUNDS 4109
+#defina SET_MIRROR_MODE 4110
+#defina OPENCHANNEL 4110
+#defina DOWNLOADHEADER 4111
+#defina CLOSECHANNEL 4112
+#defina POSTSCRIPT_PASSTHROUGH 4115
+#defina ENCAPSULATED_POSTSCRIPT 4116
+
+#defina POSTSCRIPT_IDENTIFY 4117
+#defina POSTSCRIPT_INJECTION 4118
+
+#defina CHECKJPEGFORMAT 4119
+#defina CHECKPNGFORMAT 4120
+
+#defina GET_PS_FEATURESETTING 4121
+
+#defina SPCLPASSTHROUGH2 4568
+
+#defina PSIDENT_GDICENTRIC 0
+#defina PSIDENT_PSCENTRIC 1
+
+  defina_tipo estrutura _PSINJECTDATA {
+    DWORD DataBytes;
+    WORD InjectionPoint;
+    WORD PageNumber;
+  } PSINJECTDATA,*PPSINJECTDATA;
+
+#defina PSINJECT_BEGINSTREAM 1
+#defina PSINJECT_PSADOBE 2
+#defina PSINJECT_PAGESATEND 3
+#defina PSINJECT_PAGES 4
+
+#defina PSINJECT_DOCNEEDEDRES 5
+#defina PSINJECT_DOCSUPPLIEDRES 6
+#defina PSINJECT_PAGEORDER 7
+#defina PSINJECT_ORIENTATION 8
+#defina PSINJECT_BOUNDINGBOX 9
+#defina PSINJECT_DOCUMENTPROCESSCOLORS 10
+
+#defina PSINJECT_COMMENTS 11
+#defina PSINJECT_BEGINDEFAULTS 12
+#defina PSINJECT_ENDDEFAULTS 13
+#defina PSINJECT_BEGINPROLOG 14
+#defina PSINJECT_ENDPROLOG 15
+#defina PSINJECT_BEGINSETUP 16
+#defina PSINJECT_ENDSETUP 17
+#defina PSINJECT_TRAILER 18
+#defina PSINJECT_EOF 19
+#defina PSINJECT_ENDSTREAM 20
+#defina PSINJECT_DOCUMENTPROCESSCOLORSATEND 21
+
+#defina PSINJECT_PAGENUMBER 100
+#defina PSINJECT_BEGINPAGESETUP 101
+#defina PSINJECT_ENDPAGESETUP 102
+#defina PSINJECT_PAGETRAILER 103
+#defina PSINJECT_PLATECOLOR 104
+
+#defina PSINJECT_SHOWPAGE 105
+#defina PSINJECT_PAGEBBOX 106
+#defina PSINJECT_ENDPAGECOMMENTS 107
+
+#defina PSINJECT_VMSAVE 200
+#defina PSINJECT_VMRESTORE 201
+
+#defina FEATURESETTING_NUP 0
+#defina FEATURESETTING_OUTPUT 1
+#defina FEATURESETTING_PSLEVEL 2
+#defina FEATURESETTING_CUSTPAPER 3
+#defina FEATURESETTING_MIRROR 4
+#defina FEATURESETTING_NEGATIVE 5
+#defina FEATURESETTING_PROTOCOL 6
+
+#defina FEATURESETTING_PRIVATE_BEGIN 0x1000
+#defina FEATURESETTING_PRIVATE_END 0x1FFF
+
+  defina_tipo estrutura _PSFEATURE_OUTPUT {
+    WINBOOL bPageIndependent;
+    WINBOOL bSetPageDevice;
+  } PSFEATURE_OUTPUT,*PPSFEATURE_OUTPUT;
+
+  defina_tipo estrutura _PSFEATURE_CUSTPAPER {
+    LONG lOrientation;
+    LONG lWidth;
+    LONG lHeight;
+    LONG lWidthOffset;
+    LONG lHeightOffset;
+  } PSFEATURE_CUSTPAPER,*PPSFEATURE_CUSTPAPER;
+
+#defina PSPROTOCOL_ASCII 0
+#defina PSPROTOCOL_BCP 1
+#defina PSPROTOCOL_TBCP 2
+#defina PSPROTOCOL_BINARY 3
+
+#defina QDI_SETDIBITS 1
+#defina QDI_GETDIBITS 2
+#defina QDI_DIBTOSCREEN 4
+#defina QDI_STRETCHDIB 8
+
+#defina SP_NOTREPORTED 0x4000
+#defina SP_ERROR (-1)
+#defina SP_APPABORT (-2)
+#defina SP_USERABORT (-3)
+#defina SP_OUTOFDISK (-4)
+#defina SP_OUTOFMEMORY (-5)
+
+#defina PR_JOBSTATUS 0x0000
+
+#defina OBJ_PEN 1
+#defina OBJ_BRUSH 2
+#defina OBJ_DC 3
+#defina OBJ_METADC 4
+#defina OBJ_PAL 5
+#defina OBJ_FONT 6
+#defina OBJ_BITMAP 7
+#defina OBJ_REGION 8
+#defina OBJ_METAFILE 9
+#defina OBJ_MEMDC 10
+#defina OBJ_EXTPEN 11
+#defina OBJ_ENHMETADC 12
+#defina OBJ_ENHMETAFILE 13
+#defina OBJ_COLORSPACE 14
+
+#defina MWT_IDENTITY 1
+#defina MWT_LEFTMULTIPLY 2
+#defina MWT_RIGHTMULTIPLY 3
+
+#defina MWT_MIN MWT_IDENTITY
+#defina MWT_MAX MWT_RIGHTMULTIPLY
+
+#defina _XFORM_
+  defina_tipo estrutura tagXFORM {
+    FLOAT eM11;
+    FLOAT eM12;
+    FLOAT eM21;
+    FLOAT eM22;
+    FLOAT eDx;
+    FLOAT eDy;
+  } XFORM,*PXFORM,*LPXFORM;
+
+  defina_tipo estrutura tagBITMAP {
+    LONG bmType;
+    LONG bmWidth;
+    LONG bmHeight;
+    LONG bmWidthBytes;
+    WORD bmPlanes;
+    WORD bmBitsPixel;
+    LPVOID bmBits;
+  } BITMAP,*PBITMAP,*NPBITMAP,*LPBITMAP;
+
+#inclua <pshpack1.h>
+  defina_tipo estrutura tagRGBTRIPLE {
+    BYTE rgbtBlue;
+    BYTE rgbtGreen;
+    BYTE rgbtRed;
+  } RGBTRIPLE;
+#inclua <poppack.h>
+
+  defina_tipo estrutura tagRGBQUAD {
+    BYTE rgbBlue;
+    BYTE rgbGreen;
+    BYTE rgbRed;
+    BYTE rgbReserved;
+  } RGBQUAD;
+  defina_tipo RGBQUAD *LPRGBQUAD;
+
+#defina CS_ENABLE 0x00000001L
+#defina CS_DISABLE 0x00000002L
+#defina CS_DELETE_TRANSFORM 0x00000003L
+
+//!__TINYC__: #defina LCS_SIGNATURE 'PSOC'
+//!__TINYC__: #defina LCS_sRGB 'sRGB'
+//!__TINYC__: #defina LCS_WINDOWS_COLOR_SPACE 'Win '
+
+  defina_tipo LONG LCSCSTYPE;
+#defina LCS_CALIBRATED_RGB 0x00000000L
+
+  defina_tipo LONG LCSGAMUTMATCH;
+#defina LCS_GM_BUSINESS 0x00000001L
+#defina LCS_GM_GRAPHICS 0x00000002L
+#defina LCS_GM_IMAGES 0x00000004L
+#defina LCS_GM_ABS_COLORIMETRIC 0x00000008L
+
+#defina CM_OUT_OF_GAMUT 255
+#defina CM_IN_GAMUT 0
+
+#defina ICM_ADDPROFILE 1
+#defina ICM_DELETEPROFILE 2
+#defina ICM_QUERYPROFILE 3
+#defina ICM_SETDEFAULTPROFILE 4
+#defina ICM_REGISTERICMATCHER 5
+#defina ICM_UNREGISTERICMATCHER 6
+#defina ICM_QUERYMATCH 7
+
+#defina GetKValue(cmyk) ((BYTE)(cmyk))
+#defina GetYValue(cmyk) ((BYTE)((cmyk)>> 8))
+#defina GetMValue(cmyk) ((BYTE)((cmyk)>>16))
+#defina GetCValue(cmyk) ((BYTE)((cmyk)>>24))
+
+#defina CMYK(c,m,y,k) ((COLORREF)((((BYTE)(k)|((WORD)((BYTE)(y))<<8))|(((DWORD)(BYTE)(m))<<16))|(((DWORD)(BYTE)(c))<<24)))
+
+  defina_tipo longo FXPT16DOT16,*LPFXPT16DOT16;
+  defina_tipo longo FXPT2DOT30,*LPFXPT2DOT30;
+
+  defina_tipo estrutura tagCIEXYZ {
+    FXPT2DOT30 ciexyzX;
+    FXPT2DOT30 ciexyzY;
+    FXPT2DOT30 ciexyzZ;
+  } CIEXYZ;
+  defina_tipo CIEXYZ *LPCIEXYZ;
+
+  defina_tipo estrutura tagICEXYZTRIPLE {
+    CIEXYZ ciexyzRed;
+    CIEXYZ ciexyzGreen;
+    CIEXYZ ciexyzBlue;
+  } CIEXYZTRIPLE;
+
+  defina_tipo CIEXYZTRIPLE *LPCIEXYZTRIPLE;
+
+  defina_tipo estrutura tagLOGCOLORSPACEA {
+    DWORD lcsSignature;
+    DWORD lcsVersion;
+    DWORD lcsSize;
+    LCSCSTYPE lcsCSType;
+    LCSGAMUTMATCH lcsIntent;
+    CIEXYZTRIPLE lcsEndpoints;
+    DWORD lcsGammaRed;
+    DWORD lcsGammaGreen;
+    DWORD lcsGammaBlue;
+    CHAR lcsFilename[MAX_PATH];
+  } LOGCOLORSPACEA,*LPLOGCOLORSPACEA;
+
+  defina_tipo estrutura tagLOGCOLORSPACEW {
+    DWORD lcsSignature;
+    DWORD lcsVersion;
+    DWORD lcsSize;
+    LCSCSTYPE lcsCSType;
+    LCSGAMUTMATCH lcsIntent;
+    CIEXYZTRIPLE lcsEndpoints;
+    DWORD lcsGammaRed;
+    DWORD lcsGammaGreen;
+    DWORD lcsGammaBlue;
+    WCHAR lcsFilename[MAX_PATH];
+  } LOGCOLORSPACEW,*LPLOGCOLORSPACEW;
+
+#se_definido UNICODE
+  defina_tipo LOGCOLORSPACEW LOGCOLORSPACE;
+  defina_tipo LPLOGCOLORSPACEW LPLOGCOLORSPACE;
+#senão
+  defina_tipo LOGCOLORSPACEA LOGCOLORSPACE;
+  defina_tipo LPLOGCOLORSPACEA LPLOGCOLORSPACE;
+#fim_se
+
+  defina_tipo estrutura tagBITMAPCOREHEADER {
+    DWORD bcSize;
+    WORD bcWidth;
+    WORD bcHeight;
+    WORD bcPlanes;
+    WORD bcBitCount;
+  } BITMAPCOREHEADER,*LPBITMAPCOREHEADER,*PBITMAPCOREHEADER;
+
+  defina_tipo estrutura tagBITMAPINFOHEADER {
+    DWORD biSize;
+    LONG biWidth;
+    LONG biHeight;
+    WORD biPlanes;
+    WORD biBitCount;
+    DWORD biCompression;
+    DWORD biSizeImage;
+    LONG biXPelsPerMeter;
+    LONG biYPelsPerMeter;
+    DWORD biClrUsed;
+    DWORD biClrImportant;
+  } BITMAPINFOHEADER,*LPBITMAPINFOHEADER,*PBITMAPINFOHEADER;
+
+  defina_tipo estrutura {
+    DWORD bV4Size;
+    LONG bV4Width;
+    LONG bV4Height;
+    WORD bV4Planes;
+    WORD bV4BitCount;
+    DWORD bV4V4Compression;
+    DWORD bV4SizeImage;
+    LONG bV4XPelsPerMeter;
+    LONG bV4YPelsPerMeter;
+    DWORD bV4ClrUsed;
+    DWORD bV4ClrImportant;
+    DWORD bV4RedMask;
+    DWORD bV4GreenMask;
+    DWORD bV4BlueMask;
+    DWORD bV4AlphaMask;
+    DWORD bV4CSType;
+    CIEXYZTRIPLE bV4Endpoints;
+    DWORD bV4GammaRed;
+    DWORD bV4GammaGreen;
+    DWORD bV4GammaBlue;
+  } BITMAPV4HEADER,*LPBITMAPV4HEADER,*PBITMAPV4HEADER;
+
+  defina_tipo estrutura {
+    DWORD bV5Size;
+    LONG bV5Width;
+    LONG bV5Height;
+    WORD bV5Planes;
+    WORD bV5BitCount;
+    DWORD bV5Compression;
+    DWORD bV5SizeImage;
+    LONG bV5XPelsPerMeter;
+    LONG bV5YPelsPerMeter;
+    DWORD bV5ClrUsed;
+    DWORD bV5ClrImportant;
+    DWORD bV5RedMask;
+    DWORD bV5GreenMask;
+    DWORD bV5BlueMask;
+    DWORD bV5AlphaMask;
+    DWORD bV5CSType;
+    CIEXYZTRIPLE bV5Endpoints;
+    DWORD bV5GammaRed;
+    DWORD bV5GammaGreen;
+    DWORD bV5GammaBlue;
+    DWORD bV5Intent;
+    DWORD bV5ProfileData;
+    DWORD bV5ProfileSize;
+    DWORD bV5Reserved;
+  } BITMAPV5HEADER,*LPBITMAPV5HEADER,*PBITMAPV5HEADER;
+
+//!__TINYC__: #defina PROFILE_LINKED 'LINK'
+//!__TINYC__: #defina PROFILE_EMBEDDED 'MBED'
+
+#defina BI_RGB 0L
+#defina BI_RLE8 1L
+#defina BI_RLE4 2L
+#defina BI_BITFIELDS 3L
+#defina BI_JPEG 4L
+#defina BI_PNG 5L
+
+  defina_tipo estrutura tagBITMAPINFO {
+    BITMAPINFOHEADER bmiHeader;
+    RGBQUAD bmiColors[1];
+  } BITMAPINFO,*LPBITMAPINFO,*PBITMAPINFO;
+
+  defina_tipo estrutura tagBITMAPCOREINFO {
+    BITMAPCOREHEADER bmciHeader;
+    RGBTRIPLE bmciColors[1];
+  } BITMAPCOREINFO,*LPBITMAPCOREINFO,*PBITMAPCOREINFO;
+
+#inclua <pshpack2.h>
+  defina_tipo estrutura tagBITMAPFILEHEADER {
+    WORD bfType;
+    DWORD bfSize;
+    WORD bfReserved1;
+    WORD bfReserved2;
+    DWORD bfOffBits;
+  } BITMAPFILEHEADER,*LPBITMAPFILEHEADER,*PBITMAPFILEHEADER;
+#inclua <poppack.h>
+
+#defina MAKEPOINTS(l) (*((POINTS *)&(l)))
+
+#se_não_definido NOFONTSIG
+  defina_tipo estrutura tagFONTSIGNATURE {
+    DWORD fsUsb[4];
+    DWORD fsCsb[2];
+  } FONTSIGNATURE,*PFONTSIGNATURE,*LPFONTSIGNATURE;
+
+  defina_tipo estrutura tagCHARSETINFO {
+    UINT ciCharset;
+    UINT ciACP;
+    FONTSIGNATURE fs;
+  } CHARSETINFO,*PCHARSETINFO,*NPCHARSETINFO,*LPCHARSETINFO;
+
+#defina TCI_SRCCHARSET 1
+#defina TCI_SRCCODEPAGE 2
+#defina TCI_SRCFONTSIG 3
+#defina TCI_SRCLOCALE 0x1000
+
+  defina_tipo estrutura tagLOCALESIGNATURE {
+    DWORD lsUsb[4];
+    DWORD lsCsbDefault[2];
+    DWORD lsCsbSupported[2];
+  } LOCALESIGNATURE,*PLOCALESIGNATURE,*LPLOCALESIGNATURE;
+#fim_se
+
+
+#se_não_definido NOMETAFILE
+  defina_tipo estrutura tagHANDLETABLE {
+    HGDIOBJ objectHandle[1];
+  } HANDLETABLE,*PHANDLETABLE,*LPHANDLETABLE;
+
+  defina_tipo estrutura tagMETARECORD {
+    DWORD rdSize;
+    WORD rdFunction;
+    WORD rdParm[1];
+  } METARECORD;
+  defina_tipo estrutura tagMETARECORD UNALIGNED *PMETARECORD;
+  defina_tipo estrutura tagMETARECORD UNALIGNED *LPMETARECORD;
+
+  defina_tipo estrutura tagMETAFILEPICT {
+    LONG mm;
+    LONG xExt;
+    LONG yExt;
+    HMETAFILE hMF;
+  } METAFILEPICT,*LPMETAFILEPICT;
+
+#inclua <pshpack2.h>
+  defina_tipo estrutura tagMETAHEADER {
+    WORD mtType;
+    WORD mtHeaderSize;
+    WORD mtVersion;
+    DWORD mtSize;
+    WORD mtNoObjects;
+    DWORD mtMaxRecord;
+    WORD mtNoParameters;
+  } METAHEADER;
+  defina_tipo estrutura tagMETAHEADER UNALIGNED *PMETAHEADER;
+  defina_tipo estrutura tagMETAHEADER UNALIGNED *LPMETAHEADER;
+
+#inclua <poppack.h>
+
+  defina_tipo estrutura tagENHMETARECORD {
+    DWORD iType;
+    DWORD nSize;
+    DWORD dParm[1];
+  } ENHMETARECORD,*PENHMETARECORD,*LPENHMETARECORD;
+
+  defina_tipo estrutura tagENHMETAHEADER {
+    DWORD iType;
+    DWORD nSize;
+    RECTL rclBounds;
+    RECTL rclFrame;
+    DWORD dSignature;
+    DWORD nVersion;
+    DWORD nBytes;
+    DWORD nRecords;
+    WORD nHandles;
+    WORD sReserved;
+    DWORD nDescription;
+    DWORD offDescription;
+    DWORD nPalEntries;
+    SIZEL szlDevice;
+    SIZEL szlMillimeters;
+    DWORD cbPixelFormat;
+    DWORD offPixelFormat;
+    DWORD bOpenGL;
+    SIZEL szlMicrometers;
+  } ENHMETAHEADER,*PENHMETAHEADER,*LPENHMETAHEADER;
+#fim_se
+
+#se_não_definido NOTEXTMETRIC
+#defina TMPF_FIXED_PITCH 0x01
+#defina TMPF_VECTOR 0x02
+#defina TMPF_DEVICE 0x08
+#defina TMPF_TRUETYPE 0x04
+
+#se_definido UNICODE
+  defina_tipo WCHAR BCHAR;
+#senão
+  defina_tipo BYTE BCHAR;
+#fim_se
+
+#se_não_definido _TEXTMETRIC_DEFINED
+#defina _TEXTMETRIC_DEFINED
+  defina_tipo estrutura tagTEXTMETRICA {
+    LONG tmHeight;
+    LONG tmAscent;
+    LONG tmDescent;
+    LONG tmInternalLeading;
+    LONG tmExternalLeading;
+    LONG tmAveCharWidth;
+    LONG tmMaxCharWidth;
+    LONG tmWeight;
+    LONG tmOverhang;
+    LONG tmDigitizedAspectX;
+    LONG tmDigitizedAspectY;
+    BYTE tmFirstChar;
+    BYTE tmLastChar;
+    BYTE tmDefaultChar;
+    BYTE tmBreakChar;
+    BYTE tmItalic;
+    BYTE tmUnderlined;
+    BYTE tmStruckOut;
+    BYTE tmPitchAndFamily;
+    BYTE tmCharSet;
+  } TEXTMETRICA,*PTEXTMETRICA,*NPTEXTMETRICA,*LPTEXTMETRICA;
+
+  defina_tipo estrutura tagTEXTMETRICW {
+    LONG tmHeight;
+    LONG tmAscent;
+    LONG tmDescent;
+    LONG tmInternalLeading;
+    LONG tmExternalLeading;
+    LONG tmAveCharWidth;
+    LONG tmMaxCharWidth;
+    LONG tmWeight;
+    LONG tmOverhang;
+    LONG tmDigitizedAspectX;
+    LONG tmDigitizedAspectY;
+    WCHAR tmFirstChar;
+    WCHAR tmLastChar;
+    WCHAR tmDefaultChar;
+    WCHAR tmBreakChar;
+    BYTE tmItalic;
+    BYTE tmUnderlined;
+    BYTE tmStruckOut;
+    BYTE tmPitchAndFamily;
+    BYTE tmCharSet;
+  } TEXTMETRICW,*PTEXTMETRICW,*NPTEXTMETRICW,*LPTEXTMETRICW;
+#se_definido UNICODE
+  defina_tipo TEXTMETRICW TEXTMETRIC;
+  defina_tipo PTEXTMETRICW PTEXTMETRIC;
+  defina_tipo NPTEXTMETRICW NPTEXTMETRIC;
+  defina_tipo LPTEXTMETRICW LPTEXTMETRIC;
+#senão
+  defina_tipo TEXTMETRICA TEXTMETRIC;
+  defina_tipo PTEXTMETRICA PTEXTMETRIC;
+  defina_tipo NPTEXTMETRICA NPTEXTMETRIC;
+  defina_tipo LPTEXTMETRICA LPTEXTMETRIC;
+#fim_se
+#fim_se
+
+#defina NTM_REGULAR 0x00000040L
+#defina NTM_BOLD 0x00000020L
+#defina NTM_ITALIC 0x00000001L
+
+#defina NTM_NONNEGATIVE_AC 0x00010000
+#defina NTM_PS_OPENTYPE 0x00020000
+#defina NTM_TT_OPENTYPE 0x00040000
+#defina NTM_MULTIPLEMASTER 0x00080000
+#defina NTM_TYPE1 0x00100000
+#defina NTM_DSIG 0x00200000
+
+#inclua <pshpack4.h>
+  defina_tipo estrutura tagNEWTEXTMETRICA {
+    LONG tmHeight;
+    LONG tmAscent;
+    LONG tmDescent;
+    LONG tmInternalLeading;
+    LONG tmExternalLeading;
+    LONG tmAveCharWidth;
+    LONG tmMaxCharWidth;
+    LONG tmWeight;
+    LONG tmOverhang;
+    LONG tmDigitizedAspectX;
+    LONG tmDigitizedAspectY;
+    BYTE tmFirstChar;
+    BYTE tmLastChar;
+    BYTE tmDefaultChar;
+    BYTE tmBreakChar;
+    BYTE tmItalic;
+    BYTE tmUnderlined;
+    BYTE tmStruckOut;
+    BYTE tmPitchAndFamily;
+    BYTE tmCharSet;
+    DWORD ntmFlags;
+    UINT ntmSizeEM;
+    UINT ntmCellHeight;
+    UINT ntmAvgWidth;
+  } NEWTEXTMETRICA,*PNEWTEXTMETRICA,*NPNEWTEXTMETRICA,*LPNEWTEXTMETRICA;
+
+  defina_tipo estrutura tagNEWTEXTMETRICW {
+    LONG tmHeight;
+    LONG tmAscent;
+    LONG tmDescent;
+    LONG tmInternalLeading;
+    LONG tmExternalLeading;
+    LONG tmAveCharWidth;
+    LONG tmMaxCharWidth;
+    LONG tmWeight;
+    LONG tmOverhang;
+    LONG tmDigitizedAspectX;
+    LONG tmDigitizedAspectY;
+    WCHAR tmFirstChar;
+    WCHAR tmLastChar;
+    WCHAR tmDefaultChar;
+    WCHAR tmBreakChar;
+    BYTE tmItalic;
+    BYTE tmUnderlined;
+    BYTE tmStruckOut;
+    BYTE tmPitchAndFamily;
+    BYTE tmCharSet;
+    DWORD ntmFlags;
+    UINT ntmSizeEM;
+    UINT ntmCellHeight;
+    UINT ntmAvgWidth;
+  } NEWTEXTMETRICW,*PNEWTEXTMETRICW,*NPNEWTEXTMETRICW,*LPNEWTEXTMETRICW;
+#se_definido UNICODE
+  defina_tipo NEWTEXTMETRICW NEWTEXTMETRIC;
+  defina_tipo PNEWTEXTMETRICW PNEWTEXTMETRIC;
+  defina_tipo NPNEWTEXTMETRICW NPNEWTEXTMETRIC;
+  defina_tipo LPNEWTEXTMETRICW LPNEWTEXTMETRIC;
+#senão
+  defina_tipo NEWTEXTMETRICA NEWTEXTMETRIC;
+  defina_tipo PNEWTEXTMETRICA PNEWTEXTMETRIC;
+  defina_tipo NPNEWTEXTMETRICA NPNEWTEXTMETRIC;
+  defina_tipo LPNEWTEXTMETRICA LPNEWTEXTMETRIC;
+#fim_se
+#inclua <poppack.h>
+
+  defina_tipo estrutura tagNEWTEXTMETRICEXA {
+    NEWTEXTMETRICA ntmTm;
+    FONTSIGNATURE ntmFontSig;
+  } NEWTEXTMETRICEXA;
+
+  defina_tipo estrutura tagNEWTEXTMETRICEXW {
+    NEWTEXTMETRICW ntmTm;
+    FONTSIGNATURE ntmFontSig;
+  } NEWTEXTMETRICEXW;
+#se_definido UNICODE
+  defina_tipo NEWTEXTMETRICEXW NEWTEXTMETRICEX;
+#senão
+  defina_tipo NEWTEXTMETRICEXA NEWTEXTMETRICEX;
+#fim_se
+#fim_se
+
+  defina_tipo estrutura tagPELARRAY {
+    LONG paXCount;
+    LONG paYCount;
+    LONG paXExt;
+    LONG paYExt;
+    BYTE paRGBs;
+  } PELARRAY,*PPELARRAY,*NPPELARRAY,*LPPELARRAY;
+
+  defina_tipo estrutura tagLOGBRUSH {
+    UINT lbStyle;
+    COLORREF lbColor;
+    ULONG_PTR lbHatch;
+  } LOGBRUSH,*PLOGBRUSH,*NPLOGBRUSH,*LPLOGBRUSH;
+
+  defina_tipo estrutura tagLOGBRUSH32 {
+    UINT lbStyle;
+    COLORREF lbColor;
+    ULONG lbHatch;
+  } LOGBRUSH32,*PLOGBRUSH32,*NPLOGBRUSH32,*LPLOGBRUSH32;
+
+  defina_tipo LOGBRUSH PATTERN;
+  defina_tipo PATTERN *PPATTERN;
+  defina_tipo PATTERN *NPPATTERN;
+  defina_tipo PATTERN *LPPATTERN;
+
+  defina_tipo estrutura tagLOGPEN {
+    UINT lopnStyle;
+    POINT lopnWidth;
+    COLORREF lopnColor;
+  } LOGPEN,*PLOGPEN,*NPLOGPEN,*LPLOGPEN;
+
+  defina_tipo estrutura tagEXTLOGPEN {
+    DWORD elpPenStyle;
+    DWORD elpWidth;
+    UINT elpBrushStyle;
+    COLORREF elpColor;
+    ULONG_PTR elpHatch;
+    DWORD elpNumEntries;
+    DWORD elpStyleEntry[1];
+  } EXTLOGPEN,*PEXTLOGPEN,*NPEXTLOGPEN,*LPEXTLOGPEN;
+
+#se_não_definido _PALETTEENTRY_DEFINED
+#defina _PALETTEENTRY_DEFINED
+  defina_tipo estrutura tagPALETTEENTRY {
+    BYTE peRed;
+    BYTE peGreen;
+    BYTE peBlue;
+    BYTE peFlags;
+  } PALETTEENTRY,*PPALETTEENTRY,*LPPALETTEENTRY;
+#fim_se
+
+#se_não_definido _LOGPALETTE_DEFINED
+#defina _LOGPALETTE_DEFINED
+
+  defina_tipo estrutura tagLOGPALETTE {
+    WORD palVersion;
+    WORD palNumEntries;
+    PALETTEENTRY palPalEntry[1];
+  } LOGPALETTE,*PLOGPALETTE,*NPLOGPALETTE,*LPLOGPALETTE;
+#fim_se
+
+#defina LF_FACESIZE 32
+
+  defina_tipo estrutura tagLOGFONTA {
+    LONG lfHeight;
+    LONG lfWidth;
+    LONG lfEscapement;
+    LONG lfOrientation;
+    LONG lfWeight;
+    BYTE lfItalic;
+    BYTE lfUnderline;
+    BYTE lfStrikeOut;
+    BYTE lfCharSet;
+    BYTE lfOutPrecision;
+    BYTE lfClipPrecision;
+    BYTE lfQuality;
+    BYTE lfPitchAndFamily;
+    CHAR lfFaceName[LF_FACESIZE];
+  } LOGFONTA,*PLOGFONTA,*NPLOGFONTA,*LPLOGFONTA;
+
+  defina_tipo estrutura tagLOGFONTW {
+    LONG lfHeight;
+    LONG lfWidth;
+    LONG lfEscapement;
+    LONG lfOrientation;
+    LONG lfWeight;
+    BYTE lfItalic;
+    BYTE lfUnderline;
+    BYTE lfStrikeOut;
+    BYTE lfCharSet;
+    BYTE lfOutPrecision;
+    BYTE lfClipPrecision;
+    BYTE lfQuality;
+    BYTE lfPitchAndFamily;
+    WCHAR lfFaceName[LF_FACESIZE];
+  } LOGFONTW,*PLOGFONTW,*NPLOGFONTW,*LPLOGFONTW;
+#se_definido UNICODE
+  defina_tipo LOGFONTW LOGFONT;
+  defina_tipo PLOGFONTW PLOGFONT;
+  defina_tipo NPLOGFONTW NPLOGFONT;
+  defina_tipo LPLOGFONTW LPLOGFONT;
+#senão
+  defina_tipo LOGFONTA LOGFONT;
+  defina_tipo PLOGFONTA PLOGFONT;
+  defina_tipo NPLOGFONTA NPLOGFONT;
+  defina_tipo LPLOGFONTA LPLOGFONT;
+#fim_se
+
+#defina LF_FULLFACESIZE 64
+
+  defina_tipo estrutura tagENUMLOGFONTA {
+    LOGFONTA elfLogFont;
+    BYTE elfFullName[LF_FULLFACESIZE];
+    BYTE elfStyle[LF_FACESIZE];
+  } ENUMLOGFONTA,*LPENUMLOGFONTA;
+
+  defina_tipo estrutura tagENUMLOGFONTW {
+    LOGFONTW elfLogFont;
+    WCHAR elfFullName[LF_FULLFACESIZE];
+    WCHAR elfStyle[LF_FACESIZE];
+  } ENUMLOGFONTW,*LPENUMLOGFONTW;
+#se_definido UNICODE
+  defina_tipo ENUMLOGFONTW ENUMLOGFONT;
+  defina_tipo LPENUMLOGFONTW LPENUMLOGFONT;
+#senão
+  defina_tipo ENUMLOGFONTA ENUMLOGFONT;
+  defina_tipo LPENUMLOGFONTA LPENUMLOGFONT;
+#fim_se
+
+  defina_tipo estrutura tagENUMLOGFONTEXA {
+    LOGFONTA elfLogFont;
+    BYTE elfFullName[LF_FULLFACESIZE];
+    BYTE elfStyle[LF_FACESIZE];
+    BYTE elfScript[LF_FACESIZE];
+  } ENUMLOGFONTEXA,*LPENUMLOGFONTEXA;
+
+  defina_tipo estrutura tagENUMLOGFONTEXW {
+    LOGFONTW elfLogFont;
+    WCHAR elfFullName[LF_FULLFACESIZE];
+    WCHAR elfStyle[LF_FACESIZE];
+    WCHAR elfScript[LF_FACESIZE];
+  } ENUMLOGFONTEXW,*LPENUMLOGFONTEXW;
+#se_definido UNICODE
+  defina_tipo ENUMLOGFONTEXW ENUMLOGFONTEX;
+  defina_tipo LPENUMLOGFONTEXW LPENUMLOGFONTEX;
+#senão
+  defina_tipo ENUMLOGFONTEXA ENUMLOGFONTEX;
+  defina_tipo LPENUMLOGFONTEXA LPENUMLOGFONTEX;
+#fim_se
+
+#defina OUT_DEFAULT_PRECIS 0
+#defina OUT_STRING_PRECIS 1
+#defina OUT_CHARACTER_PRECIS 2
+#defina OUT_STROKE_PRECIS 3
+#defina OUT_TT_PRECIS 4
+#defina OUT_DEVICE_PRECIS 5
+#defina OUT_RASTER_PRECIS 6
+#defina OUT_TT_ONLY_PRECIS 7
+#defina OUT_OUTLINE_PRECIS 8
+#defina OUT_SCREEN_OUTLINE_PRECIS 9
+#defina OUT_PS_ONLY_PRECIS 10
+
+#defina CLIP_DEFAULT_PRECIS 0
+#defina CLIP_CHARACTER_PRECIS 1
+#defina CLIP_STROKE_PRECIS 2
+#defina CLIP_MASK 0xf
+#defina CLIP_LH_ANGLES (1<<4)
+#defina CLIP_TT_ALWAYS (2<<4)
+#defina CLIP_DFA_DISABLE (4<<4)
+#defina CLIP_EMBEDDED (8<<4)
+
+#defina DEFAULT_QUALITY 0
+#defina DRAFT_QUALITY 1
+#defina PROOF_QUALITY 2
+#defina NONANTIALIASED_QUALITY 3
+#defina ANTIALIASED_QUALITY 4
+
+#defina CLEARTYPE_QUALITY 5
+#defina CLEARTYPE_NATURAL_QUALITY 6
+
+#defina DEFAULT_PITCH 0
+#defina FIXED_PITCH 1
+#defina VARIABLE_PITCH 2
+#defina MONO_FONT 8
+
+#defina ANSI_CHARSET 0
+#defina DEFAULT_CHARSET 1
+#defina SYMBOL_CHARSET 2
+#defina SHIFTJIS_CHARSET 128
+#defina HANGEUL_CHARSET 129
+#defina HANGUL_CHARSET 129
+#defina GB2312_CHARSET 134
+#defina CHINESEBIG5_CHARSET 136
+#defina OEM_CHARSET 255
+#defina JOHAB_CHARSET 130
+#defina HEBREW_CHARSET 177
+#defina ARABIC_CHARSET 178
+#defina GREEK_CHARSET 161
+#defina TURKISH_CHARSET 162
+#defina VIETNAMESE_CHARSET 163
+#defina THAI_CHARSET 222
+#defina EASTEUROPE_CHARSET 238
+#defina RUSSIAN_CHARSET 204
+
+#defina MAC_CHARSET 77
+#defina BALTIC_CHARSET 186
+
+#defina FS_LATIN1 0x00000001L
+#defina FS_LATIN2 0x00000002L
+#defina FS_CYRILLIC 0x00000004L
+#defina FS_GREEK 0x00000008L
+#defina FS_TURKISH 0x00000010L
+#defina FS_HEBREW 0x00000020L
+#defina FS_ARABIC 0x00000040L
+#defina FS_BALTIC 0x00000080L
+#defina FS_VIETNAMESE 0x00000100L
+#defina FS_THAI 0x00010000L
+#defina FS_JISJAPAN 0x00020000L
+#defina FS_CHINESESIMP 0x00040000L
+#defina FS_WANSUNG 0x00080000L
+#defina FS_CHINESETRAD 0x00100000L
+#defina FS_JOHAB 0x00200000L
+#defina FS_SYMBOL 0x80000000L
+
+#defina FF_DONTCARE (0<<4)
+#defina FF_ROMAN (1<<4)
+
+#defina FF_SWISS (2<<4)
+
+#defina FF_MODERN (3<<4)
+
+#defina FF_SCRIPT (4<<4)
+#defina FF_DECORATIVE (5<<4)
+
+#defina FW_DONTCARE 0
+#defina FW_THIN 100
+#defina FW_EXTRALIGHT 200
+#defina FW_LIGHT 300
+#defina FW_NORMAL 400
+#defina FW_MEDIUM 500
+#defina FW_SEMIBOLD 600
+#defina FW_BOLD 700
+#defina FW_EXTRABOLD 800
+#defina FW_HEAVY 900
+
+#defina FW_ULTRALIGHT FW_EXTRALIGHT
+#defina FW_REGULAR FW_NORMAL
+#defina FW_DEMIBOLD FW_SEMIBOLD
+#defina FW_ULTRABOLD FW_EXTRABOLD
+#defina FW_BLACK FW_HEAVY
+
+#defina PANOSE_COUNT 10
+#defina PAN_FAMILYTYPE_INDEX 0
+#defina PAN_SERIFSTYLE_INDEX 1
+#defina PAN_WEIGHT_INDEX 2
+#defina PAN_PROPORTION_INDEX 3
+#defina PAN_CONTRAST_INDEX 4
+#defina PAN_STROKEVARIATION_INDEX 5
+#defina PAN_ARMSTYLE_INDEX 6
+#defina PAN_LETTERFORM_INDEX 7
+#defina PAN_MIDLINE_INDEX 8
+#defina PAN_XHEIGHT_INDEX 9
+
+#defina PAN_CULTURE_LATIN 0
+
+  defina_tipo estrutura tagPANOSE {
+    BYTE bFamilyType;
+    BYTE bSerifStyle;
+    BYTE bWeight;
+    BYTE bProportion;
+    BYTE bContrast;
+    BYTE bStrokeVariation;
+    BYTE bArmStyle;
+    BYTE bLetterform;
+    BYTE bMidline;
+    BYTE bXHeight;
+  } PANOSE,*LPPANOSE;
+
+#defina PAN_ANY 0
+#defina PAN_NO_FIT 1
+
+#defina PAN_FAMILY_TEXT_DISPLAY 2
+#defina PAN_FAMILY_SCRIPT 3
+#defina PAN_FAMILY_DECORATIVE 4
+#defina PAN_FAMILY_PICTORIAL 5
+
+#defina PAN_SERIF_COVE 2
+#defina PAN_SERIF_OBTUSE_COVE 3
+#defina PAN_SERIF_SQUARE_COVE 4
+#defina PAN_SERIF_OBTUSE_SQUARE_COVE 5
+#defina PAN_SERIF_SQUARE 6
+#defina PAN_SERIF_THIN 7
+#defina PAN_SERIF_BONE 8
+#defina PAN_SERIF_EXAGGERATED 9
+#defina PAN_SERIF_TRIANGLE 10
+#defina PAN_SERIF_NORMAL_SANS 11
+#defina PAN_SERIF_OBTUSE_SANS 12
+#defina PAN_SERIF_PERP_SANS 13
+#defina PAN_SERIF_FLARED 14
+#defina PAN_SERIF_ROUNDED 15
+
+#defina PAN_WEIGHT_VERY_LIGHT 2
+#defina PAN_WEIGHT_LIGHT 3
+#defina PAN_WEIGHT_THIN 4
+#defina PAN_WEIGHT_BOOK 5
+#defina PAN_WEIGHT_MEDIUM 6
+#defina PAN_WEIGHT_DEMI 7
+#defina PAN_WEIGHT_BOLD 8
+#defina PAN_WEIGHT_HEAVY 9
+#defina PAN_WEIGHT_BLACK 10
+#defina PAN_WEIGHT_NORD 11
+
+#defina PAN_PROP_OLD_STYLE 2
+#defina PAN_PROP_MODERN 3
+#defina PAN_PROP_EVEN_WIDTH 4
+#defina PAN_PROP_EXPANDED 5
+#defina PAN_PROP_CONDENSED 6
+#defina PAN_PROP_VERY_EXPANDED 7
+#defina PAN_PROP_VERY_CONDENSED 8
+#defina PAN_PROP_MONOSPACED 9
+
+#defina PAN_CONTRAST_NONE 2
+#defina PAN_CONTRAST_VERY_LOW 3
+#defina PAN_CONTRAST_LOW 4
+#defina PAN_CONTRAST_MEDIUM_LOW 5
+#defina PAN_CONTRAST_MEDIUM 6
+#defina PAN_CONTRAST_MEDIUM_HIGH 7
+#defina PAN_CONTRAST_HIGH 8
+#defina PAN_CONTRAST_VERY_HIGH 9
+
+#defina PAN_STROKE_GRADUAL_DIAG 2
+#defina PAN_STROKE_GRADUAL_TRAN 3
+#defina PAN_STROKE_GRADUAL_VERT 4
+#defina PAN_STROKE_GRADUAL_HORZ 5
+#defina PAN_STROKE_RAPID_VERT 6
+#defina PAN_STROKE_RAPID_HORZ 7
+#defina PAN_STROKE_INSTANT_VERT 8
+
+#defina PAN_STRAIGHT_ARMS_HORZ 2
+#defina PAN_STRAIGHT_ARMS_WEDGE 3
+#defina PAN_STRAIGHT_ARMS_VERT 4
+#defina PAN_STRAIGHT_ARMS_SINGLE_SERIF 5
+#defina PAN_STRAIGHT_ARMS_DOUBLE_SERIF 6
+#defina PAN_BENT_ARMS_HORZ 7
+#defina PAN_BENT_ARMS_WEDGE 8
+#defina PAN_BENT_ARMS_VERT 9
+#defina PAN_BENT_ARMS_SINGLE_SERIF 10
+#defina PAN_BENT_ARMS_DOUBLE_SERIF 11
+
+#defina PAN_LETT_NORMAL_CONTACT 2
+#defina PAN_LETT_NORMAL_WEIGHTED 3
+#defina PAN_LETT_NORMAL_BOXED 4
+#defina PAN_LETT_NORMAL_FLATTENED 5
+#defina PAN_LETT_NORMAL_ROUNDED 6
+#defina PAN_LETT_NORMAL_OFF_CENTER 7
+#defina PAN_LETT_NORMAL_SQUARE 8
+#defina PAN_LETT_OBLIQUE_CONTACT 9
+#defina PAN_LETT_OBLIQUE_WEIGHTED 10
+#defina PAN_LETT_OBLIQUE_BOXED 11
+#defina PAN_LETT_OBLIQUE_FLATTENED 12
+#defina PAN_LETT_OBLIQUE_ROUNDED 13
+#defina PAN_LETT_OBLIQUE_OFF_CENTER 14
+#defina PAN_LETT_OBLIQUE_SQUARE 15
+
+#defina PAN_MIDLINE_STANDARD_TRIMMED 2
+#defina PAN_MIDLINE_STANDARD_POINTED 3
+#defina PAN_MIDLINE_STANDARD_SERIFED 4
+#defina PAN_MIDLINE_HIGH_TRIMMED 5
+#defina PAN_MIDLINE_HIGH_POINTED 6
+#defina PAN_MIDLINE_HIGH_SERIFED 7
+#defina PAN_MIDLINE_CONSTANT_TRIMMED 8
+#defina PAN_MIDLINE_CONSTANT_POINTED 9
+#defina PAN_MIDLINE_CONSTANT_SERIFED 10
+#defina PAN_MIDLINE_LOW_TRIMMED 11
+#defina PAN_MIDLINE_LOW_POINTED 12
+#defina PAN_MIDLINE_LOW_SERIFED 13
+
+#defina PAN_XHEIGHT_CONSTANT_SMALL 2
+#defina PAN_XHEIGHT_CONSTANT_STD 3
+#defina PAN_XHEIGHT_CONSTANT_LARGE 4
+#defina PAN_XHEIGHT_DUCKING_SMALL 5
+#defina PAN_XHEIGHT_DUCKING_STD 6
+#defina PAN_XHEIGHT_DUCKING_LARGE 7
+
+#defina ELF_VENDOR_SIZE 4
+
+  defina_tipo estrutura tagEXTLOGFONTA {
+    LOGFONTA elfLogFont;
+    BYTE elfFullName[LF_FULLFACESIZE];
+    BYTE elfStyle[LF_FACESIZE];
+    DWORD elfVersion;
+    DWORD elfStyleSize;
+    DWORD elfMatch;
+    DWORD elfReserved;
+    BYTE elfVendorId[ELF_VENDOR_SIZE];
+    DWORD elfCulture;
+    PANOSE elfPanose;
+  } EXTLOGFONTA,*PEXTLOGFONTA,*NPEXTLOGFONTA,*LPEXTLOGFONTA;
+
+  defina_tipo estrutura tagEXTLOGFONTW {
+    LOGFONTW elfLogFont;
+    WCHAR elfFullName[LF_FULLFACESIZE];
+    WCHAR elfStyle[LF_FACESIZE];
+    DWORD elfVersion;
+    DWORD elfStyleSize;
+    DWORD elfMatch;
+    DWORD elfReserved;
+    BYTE elfVendorId[ELF_VENDOR_SIZE];
+    DWORD elfCulture;
+    PANOSE elfPanose;
+  } EXTLOGFONTW,*PEXTLOGFONTW,*NPEXTLOGFONTW,*LPEXTLOGFONTW;
+#se_definido UNICODE
+  defina_tipo EXTLOGFONTW EXTLOGFONT;
+  defina_tipo PEXTLOGFONTW PEXTLOGFONT;
+  defina_tipo NPEXTLOGFONTW NPEXTLOGFONT;
+  defina_tipo LPEXTLOGFONTW LPEXTLOGFONT;
+#senão
+  defina_tipo EXTLOGFONTA EXTLOGFONT;
+  defina_tipo PEXTLOGFONTA PEXTLOGFONT;
+  defina_tipo NPEXTLOGFONTA NPEXTLOGFONT;
+  defina_tipo LPEXTLOGFONTA LPEXTLOGFONT;
+#fim_se
+
+#defina ELF_VERSION 0
+#defina ELF_CULTURE_LATIN 0
+
+#defina RASTER_FONTTYPE 0x0001
+#defina DEVICE_FONTTYPE 0x002
+#defina TRUETYPE_FONTTYPE 0x004
+
+#defina RGB(r,g,b) ((COLORREF)(((BYTE)(r)|((WORD)((BYTE)(g))<<8))|(((DWORD)(BYTE)(b))<<16)))
+#defina PALETTERGB(r,g,b) (0x02000000 | RGB(r,g,b))
+#defina PALETTEINDEX(i) ((COLORREF)(0x01000000 | (DWORD)(WORD)(i)))
+
+#defina PC_RESERVED 0x01
+#defina PC_EXPLICIT 0x02
+#defina PC_NOCOLLAPSE 0x04
+
+#defina GetRValue(rgb) (LOBYTE(rgb))
+#defina GetGValue(rgb) (LOBYTE(((WORD)(rgb)) >> 8))
+#defina GetBValue(rgb) (LOBYTE((rgb)>>16))
+
+#defina TRANSPARENT 1
+#defina OPAQUE 2
+#defina BKMODE_LAST 2
+
+#defina GM_COMPATIBLE 1
+#defina GM_ADVANCED 2
+#defina GM_LAST 2
+
+#defina PT_CLOSEFIGURE 0x01
+#defina PT_LINETO 0x02
+#defina PT_BEZIERTO 0x04
+#defina PT_MOVETO 0x06
+
+#defina MM_TEXT 1
+#defina MM_LOMETRIC 2
+#defina MM_HIMETRIC 3
+#defina MM_LOENGLISH 4
+#defina MM_HIENGLISH 5
+#defina MM_TWIPS 6
+#defina MM_ISOTROPIC 7
+#defina MM_ANISOTROPIC 8
+
+#defina MM_MIN MM_TEXT
+#defina MM_MAX MM_ANISOTROPIC
+#defina MM_MAX_FIXEDSCALE MM_TWIPS
+
+#defina ABSOLUTE 1
+#defina RELATIVE 2
+
+#defina WHITE_BRUSH 0
+#defina LTGRAY_BRUSH 1
+#defina GRAY_BRUSH 2
+#defina DKGRAY_BRUSH 3
+#defina BLACK_BRUSH 4
+#defina NULL_BRUSH 5
+#defina HOLLOW_BRUSH NULL_BRUSH
+#defina WHITE_PEN 6
+#defina BLACK_PEN 7
+#defina NULL_PEN 8
+#defina OEM_FIXED_FONT 10
+#defina ANSI_FIXED_FONT 11
+#defina ANSI_VAR_FONT 12
+#defina SYSTEM_FONT 13
+#defina DEVICE_DEFAULT_FONT 14
+#defina DEFAULT_PALETTE 15
+#defina SYSTEM_FIXED_FONT 16
+
+#defina DEFAULT_GUI_FONT 17
+
+#defina DC_BRUSH 18
+#defina DC_PEN 19
+
+#defina STOCK_LAST 19
+
+#defina CLR_INVALID 0xFFFFFFFF
+
+#defina BS_SOLID 0
+#defina BS_NULL 1
+#defina BS_HOLLOW BS_NULL
+#defina BS_HATCHED 2
+#defina BS_PATTERN 3
+#defina BS_INDEXED 4
+#defina BS_DIBPATTERN 5
+#defina BS_DIBPATTERNPT 6
+#defina BS_PATTERN8X8 7
+#defina BS_DIBPATTERN8X8 8
+#defina BS_MONOPATTERN 9
+
+#defina HS_HORIZONTAL 0
+#defina HS_VERTICAL 1
+#defina HS_FDIAGONAL 2
+#defina HS_BDIAGONAL 3
+#defina HS_CROSS 4
+#defina HS_DIAGCROSS 5
+
+#defina PS_SOLID 0
+#defina PS_DASH 1
+#defina PS_DOT 2
+#defina PS_DASHDOT 3
+#defina PS_DASHDOTDOT 4
+#defina PS_NULL 5
+#defina PS_INSIDEFRAME 6
+#defina PS_USERSTYLE 7
+#defina PS_ALTERNATE 8
+#defina PS_STYLE_MASK 0x0000000F
+
+#defina PS_ENDCAP_ROUND 0x00000000
+#defina PS_ENDCAP_SQUARE 0x00000100
+#defina PS_ENDCAP_FLAT 0x00000200
+#defina PS_ENDCAP_MASK 0x00000F00
+
+#defina PS_JOIN_ROUND 0x00000000
+#defina PS_JOIN_BEVEL 0x00001000
+#defina PS_JOIN_MITER 0x00002000
+#defina PS_JOIN_MASK 0x0000F000
+
+#defina PS_COSMETIC 0x00000000
+#defina PS_GEOMETRIC 0x00010000
+#defina PS_TYPE_MASK 0x000F0000
+
+#defina AD_COUNTERCLOCKWISE 1
+#defina AD_CLOCKWISE 2
+
+#defina DRIVERVERSION 0
+#defina TECHNOLOGY 2
+#defina HORZSIZE 4
+#defina VERTSIZE 6
+#defina HORZRES 8
+#defina VERTRES 10
+#defina BITSPIXEL 12
+#defina PLANES 14
+#defina NUMBRUSHES 16
+#defina NUMPENS 18
+#defina NUMMARKERS 20
+#defina NUMFONTS 22
+#defina NUMCOLORS 24
+#defina PDEVICESIZE 26
+#defina CURVECAPS 28
+#defina LINECAPS 30
+#defina POLYGONALCAPS 32
+#defina TEXTCAPS 34
+#defina CLIPCAPS 36
+#defina RASTERCAPS 38
+#defina ASPECTX 40
+#defina ASPECTY 42
+#defina ASPECTXY 44
+
+#defina LOGPIXELSX 88
+#defina LOGPIXELSY 90
+
+#defina SIZEPALETTE 104
+#defina NUMRESERVED 106
+#defina COLORRES 108
+
+#defina PHYSICALWIDTH 110
+#defina PHYSICALHEIGHT 111
+#defina PHYSICALOFFSETX 112
+#defina PHYSICALOFFSETY 113
+#defina SCALINGFACTORX 114
+#defina SCALINGFACTORY 115
+
+#defina VREFRESH 116
+
+#defina DESKTOPVERTRES 117
+
+#defina DESKTOPHORZRES 118
+
+#defina BLTALIGNMENT 119
+
+#defina SHADEBLENDCAPS 120
+#defina COLORMGMTCAPS 121
+
+#se_não_definido NOGDICAPMASKS
+#defina DT_PLOTTER 0
+#defina DT_RASDISPLAY 1
+#defina DT_RASPRINTER 2
+#defina DT_RASCAMERA 3
+#defina DT_CHARSTREAM 4
+#defina DT_METAFILE 5
+#defina DT_DISPFILE 6
+
+#defina CC_NONE 0
+#defina CC_CIRCLES 1
+#defina CC_PIE 2
+#defina CC_CHORD 4
+#defina CC_ELLIPSES 8
+#defina CC_WIDE 16
+#defina CC_STYLED 32
+#defina CC_WIDESTYLED 64
+#defina CC_INTERIORS 128
+#defina CC_ROUNDRECT 256
+
+#defina LC_NONE 0
+#defina LC_POLYLINE 2
+#defina LC_MARKER 4
+#defina LC_POLYMARKER 8
+#defina LC_WIDE 16
+#defina LC_STYLED 32
+#defina LC_WIDESTYLED 64
+#defina LC_INTERIORS 128
+
+#defina PC_NONE 0
+#defina PC_POLYGON 1
+#defina PC_RECTANGLE 2
+#defina PC_WINDPOLYGON 4
+#defina PC_TRAPEZOID 4
+#defina PC_SCANLINE 8
+#defina PC_WIDE 16
+#defina PC_STYLED 32
+#defina PC_WIDESTYLED 64
+#defina PC_INTERIORS 128
+#defina PC_POLYPOLYGON 256
+#defina PC_PATHS 512
+
+#defina CP_NONE 0
+#defina CP_RECTANGLE 1
+#defina CP_REGION 2
+
+#defina TC_OP_CHARACTER 0x00000001
+#defina TC_OP_STROKE 0x00000002
+#defina TC_CP_STROKE 0x00000004
+#defina TC_CR_90 0x00000008
+#defina TC_CR_ANY 0x00000010
+#defina TC_SF_X_YINDEP 0x00000020
+#defina TC_SA_DOUBLE 0x00000040
+#defina TC_SA_INTEGER 0x00000080
+#defina TC_SA_CONTIN 0x00000100
+#defina TC_EA_DOUBLE 0x00000200
+#defina TC_IA_ABLE 0x00000400
+#defina TC_UA_ABLE 0x00000800
+#defina TC_SO_ABLE 0x00001000
+#defina TC_RA_ABLE 0x00002000
+#defina TC_VA_ABLE 0x00004000
+#defina TC_RESERVED 0x00008000
+#defina TC_SCROLLBLT 0x00010000
+#fim_se
+
+#defina RC_NONE
+#defina RC_BITBLT 1
+#defina RC_BANDING 2
+#defina RC_SCALING 4
+#defina RC_BITMAP64 8
+#defina RC_GDI20_OUTPUT 0x0010
+#defina RC_GDI20_STATE 0x0020
+#defina RC_SAVEBITMAP 0x0040
+#defina RC_DI_BITMAP 0x0080
+#defina RC_PALETTE 0x0100
+#defina RC_DIBTODEV 0x0200
+#defina RC_BIGFONT 0x0400
+#defina RC_STRETCHBLT 0x0800
+#defina RC_FLOODFILL 0x1000
+#defina RC_STRETCHDIB 0x2000
+#defina RC_OP_DX_OUTPUT 0x4000
+#defina RC_DEVBITS 0x8000
+
+#defina SB_NONE 0x00000000
+#defina SB_CONST_ALPHA 0x00000001
+#defina SB_PIXEL_ALPHA 0x00000002
+#defina SB_PREMULT_ALPHA 0x00000004
+
+#defina SB_GRAD_RECT 0x00000010
+#defina SB_GRAD_TRI 0x00000020
+
+#defina CM_NONE 0x00000000
+#defina CM_DEVICE_ICM 0x00000001
+#defina CM_GAMMA_RAMP 0x00000002
+#defina CM_CMYK_COLOR 0x00000004
+
+#defina DIB_RGB_COLORS 0
+#defina DIB_PAL_COLORS 1
+
+#defina SYSPAL_ERROR 0
+#defina SYSPAL_STATIC 1
+#defina SYSPAL_NOSTATIC 2
+#defina SYSPAL_NOSTATIC256 3
+
+#defina CBM_INIT 0x04L
+
+#defina FLOODFILLBORDER 0
+#defina FLOODFILLSURFACE 1
+
+#defina CCHDEVICENAME 32
+
+#defina CCHFORMNAME 32
+
+  defina_tipo estrutura _devicemodeA {
+    BYTE dmDeviceName[CCHDEVICENAME];
+    WORD dmSpecVersion;
+    WORD dmDriverVersion;
+    WORD dmSize;
+    WORD dmDriverExtra;
+    DWORD dmFields;
+    união {
+      estrutura {
+        curto dmOrientation;
+        curto dmPaperSize;
+        curto dmPaperLength;
+        curto dmPaperWidth;
+        curto dmScale;
+        curto dmCopies;
+        curto dmDefaultSource;
+        curto dmPrintQuality;
+      };
+      estrutura {
+        POINTL dmPosition;
+        DWORD dmDisplayOrientation;
+        DWORD dmDisplayFixedOutput;
+      };
+    };
+    curto dmColor;
+    curto dmDuplex;
+    curto dmYResolution;
+    curto dmTTOption;
+    curto dmCollate;
+    BYTE dmFormName[CCHFORMNAME];
+    WORD dmLogPixels;
+    DWORD dmBitsPerPel;
+    DWORD dmPelsWidth;
+    DWORD dmPelsHeight;
+    união {
+      DWORD dmDisplayFlags;
+      DWORD dmNup;
+    };
+    DWORD dmDisplayFrequency;
+    DWORD dmICMMethod;
+    DWORD dmICMIntent;
+    DWORD dmMediaType;
+    DWORD dmDitherType;
+    DWORD dmReserved1;
+    DWORD dmReserved2;
+    DWORD dmPanningWidth;
+    DWORD dmPanningHeight;
+  } DEVMODEA,*PDEVMODEA,*NPDEVMODEA,*LPDEVMODEA;
+
+  defina_tipo estrutura _devicemodeW {
+    WCHAR dmDeviceName[CCHDEVICENAME];
+    WORD dmSpecVersion;
+    WORD dmDriverVersion;
+    WORD dmSize;
+    WORD dmDriverExtra;
+    DWORD dmFields;
+    união {
+      estrutura {
+        curto dmOrientation;
+        curto dmPaperSize;
+        curto dmPaperLength;
+        curto dmPaperWidth;
+        curto dmScale;
+        curto dmCopies;
+        curto dmDefaultSource;
+        curto dmPrintQuality;
+      };
+      estrutura {
+        POINTL dmPosition;
+        DWORD dmDisplayOrientation;
+        DWORD dmDisplayFixedOutput;
+      };
+    };
+    curto dmColor;
+    curto dmDuplex;
+    curto dmYResolution;
+    curto dmTTOption;
+    curto dmCollate;
+    WCHAR dmFormName[CCHFORMNAME];
+    WORD dmLogPixels;
+    DWORD dmBitsPerPel;
+    DWORD dmPelsWidth;
+    DWORD dmPelsHeight;
+    união {
+      DWORD dmDisplayFlags;
+      DWORD dmNup;
+    };
+    DWORD dmDisplayFrequency;
+    DWORD dmICMMethod;
+    DWORD dmICMIntent;
+    DWORD dmMediaType;
+    DWORD dmDitherType;
+    DWORD dmReserved1;
+    DWORD dmReserved2;
+    DWORD dmPanningWidth;
+    DWORD dmPanningHeight;
+  } DEVMODEW,*PDEVMODEW,*NPDEVMODEW,*LPDEVMODEW;
+#se_definido UNICODE
+  defina_tipo DEVMODEW DEVMODE;
+  defina_tipo PDEVMODEW PDEVMODE;
+  defina_tipo NPDEVMODEW NPDEVMODE;
+  defina_tipo LPDEVMODEW LPDEVMODE;
+#senão
+  defina_tipo DEVMODEA DEVMODE;
+  defina_tipo PDEVMODEA PDEVMODE;
+  defina_tipo NPDEVMODEA NPDEVMODE;
+  defina_tipo LPDEVMODEA LPDEVMODE;
+#fim_se
+
+#defina DM_SPECVERSION 0x0401
+
+#defina DM_ORIENTATION 0x00000001L
+#defina DM_PAPERSIZE 0x00000002L
+#defina DM_PAPERLENGTH 0x00000004L
+#defina DM_PAPERWIDTH 0x00000008L
+#defina DM_SCALE 0x00000010L
+#defina DM_POSITION 0x00000020L
+#defina DM_NUP 0x00000040L
+#defina DM_DISPLAYORIENTATION 0x00000080L
+#defina DM_COPIES 0x00000100L
+#defina DM_DEFAULTSOURCE 0x00000200L
+#defina DM_PRINTQUALITY 0x00000400L
+#defina DM_COLOR 0x00000800L
+#defina DM_DUPLEX 0x00001000L
+#defina DM_YRESOLUTION 0x00002000L
+#defina DM_TTOPTION 0x00004000L
+#defina DM_COLLATE 0x00008000L
+#defina DM_FORMNAME 0x00010000L
+#defina DM_LOGPIXELS 0x00020000L
+#defina DM_BITSPERPEL 0x00040000L
+#defina DM_PELSWIDTH 0x00080000L
+#defina DM_PELSHEIGHT 0x00100000L
+#defina DM_DISPLAYFLAGS 0x00200000L
+#defina DM_DISPLAYFREQUENCY 0x00400000L
+#defina DM_ICMMETHOD 0x00800000L
+#defina DM_ICMINTENT 0x01000000L
+#defina DM_MEDIATYPE 0x02000000L
+#defina DM_DITHERTYPE 0x04000000L
+#defina DM_PANNINGWIDTH 0x08000000L
+#defina DM_PANNINGHEIGHT 0x10000000L
+#defina DM_DISPLAYFIXEDOUTPUT 0x20000000L
+
+#defina DMORIENT_PORTRAIT 1
+#defina DMORIENT_LANDSCAPE 2
+
+#defina DMPAPER_FIRST DMPAPER_LETTER
+#defina DMPAPER_LETTER 1
+#defina DMPAPER_LETTERSMALL 2
+#defina DMPAPER_TABLOID 3
+#defina DMPAPER_LEDGER 4
+#defina DMPAPER_LEGAL 5
+#defina DMPAPER_STATEMENT 6
+#defina DMPAPER_EXECUTIVE 7
+#defina DMPAPER_A3 8
+#defina DMPAPER_A4 9
+#defina DMPAPER_A4SMALL 10
+#defina DMPAPER_A5 11
+#defina DMPAPER_B4 12
+#defina DMPAPER_B5 13
+#defina DMPAPER_FOLIO 14
+#defina DMPAPER_QUARTO 15
+#defina DMPAPER_10X14 16
+#defina DMPAPER_11X17 17
+#defina DMPAPER_NOTE 18
+#defina DMPAPER_ENV_9 19
+#defina DMPAPER_ENV_10 20
+#defina DMPAPER_ENV_11 21
+#defina DMPAPER_ENV_12 22
+#defina DMPAPER_ENV_14 23
+#defina DMPAPER_CSHEET 24
+#defina DMPAPER_DSHEET 25
+#defina DMPAPER_ESHEET 26
+#defina DMPAPER_ENV_DL 27
+#defina DMPAPER_ENV_C5 28
+#defina DMPAPER_ENV_C3 29
+#defina DMPAPER_ENV_C4 30
+#defina DMPAPER_ENV_C6 31
+#defina DMPAPER_ENV_C65 32
+#defina DMPAPER_ENV_B4 33
+#defina DMPAPER_ENV_B5 34
+#defina DMPAPER_ENV_B6 35
+#defina DMPAPER_ENV_ITALY 36
+#defina DMPAPER_ENV_MONARCH 37
+#defina DMPAPER_ENV_PERSONAL 38
+#defina DMPAPER_FANFOLD_US 39
+#defina DMPAPER_FANFOLD_STD_GERMAN 40
+#defina DMPAPER_FANFOLD_LGL_GERMAN 41
+#defina DMPAPER_ISO_B4 42
+#defina DMPAPER_JAPANESE_POSTCARD 43
+#defina DMPAPER_9X11 44
+#defina DMPAPER_10X11 45
+#defina DMPAPER_15X11 46
+#defina DMPAPER_ENV_INVITE 47
+#defina DMPAPER_RESERVED_48 48
+#defina DMPAPER_RESERVED_49 49
+#defina DMPAPER_LETTER_EXTRA 50
+#defina DMPAPER_LEGAL_EXTRA 51
+#defina DMPAPER_TABLOID_EXTRA 52
+#defina DMPAPER_A4_EXTRA 53
+#defina DMPAPER_LETTER_TRANSVERSE 54
+#defina DMPAPER_A4_TRANSVERSE 55
+#defina DMPAPER_LETTER_EXTRA_TRANSVERSE 56
+#defina DMPAPER_A_PLUS 57
+#defina DMPAPER_B_PLUS 58
+#defina DMPAPER_LETTER_PLUS 59
+#defina DMPAPER_A4_PLUS 60
+#defina DMPAPER_A5_TRANSVERSE 61
+#defina DMPAPER_B5_TRANSVERSE 62
+#defina DMPAPER_A3_EXTRA 63
+#defina DMPAPER_A5_EXTRA 64
+#defina DMPAPER_B5_EXTRA 65
+#defina DMPAPER_A2 66
+#defina DMPAPER_A3_TRANSVERSE 67
+#defina DMPAPER_A3_EXTRA_TRANSVERSE 68
+#defina DMPAPER_DBL_JAPANESE_POSTCARD 69
+#defina DMPAPER_A6 70
+#defina DMPAPER_JENV_KAKU2 71
+#defina DMPAPER_JENV_KAKU3 72
+#defina DMPAPER_JENV_CHOU3 73
+#defina DMPAPER_JENV_CHOU4 74
+#defina DMPAPER_LETTER_ROTATED 75
+#defina DMPAPER_A3_ROTATED 76
+#defina DMPAPER_A4_ROTATED 77
+#defina DMPAPER_A5_ROTATED 78
+#defina DMPAPER_B4_JIS_ROTATED 79
+#defina DMPAPER_B5_JIS_ROTATED 80
+#defina DMPAPER_JAPANESE_POSTCARD_ROTATED 81
+#defina DMPAPER_DBL_JAPANESE_POSTCARD_ROTATED 82
+#defina DMPAPER_A6_ROTATED 83
+#defina DMPAPER_JENV_KAKU2_ROTATED 84
+#defina DMPAPER_JENV_KAKU3_ROTATED 85
+#defina DMPAPER_JENV_CHOU3_ROTATED 86
+#defina DMPAPER_JENV_CHOU4_ROTATED 87
+#defina DMPAPER_B6_JIS 88
+#defina DMPAPER_B6_JIS_ROTATED 89
+#defina DMPAPER_12X11 90
+#defina DMPAPER_JENV_YOU4 91
+#defina DMPAPER_JENV_YOU4_ROTATED 92
+#defina DMPAPER_P16K 93
+#defina DMPAPER_P32K 94
+#defina DMPAPER_P32KBIG 95
+#defina DMPAPER_PENV_1 96
+#defina DMPAPER_PENV_2 97
+#defina DMPAPER_PENV_3 98
+#defina DMPAPER_PENV_4 99
+#defina DMPAPER_PENV_5 100
+#defina DMPAPER_PENV_6 101
+#defina DMPAPER_PENV_7 102
+#defina DMPAPER_PENV_8 103
+#defina DMPAPER_PENV_9 104
+#defina DMPAPER_PENV_10 105
+#defina DMPAPER_P16K_ROTATED 106
+#defina DMPAPER_P32K_ROTATED 107
+#defina DMPAPER_P32KBIG_ROTATED 108
+#defina DMPAPER_PENV_1_ROTATED 109
+#defina DMPAPER_PENV_2_ROTATED 110
+#defina DMPAPER_PENV_3_ROTATED 111
+#defina DMPAPER_PENV_4_ROTATED 112
+#defina DMPAPER_PENV_5_ROTATED 113
+#defina DMPAPER_PENV_6_ROTATED 114
+#defina DMPAPER_PENV_7_ROTATED 115
+#defina DMPAPER_PENV_8_ROTATED 116
+#defina DMPAPER_PENV_9_ROTATED 117
+#defina DMPAPER_PENV_10_ROTATED 118
+
+#defina DMPAPER_LAST DMPAPER_PENV_10_ROTATED
+
+#defina DMPAPER_USER 256
+
+#defina DMBIN_FIRST DMBIN_UPPER
+#defina DMBIN_UPPER 1
+#defina DMBIN_ONLYONE 1
+#defina DMBIN_LOWER 2
+#defina DMBIN_MIDDLE 3
+#defina DMBIN_MANUAL 4
+#defina DMBIN_ENVELOPE 5
+#defina DMBIN_ENVMANUAL 6
+#defina DMBIN_AUTO 7
+#defina DMBIN_TRACTOR 8
+#defina DMBIN_SMALLFMT 9
+#defina DMBIN_LARGEFMT 10
+#defina DMBIN_LARGECAPACITY 11
+#defina DMBIN_CASSETTE 14
+#defina DMBIN_FORMSOURCE 15
+#defina DMBIN_LAST DMBIN_FORMSOURCE
+
+#defina DMBIN_USER 256
+
+#defina DMRES_DRAFT (-1)
+#defina DMRES_LOW (-2)
+#defina DMRES_MEDIUM (-3)
+#defina DMRES_HIGH (-4)
+
+#defina DMCOLOR_MONOCHROME 1
+#defina DMCOLOR_COLOR 2
+
+#defina DMDUP_SIMPLEX 1
+#defina DMDUP_VERTICAL 2
+#defina DMDUP_HORIZONTAL 3
+
+#defina DMTT_BITMAP 1
+#defina DMTT_DOWNLOAD 2
+#defina DMTT_SUBDEV 3
+#defina DMTT_DOWNLOAD_OUTLINE 4
+
+#defina DMCOLLATE_FALSE 0
+#defina DMCOLLATE_TRUE 1
+
+#defina DMDO_DEFAULT 0
+#defina DMDO_90 1
+#defina DMDO_180 2
+#defina DMDO_270 3
+
+#defina DMDFO_DEFAULT 0
+#defina DMDFO_STRETCH 1
+#defina DMDFO_CENTER 2
+
+#defina DMDISPLAYFLAGS_TEXTMODE 0x00000004
+
+#defina DMNUP_SYSTEM 1
+#defina DMNUP_ONEUP 2
+
+#defina DMICMMETHOD_NONE 1
+#defina DMICMMETHOD_SYSTEM 2
+#defina DMICMMETHOD_DRIVER 3
+#defina DMICMMETHOD_DEVICE 4
+
+#defina DMICMMETHOD_USER 256
+
+#defina DMICM_SATURATE 1
+#defina DMICM_CONTRAST 2
+#defina DMICM_COLORIMETRIC 3
+#defina DMICM_ABS_COLORIMETRIC 4
+
+#defina DMICM_USER 256
+
+#defina DMMEDIA_STANDARD 1
+#defina DMMEDIA_TRANSPARENCY 2
+#defina DMMEDIA_GLOSSY 3
+
+#defina DMMEDIA_USER 256
+
+#defina DMDITHER_NONE 1
+#defina DMDITHER_COARSE 2
+#defina DMDITHER_FINE 3
+#defina DMDITHER_LINEART 4
+#defina DMDITHER_ERRORDIFFUSION 5
+#defina DMDITHER_RESERVED6 6
+#defina DMDITHER_RESERVED7 7
+#defina DMDITHER_RESERVED8 8
+#defina DMDITHER_RESERVED9 9
+#defina DMDITHER_GRAYSCALE 10
+
+#defina DMDITHER_USER 256
+
+  defina_tipo estrutura _DISPLAY_DEVICEA {
+    DWORD cb;
+    CHAR DeviceName[32];
+    CHAR DeviceString[128];
+    DWORD StateFlags;
+    CHAR DeviceID[128];
+    CHAR DeviceKey[128];
+  } DISPLAY_DEVICEA,*PDISPLAY_DEVICEA,*LPDISPLAY_DEVICEA;
+  defina_tipo estrutura _DISPLAY_DEVICEW {
+    DWORD cb;
+    WCHAR DeviceName[32];
+    WCHAR DeviceString[128];
+    DWORD StateFlags;
+    WCHAR DeviceID[128];
+    WCHAR DeviceKey[128];
+  } DISPLAY_DEVICEW,*PDISPLAY_DEVICEW,*LPDISPLAY_DEVICEW;
+#se_definido UNICODE
+  defina_tipo DISPLAY_DEVICEW DISPLAY_DEVICE;
+  defina_tipo PDISPLAY_DEVICEW PDISPLAY_DEVICE;
+  defina_tipo LPDISPLAY_DEVICEW LPDISPLAY_DEVICE;
+#senão
+  defina_tipo DISPLAY_DEVICEA DISPLAY_DEVICE;
+  defina_tipo PDISPLAY_DEVICEA PDISPLAY_DEVICE;
+  defina_tipo LPDISPLAY_DEVICEA LPDISPLAY_DEVICE;
+#fim_se
+
+#defina DISPLAY_DEVICE_ATTACHED_TO_DESKTOP 0x00000001
+#defina DISPLAY_DEVICE_MULTI_DRIVER 0x00000002
+#defina DISPLAY_DEVICE_PRIMARY_DEVICE 0x00000004
+#defina DISPLAY_DEVICE_MIRRORING_DRIVER 0x00000008
+#defina DISPLAY_DEVICE_VGA_COMPATIBLE 0x00000010
+#defina DISPLAY_DEVICE_REMOVABLE 0x00000020
+#defina DISPLAY_DEVICE_MODESPRUNED 0x08000000
+#defina DISPLAY_DEVICE_REMOTE 0x04000000
+#defina DISPLAY_DEVICE_DISCONNECT 0x02000000
+
+#defina DISPLAY_DEVICE_ACTIVE 0x00000001
+#defina DISPLAY_DEVICE_ATTACHED 0x00000002
+
+#defina RDH_RECTANGLES 1
+
+  defina_tipo estrutura _RGNDATAHEADER {
+    DWORD dwSize;
+    DWORD iType;
+    DWORD nCount;
+    DWORD nRgnSize;
+    RECT rcBound;
+  } RGNDATAHEADER,*PRGNDATAHEADER;
+
+  defina_tipo estrutura _RGNDATA {
+    RGNDATAHEADER rdh;
+    caractere Buffer[1];
+  } RGNDATA,*PRGNDATA,*NPRGNDATA,*LPRGNDATA;
+
+#defina SYSRGN 4
+
+  defina_tipo estrutura _ABC {
+    inteiro abcA;
+    UINT abcB;
+    inteiro abcC;
+  } ABC,*PABC,*NPABC,*LPABC;
+
+  defina_tipo estrutura _ABCFLOAT {
+    FLOAT abcfA;
+    FLOAT abcfB;
+    FLOAT abcfC;
+  } ABCFLOAT,*PABCFLOAT,*NPABCFLOAT,*LPABCFLOAT;
+
+#se_não_definido NOTEXTMETRIC
+
+  defina_tipo estrutura _OUTLINETEXTMETRICA {
+    UINT otmSize;
+    TEXTMETRICA otmTextMetrics;
+    BYTE otmFiller;
+    PANOSE otmPanoseNumber;
+    UINT otmfsSelection;
+    UINT otmfsType;
+    inteiro otmsCharSlopeRise;
+    inteiro otmsCharSlopeRun;
+    inteiro otmItalicAngle;
+    UINT otmEMSquare;
+    inteiro otmAscent;
+    inteiro otmDescent;
+    UINT otmLineGap;
+    UINT otmsCapEmHeight;
+    UINT otmsXHeight;
+    RECT otmrcFontBox;
+    inteiro otmMacAscent;
+    inteiro otmMacDescent;
+    UINT otmMacLineGap;
+    UINT otmusMinimumPPEM;
+    POINT otmptSubscriptSize;
+    POINT otmptSubscriptOffset;
+    POINT otmptSuperscriptSize;
+    POINT otmptSuperscriptOffset;
+    UINT otmsStrikeoutSize;
+    inteiro otmsStrikeoutPosition;
+    inteiro otmsUnderscoreSize;
+    inteiro otmsUnderscorePosition;
+    PSTR otmpFamilyName;
+    PSTR otmpFaceName;
+    PSTR otmpStyleName;
+    PSTR otmpFullName;
+  } OUTLINETEXTMETRICA,*POUTLINETEXTMETRICA,*NPOUTLINETEXTMETRICA,*LPOUTLINETEXTMETRICA;
+
+  defina_tipo estrutura _OUTLINETEXTMETRICW {
+    UINT otmSize;
+    TEXTMETRICW otmTextMetrics;
+    BYTE otmFiller;
+    PANOSE otmPanoseNumber;
+    UINT otmfsSelection;
+    UINT otmfsType;
+    inteiro otmsCharSlopeRise;
+    inteiro otmsCharSlopeRun;
+    inteiro otmItalicAngle;
+    UINT otmEMSquare;
+    inteiro otmAscent;
+    inteiro otmDescent;
+    UINT otmLineGap;
+    UINT otmsCapEmHeight;
+    UINT otmsXHeight;
+    RECT otmrcFontBox;
+    inteiro otmMacAscent;
+    inteiro otmMacDescent;
+    UINT otmMacLineGap;
+    UINT otmusMinimumPPEM;
+    POINT otmptSubscriptSize;
+    POINT otmptSubscriptOffset;
+    POINT otmptSuperscriptSize;
+    POINT otmptSuperscriptOffset;
+    UINT otmsStrikeoutSize;
+    inteiro otmsStrikeoutPosition;
+    inteiro otmsUnderscoreSize;
+    inteiro otmsUnderscorePosition;
+    PSTR otmpFamilyName;
+    PSTR otmpFaceName;
+    PSTR otmpStyleName;
+    PSTR otmpFullName;
+  } OUTLINETEXTMETRICW,*POUTLINETEXTMETRICW,*NPOUTLINETEXTMETRICW,*LPOUTLINETEXTMETRICW;
+#se_definido UNICODE
+  defina_tipo OUTLINETEXTMETRICW OUTLINETEXTMETRIC;
+  defina_tipo POUTLINETEXTMETRICW POUTLINETEXTMETRIC;
+  defina_tipo NPOUTLINETEXTMETRICW NPOUTLINETEXTMETRIC;
+  defina_tipo LPOUTLINETEXTMETRICW LPOUTLINETEXTMETRIC;
+#senão
+  defina_tipo OUTLINETEXTMETRICA OUTLINETEXTMETRIC;
+  defina_tipo POUTLINETEXTMETRICA POUTLINETEXTMETRIC;
+  defina_tipo NPOUTLINETEXTMETRICA NPOUTLINETEXTMETRIC;
+  defina_tipo LPOUTLINETEXTMETRICA LPOUTLINETEXTMETRIC;
+#fim_se
+#fim_se
+
+  defina_tipo estrutura tagPOLYTEXTA {
+    inteiro x;
+    inteiro y;
+    UINT n;
+    LPCSTR lpstr;
+    UINT uiFlags;
+    RECT rcl;
+    inteiro *pdx;
+  } POLYTEXTA,*PPOLYTEXTA,*NPPOLYTEXTA,*LPPOLYTEXTA;
+
+  defina_tipo estrutura tagPOLYTEXTW {
+    inteiro x;
+    inteiro y;
+    UINT n;
+    LPCWSTR lpstr;
+    UINT uiFlags;
+    RECT rcl;
+    inteiro *pdx;
+  } POLYTEXTW,*PPOLYTEXTW,*NPPOLYTEXTW,*LPPOLYTEXTW;
+#se_definido UNICODE
+  defina_tipo POLYTEXTW POLYTEXT;
+  defina_tipo PPOLYTEXTW PPOLYTEXT;
+  defina_tipo NPPOLYTEXTW NPPOLYTEXT;
+  defina_tipo LPPOLYTEXTW LPPOLYTEXT;
+#senão
+  defina_tipo POLYTEXTA POLYTEXT;
+  defina_tipo PPOLYTEXTA PPOLYTEXT;
+  defina_tipo NPPOLYTEXTA NPPOLYTEXT;
+  defina_tipo LPPOLYTEXTA LPPOLYTEXT;
+#fim_se
+
+  defina_tipo estrutura _FIXED {
+    WORD fract;
+    curto value;
+  } FIXED;
+
+  defina_tipo estrutura _MAT2 {
+    FIXED eM11;
+    FIXED eM12;
+    FIXED eM21;
+    FIXED eM22;
+  } MAT2,*LPMAT2;
+
+  defina_tipo estrutura _GLYPHMETRICS {
+    UINT gmBlackBoxX;
+    UINT gmBlackBoxY;
+    POINT gmptGlyphOrigin;
+    curto gmCellIncX;
+    curto gmCellIncY;
+  } GLYPHMETRICS,*LPGLYPHMETRICS;
+
+#defina GGO_METRICS 0
+#defina GGO_BITMAP 1
+#defina GGO_NATIVE 2
+#defina GGO_BEZIER 3
+
+#defina GGO_GRAY2_BITMAP 4
+#defina GGO_GRAY4_BITMAP 5
+#defina GGO_GRAY8_BITMAP 6
+#defina GGO_GLYPH_INDEX 0x0080
+#defina GGO_UNHINTED 0x0100
+
+#defina TT_POLYGON_TYPE 24
+
+#defina TT_PRIM_LINE 1
+#defina TT_PRIM_QSPLINE 2
+#defina TT_PRIM_CSPLINE 3
+
+  defina_tipo estrutura tagPOINTFX {
+    FIXED x;
+    FIXED y;
+  } POINTFX,*LPPOINTFX;
+
+  defina_tipo estrutura tagTTPOLYCURVE {
+    WORD wType;
+    WORD cpfx;
+    POINTFX apfx[1];
+  } TTPOLYCURVE,*LPTTPOLYCURVE;
+
+  defina_tipo estrutura tagTTPOLYGONHEADER {
+    DWORD cb;
+    DWORD dwType;
+    POINTFX pfxStart;
+  } TTPOLYGONHEADER,*LPTTPOLYGONHEADER;
+
+#defina GCP_DBCS 0x0001
+#defina GCP_REORDER 0x0002
+#defina GCP_USEKERNING 0x0008
+#defina GCP_GLYPHSHAPE 0x0010
+#defina GCP_LIGATE 0x0020
+
+#defina GCP_DIACRITIC 0x0100
+#defina GCP_KASHIDA 0x0400
+#defina GCP_ERROR 0x8000
+#defina FLI_MASK 0x103B
+
+#defina GCP_JUSTIFY 0x00010000L
+
+#defina FLI_GLYPHS 0x00040000L
+#defina GCP_CLASSIN 0x00080000L
+#defina GCP_MAXEXTENT 0x00100000L
+#defina GCP_JUSTIFYIN 0x00200000L
+#defina GCP_DISPLAYZWG 0x00400000L
+#defina GCP_SYMSWAPOFF 0x00800000L
+#defina GCP_NUMERICOVERRIDE 0x01000000L
+#defina GCP_NEUTRALOVERRIDE 0x02000000L
+#defina GCP_NUMERICSLATIN 0x04000000L
+#defina GCP_NUMERICSLOCAL 0x08000000L
+
+#defina GCPCLASS_LATIN 1
+#defina GCPCLASS_HEBREW 2
+#defina GCPCLASS_ARABIC 2
+#defina GCPCLASS_NEUTRAL 3
+#defina GCPCLASS_LOCALNUMBER 4
+#defina GCPCLASS_LATINNUMBER 5
+#defina GCPCLASS_LATINNUMERICTERMINATOR 6
+#defina GCPCLASS_LATINNUMERICSEPARATOR 7
+#defina GCPCLASS_NUMERICSEPARATOR 8
+#defina GCPCLASS_PREBOUNDLTR 0x80
+#defina GCPCLASS_PREBOUNDRTL 0x40
+#defina GCPCLASS_POSTBOUNDLTR 0x20
+#defina GCPCLASS_POSTBOUNDRTL 0x10
+
+#defina GCPGLYPH_LINKBEFORE 0x8000
+#defina GCPGLYPH_LINKAFTER 0x4000
+
+  defina_tipo estrutura tagGCP_RESULTSA {
+    DWORD lStructSize;
+    LPSTR lpOutString;
+    UINT *lpOrder;
+    inteiro *lpDx;
+    inteiro *lpCaretPos;
+    LPSTR lpClass;
+    LPWSTR lpGlyphs;
+    UINT nGlyphs;
+    inteiro nMaxFit;
+  } GCP_RESULTSA,*LPGCP_RESULTSA;
+  defina_tipo estrutura tagGCP_RESULTSW {
+    DWORD lStructSize;
+    LPWSTR lpOutString;
+    UINT *lpOrder;
+    inteiro *lpDx;
+    inteiro *lpCaretPos;
+    LPSTR lpClass;
+    LPWSTR lpGlyphs;
+    UINT nGlyphs;
+    inteiro nMaxFit;
+  } GCP_RESULTSW,*LPGCP_RESULTSW;
+#se_definido UNICODE
+  defina_tipo GCP_RESULTSW GCP_RESULTS;
+  defina_tipo LPGCP_RESULTSW LPGCP_RESULTS;
+#senão
+  defina_tipo GCP_RESULTSA GCP_RESULTS;
+  defina_tipo LPGCP_RESULTSA LPGCP_RESULTS;
+#fim_se
+
+  defina_tipo estrutura _RASTERIZER_STATUS {
+    curto nSize;
+    curto wFlags;
+    curto nLanguageID;
+  } RASTERIZER_STATUS,*LPRASTERIZER_STATUS;
+
+#defina TT_AVAILABLE 0x0001
+#defina TT_ENABLED 0x0002
+
+  defina_tipo estrutura tagPIXELFORMATDESCRIPTOR {
+    WORD nSize;
+    WORD nVersion;
+    DWORD dwFlags;
+    BYTE iPixelType;
+    BYTE cColorBits;
+    BYTE cRedBits;
+    BYTE cRedShift;
+    BYTE cGreenBits;
+    BYTE cGreenShift;
+    BYTE cBlueBits;
+    BYTE cBlueShift;
+    BYTE cAlphaBits;
+    BYTE cAlphaShift;
+    BYTE cAccumBits;
+    BYTE cAccumRedBits;
+    BYTE cAccumGreenBits;
+    BYTE cAccumBlueBits;
+    BYTE cAccumAlphaBits;
+    BYTE cDepthBits;
+    BYTE cStencilBits;
+    BYTE cAuxBuffers;
+    BYTE iLayerType;
+    BYTE bReserved;
+    DWORD dwLayerMask;
+    DWORD dwVisibleMask;
+    DWORD dwDamageMask;
+  } PIXELFORMATDESCRIPTOR,*PPIXELFORMATDESCRIPTOR,*LPPIXELFORMATDESCRIPTOR;
+
+#defina PFD_TYPE_RGBA 0
+#defina PFD_TYPE_COLORINDEX 1
+
+#defina PFD_MAIN_PLANE 0
+#defina PFD_OVERLAY_PLANE 1
+#defina PFD_UNDERLAY_PLANE (-1)
+
+#defina PFD_DOUBLEBUFFER 0x00000001
+#defina PFD_STEREO 0x00000002
+#defina PFD_DRAW_TO_WINDOW 0x00000004
+#defina PFD_DRAW_TO_BITMAP 0x00000008
+#defina PFD_SUPPORT_GDI 0x00000010
+#defina PFD_SUPPORT_OPENGL 0x00000020
+#defina PFD_GENERIC_FORMAT 0x00000040
+#defina PFD_NEED_PALETTE 0x00000080
+#defina PFD_NEED_SYSTEM_PALETTE 0x00000100
+#defina PFD_SWAP_EXCHANGE 0x00000200
+#defina PFD_SWAP_COPY 0x00000400
+#defina PFD_SWAP_LAYER_BUFFERS 0x00000800
+#defina PFD_GENERIC_ACCELERATED 0x00001000
+#defina PFD_SUPPORT_DIRECTDRAW 0x00002000
+
+#defina PFD_DEPTH_DONTCARE 0x20000000
+#defina PFD_DOUBLEBUFFER_DONTCARE 0x40000000
+#defina PFD_STEREO_DONTCARE 0x80000000
+
+#se_não_definido NOTEXTMETRIC
+  defina_tipo inteiro (CALLBACK *OLDFONTENUMPROCA)(CONST LOGFONTA *,CONST TEXTMETRICA *,DWORD,LPARAM);
+  defina_tipo inteiro (CALLBACK *OLDFONTENUMPROCW)(CONST LOGFONTW *,CONST TEXTMETRICW *,DWORD,LPARAM);
+#se_definido UNICODE
+#defina OLDFONTENUMPROC OLDFONTENUMPROCW
+#senão
+#defina OLDFONTENUMPROC OLDFONTENUMPROCA
+#fim_se
+#senão
+  defina_tipo inteiro (CALLBACK *OLDFONTENUMPROCA)(CONST LOGFONTA *,CONST VOID *,DWORD,LPARAM);
+  defina_tipo inteiro (CALLBACK *OLDFONTENUMPROCW)(CONST LOGFONTW *,CONST VOID *,DWORD,LPARAM);
+#se_definido UNICODE
+#defina OLDFONTENUMPROC OLDFONTENUMPROCW
+#senão
+#defina OLDFONTENUMPROC OLDFONTENUMPROCA
+#fim_se
+#fim_se
+
+  defina_tipo OLDFONTENUMPROCA FONTENUMPROCA;
+  defina_tipo OLDFONTENUMPROCW FONTENUMPROCW;
+#se_definido UNICODE
+  defina_tipo FONTENUMPROCW FONTENUMPROC;
+#senão
+  defina_tipo FONTENUMPROCA FONTENUMPROC;
+#fim_se
+
+  defina_tipo inteiro (CALLBACK *GOBJENUMPROC)(LPVOID,LPARAM);
+  defina_tipo VOID (CALLBACK *LINEDDAPROC)(inteiro,inteiro,LPARAM);
+
+#se_definido UNICODE
+#defina AddFontResource AddFontResourceW
+#defina CopyMetaFile CopyMetaFileW
+#defina CreateDC CreateDCW
+#defina CreateFontIndirect CreateFontIndirectW
+#defina CreateFont CreateFontW
+#defina CreateIC CreateICW
+#defina CreateMetaFile CreateMetaFileW
+#defina CreateScalableFontResource CreateScalableFontResourceW
+#senão
+#defina AddFontResource AddFontResourceA
+#defina CopyMetaFile CopyMetaFileA
+#defina CreateDC CreateDCA
+#defina CreateFontIndirect CreateFontIndirectA
+#defina CreateFont CreateFontA
+#defina CreateIC CreateICA
+#defina CreateMetaFile CreateMetaFileA
+#defina CreateScalableFontResource CreateScalableFontResourceA
+#fim_se
+
+  WINGDIAPI inteiro WINAPI AddFontResourceA(LPCSTR);
+  WINGDIAPI inteiro WINAPI AddFontResourceW(LPCWSTR);
+  WINGDIAPI WINBOOL WINAPI AnimatePalette(HPALETTE hPal,UINT iStartIndex,UINT cEntries,CONST PALETTEENTRY *ppe);
+  WINGDIAPI WINBOOL WINAPI Arc(HDC hdc,inteiro x1,inteiro y1,inteiro x2,inteiro y2,inteiro x3,inteiro y3,inteiro x4,inteiro y4);
+  WINGDIAPI WINBOOL WINAPI BitBlt(HDC hdc,inteiro x,inteiro y,inteiro cx,inteiro cy,HDC hdcSrc,inteiro x1,inteiro y1,DWORD rop);
+  WINGDIAPI WINBOOL WINAPI CancelDC(HDC hdc);
+  WINGDIAPI WINBOOL WINAPI Chord(HDC hdc,inteiro x1,inteiro y1,inteiro x2,inteiro y2,inteiro x3,inteiro y3,inteiro x4,inteiro y4);
+  WINGDIAPI inteiro WINAPI ChoosePixelFormat(HDC hdc,CONST PIXELFORMATDESCRIPTOR *ppfd);
+  WINGDIAPI HMETAFILE WINAPI CloseMetaFile(HDC hdc);
+  WINGDIAPI inteiro WINAPI CombineRgn(HRGN hrgnDst,HRGN hrgnSrc1,HRGN hrgnSrc2,inteiro iMode);
+  WINGDIAPI HMETAFILE WINAPI CopyMetaFileA(HMETAFILE,LPCSTR);
+  WINGDIAPI HMETAFILE WINAPI CopyMetaFileW(HMETAFILE,LPCWSTR);
+  WINGDIAPI HBITMAP WINAPI CreateBitmap(inteiro nWidth,inteiro nHeight,UINT nPlanes,UINT nBitCount,CONST VOID *lpBits);
+  WINGDIAPI HBITMAP WINAPI CreateBitmapIndirect(CONST BITMAP *pbm);
+  WINGDIAPI HBRUSH WINAPI CreateBrushIndirect(CONST LOGBRUSH *plbrush);
+  WINGDIAPI HBITMAP WINAPI CreateCompatibleBitmap(HDC hdc,inteiro cx,inteiro cy);
+  WINGDIAPI HBITMAP WINAPI CreateDiscardableBitmap(HDC hdc,inteiro cx,inteiro cy);
+  WINGDIAPI HDC WINAPI CreateCompatibleDC(HDC hdc);
+  WINGDIAPI HDC WINAPI CreateDCA(LPCSTR pwszDriver,LPCSTR pwszDevice,LPCSTR pszPort,CONST DEVMODEA *pdm);
+  WINGDIAPI HDC WINAPI CreateDCW(LPCWSTR pwszDriver,LPCWSTR pwszDevice,LPCWSTR pszPort,CONST DEVMODEW *pdm);
+  WINGDIAPI HBITMAP WINAPI CreateDIBitmap(HDC hdc,CONST BITMAPINFOHEADER *pbmih,DWORD flInit,CONST VOID *pjBits,CONST BITMAPINFO *pbmi,UINT iUsage);
+  WINGDIAPI HBRUSH WINAPI CreateDIBPatternBrush(HGLOBAL h,UINT iUsage);
+  WINGDIAPI HBRUSH WINAPI CreateDIBPatternBrushPt(CONST VOID *lpPackedDIB,UINT iUsage);
+  WINGDIAPI HRGN WINAPI CreateEllipticRgn(inteiro x1,inteiro y1,inteiro x2,inteiro y2);
+  WINGDIAPI HRGN WINAPI CreateEllipticRgnIndirect(CONST RECT *lprect);
+  WINGDIAPI HFONT WINAPI CreateFontIndirectA(CONST LOGFONTA *lplf);
+  WINGDIAPI HFONT WINAPI CreateFontIndirectW(CONST LOGFONTW *lplf);
+  WINGDIAPI HFONT WINAPI CreateFontA(inteiro cHeight,inteiro cWidth,inteiro cEscapement,inteiro cOrientation,inteiro cWeight,DWORD bItalic,DWORD bUnderline,DWORD bStrikeOut,DWORD iCharSet,DWORD iOutPrecision,DWORD iClipPrecision,DWORD iQuality,DWORD iPitchAndFamily,LPCSTR pszFaceName);
+  WINGDIAPI HFONT WINAPI CreateFontW(inteiro cHeight,inteiro cWidth,inteiro cEscapement,inteiro cOrientation,inteiro cWeight,DWORD bItalic,DWORD bUnderline,DWORD bStrikeOut,DWORD iCharSet,DWORD iOutPrecision,DWORD iClipPrecision,DWORD iQuality,DWORD iPitchAndFamily,LPCWSTR pszFaceName);
+  WINGDIAPI HBRUSH WINAPI CreateHatchBrush(inteiro iHatch,COLORREF color);
+  WINGDIAPI HDC WINAPI CreateICA(LPCSTR pszDriver,LPCSTR pszDevice,LPCSTR pszPort,CONST DEVMODEA *pdm);
+  WINGDIAPI HDC WINAPI CreateICW(LPCWSTR pszDriver,LPCWSTR pszDevice,LPCWSTR pszPort,CONST DEVMODEW *pdm);
+  WINGDIAPI HDC WINAPI CreateMetaFileA(LPCSTR pszFile);
+  WINGDIAPI HDC WINAPI CreateMetaFileW(LPCWSTR pszFile);
+  WINGDIAPI HPALETTE WINAPI CreatePalette(CONST LOGPALETTE *plpal);
+  WINGDIAPI HPEN WINAPI CreatePen(inteiro iStyle,inteiro cWidth,COLORREF color);
+  WINGDIAPI HPEN WINAPI CreatePenIndirect(CONST LOGPEN *plpen);
+  WINGDIAPI HRGN WINAPI CreatePolyPolygonRgn(CONST POINT *pptl,CONST INT *pc,inteiro cPoly,inteiro iMode);
+  WINGDIAPI HBRUSH WINAPI CreatePatternBrush(HBITMAP hbm);
+  WINGDIAPI HRGN WINAPI CreateRectRgn(inteiro x1,inteiro y1,inteiro x2,inteiro y2);
+  WINGDIAPI HRGN WINAPI CreateRectRgnIndirect(CONST RECT *lprect);
+  WINGDIAPI HRGN WINAPI CreateRoundRectRgn(inteiro x1,inteiro y1,inteiro x2,inteiro y2,inteiro w,inteiro h);
+  WINGDIAPI WINBOOL WINAPI CreateScalableFontResourceA(DWORD fdwHidden,LPCSTR lpszFont,LPCSTR lpszFile,LPCSTR lpszPath);
+  WINGDIAPI WINBOOL WINAPI CreateScalableFontResourceW(DWORD fdwHidden,LPCWSTR lpszFont,LPCWSTR lpszFile,LPCWSTR lpszPath);
+  WINGDIAPI HBRUSH WINAPI CreateSolidBrush(COLORREF color);
+  WINGDIAPI WINBOOL WINAPI DeleteDC(HDC hdc);
+  WINGDIAPI WINBOOL WINAPI DeleteMetaFile(HMETAFILE hmf);
+  WINGDIAPI WINBOOL WINAPI DeleteObject(HGDIOBJ ho);
+  WINGDIAPI inteiro WINAPI DescribePixelFormat(HDC hdc,inteiro iPixelFormat,UINT nBytes,LPPIXELFORMATDESCRIPTOR ppfd);
+
+  defina_tipo UINT (CALLBACK *LPFNDEVMODE)(HWND,HMODULE,LPDEVMODE,LPSTR,LPSTR,LPDEVMODE,LPSTR,UINT);
+  defina_tipo DWORD (CALLBACK *LPFNDEVCAPS)(LPSTR,LPSTR,UINT,LPSTR,LPDEVMODE);
+
+#defina DM_UPDATE 1
+#defina DM_COPY 2
+#defina DM_PROMPT 4
+#defina DM_MODIFY 8
+
+#defina DM_IN_BUFFER DM_MODIFY
+#defina DM_IN_PROMPT DM_PROMPT
+#defina DM_OUT_BUFFER DM_COPY
+#defina DM_OUT_DEFAULT DM_UPDATE
+
+#defina DC_FIELDS 1
+#defina DC_PAPERS 2
+#defina DC_PAPERSIZE 3
+#defina DC_MINEXTENT 4
+#defina DC_MAXEXTENT 5
+#defina DC_BINS 6
+#defina DC_DUPLEX 7
+#defina DC_SIZE 8
+#defina DC_EXTRA 9
+#defina DC_VERSION 10
+#defina DC_DRIVER 11
+#defina DC_BINNAMES 12
+#defina DC_ENUMRESOLUTIONS 13
+#defina DC_FILEDEPENDENCIES 14
+#defina DC_TRUETYPE 15
+#defina DC_PAPERNAMES 16
+#defina DC_ORIENTATION 17
+#defina DC_COPIES 18
+#defina DC_BINADJUST 19
+#defina DC_EMF_COMPLIANT 20
+#defina DC_DATATYPE_PRODUCED 21
+#defina DC_COLLATE 22
+#defina DC_MANUFACTURER 23
+#defina DC_MODEL 24
+#defina DC_PERSONALITY 25
+#defina DC_PRINTRATE 26
+#defina DC_PRINTRATEUNIT 27
+#defina PRINTRATEUNIT_PPM 1
+#defina PRINTRATEUNIT_CPS 2
+#defina PRINTRATEUNIT_LPM 3
+#defina PRINTRATEUNIT_IPM 4
+#defina DC_PRINTERMEM 28
+#defina DC_MEDIAREADY 29
+#defina DC_STAPLE 30
+#defina DC_PRINTRATEPPM 31
+#defina DC_COLORDEVICE 32
+#defina DC_NUP 33
+#defina DC_MEDIATYPENAMES 34
+#defina DC_MEDIATYPES 35
+
+#defina DCTT_BITMAP 0x0000001L
+#defina DCTT_DOWNLOAD 0x0000002L
+#defina DCTT_SUBDEV 0x0000004L
+#defina DCTT_DOWNLOAD_OUTLINE 0x0000008L
+
+#defina DCBA_FACEUPNONE 0x0000
+#defina DCBA_FACEUPCENTER 0x0001
+#defina DCBA_FACEUPLEFT 0x0002
+#defina DCBA_FACEUPRIGHT 0x0003
+#defina DCBA_FACEDOWNNONE 0x0100
+#defina DCBA_FACEDOWNCENTER 0x0101
+#defina DCBA_FACEDOWNLEFT 0x0102
+#defina DCBA_FACEDOWNRIGHT 0x0103
+
+#se_definido UNICODE
+#defina DeviceCapabilities DeviceCapabilitiesW
+#defina EnumFontFamiliesEx EnumFontFamiliesExW
+#defina EnumFontFamilies EnumFontFamiliesW
+#defina EnumFonts EnumFontsW
+#defina GetCharWidth GetCharWidthW
+#defina GetCharWidth32 GetCharWidth32W
+#defina GetCharWidthFloat GetCharWidthFloatW
+#defina GetCharABCWidths GetCharABCWidthsW
+#defina GetCharABCWidthsFloat GetCharABCWidthsFloatW
+#defina GetGlyphOutline GetGlyphOutlineW
+#defina GetMetaFile GetMetaFileW
+#senão
+#defina DeviceCapabilities DeviceCapabilitiesA
+#defina EnumFontFamiliesEx EnumFontFamiliesExA
+#defina EnumFontFamilies EnumFontFamiliesA
+#defina EnumFonts EnumFontsA
+#defina GetCharWidth GetCharWidthA
+#defina GetCharWidth32 GetCharWidth32A
+#defina GetCharWidthFloat GetCharWidthFloatA
+#defina GetCharABCWidths GetCharABCWidthsA
+#defina GetCharABCWidthsFloat GetCharABCWidthsFloatA
+#defina GetGlyphOutline GetGlyphOutlineA
+#defina GetMetaFile GetMetaFileA
+#fim_se
+
+  WINSPOOLAPI inteiro WINAPI DeviceCapabilitiesA(LPCSTR pDevice,LPCSTR pPort,WORD fwCapability,LPSTR pOutput,CONST DEVMODEA *pDevMode);
+  WINSPOOLAPI inteiro WINAPI DeviceCapabilitiesW(LPCWSTR pDevice,LPCWSTR pPort,WORD fwCapability,LPWSTR pOutput,CONST DEVMODEW *pDevMode);
+  WINGDIAPI inteiro WINAPI DrawEscape(HDC hdc,inteiro iEscape,inteiro cjIn,LPCSTR lpIn);
+  WINGDIAPI WINBOOL WINAPI Ellipse(HDC hdc,inteiro left,inteiro top,inteiro right,inteiro bottom);
+  WINGDIAPI inteiro WINAPI EnumFontFamiliesExA(HDC hdc,LPLOGFONTA lpLogfont,FONTENUMPROCA lpProc,LPARAM lParam,DWORD dwFlags);
+  WINGDIAPI inteiro WINAPI EnumFontFamiliesExW(HDC hdc,LPLOGFONTW lpLogfont,FONTENUMPROCW lpProc,LPARAM lParam,DWORD dwFlags);
+  WINGDIAPI inteiro WINAPI EnumFontFamiliesA(HDC hdc,LPCSTR lpLogfont,FONTENUMPROCA lpProc,LPARAM lParam);
+  WINGDIAPI inteiro WINAPI EnumFontFamiliesW(HDC hdc,LPCWSTR lpLogfont,FONTENUMPROCW lpProc,LPARAM lParam);
+  WINGDIAPI inteiro WINAPI EnumFontsA(HDC hdc,LPCSTR lpLogfont,FONTENUMPROCA lpProc,LPARAM lParam);
+  WINGDIAPI inteiro WINAPI EnumFontsW(HDC hdc,LPCWSTR lpLogfont,FONTENUMPROCW lpProc,LPARAM lParam);
+  WINGDIAPI inteiro WINAPI EnumObjects(HDC hdc,inteiro nType,GOBJENUMPROC lpFunc,LPARAM lParam);
+  WINGDIAPI WINBOOL WINAPI EqualRgn(HRGN hrgn1,HRGN hrgn2);
+  WINGDIAPI inteiro WINAPI Escape(HDC hdc,inteiro iEscape,inteiro cjIn,LPCSTR pvIn,LPVOID pvOut);
+  WINGDIAPI inteiro WINAPI ExtEscape(HDC hdc,inteiro iEscape,inteiro cjInput,LPCSTR lpInData,inteiro cjOutput,LPSTR lpOutData);
+  WINGDIAPI inteiro WINAPI ExcludeClipRect(HDC hdc,inteiro left,inteiro top,inteiro right,inteiro bottom);
+  WINGDIAPI HRGN WINAPI ExtCreateRegion(CONST XFORM *lpx,DWORD nCount,CONST RGNDATA *lpData);
+  WINGDIAPI WINBOOL WINAPI ExtFloodFill(HDC hdc,inteiro x,inteiro y,COLORREF color,UINT type);
+  WINGDIAPI WINBOOL WINAPI FillRgn(HDC hdc,HRGN hrgn,HBRUSH hbr);
+  WINGDIAPI WINBOOL WINAPI FloodFill(HDC hdc,inteiro x,inteiro y,COLORREF color);
+  WINGDIAPI WINBOOL WINAPI FrameRgn(HDC hdc,HRGN hrgn,HBRUSH hbr,inteiro w,inteiro h);
+  WINGDIAPI inteiro WINAPI GetROP2(HDC hdc);
+  WINGDIAPI WINBOOL WINAPI GetAspectRatioFilterEx(HDC hdc,LPSIZE lpsize);
+  WINGDIAPI COLORREF WINAPI GetBkColor(HDC hdc);
+  WINGDIAPI COLORREF WINAPI GetDCBrushColor(HDC hdc);
+  WINGDIAPI COLORREF WINAPI GetDCPenColor(HDC hdc);
+  WINGDIAPI inteiro WINAPI GetBkMode(HDC hdc);
+  WINGDIAPI LONG WINAPI GetBitmapBits(HBITMAP hbit,LONG cb,LPVOID lpvBits);
+  WINGDIAPI WINBOOL WINAPI GetBitmapDimensionEx(HBITMAP hbit,LPSIZE lpsize);
+  WINGDIAPI UINT WINAPI GetBoundsRect(HDC hdc,LPRECT lprect,UINT flags);
+  WINGDIAPI WINBOOL WINAPI GetBrushOrgEx(HDC hdc,LPPOINT lppt);
+  WINGDIAPI WINBOOL WINAPI GetCharWidthA(HDC hdc,UINT iFirst,UINT iLast,LPINT lpBuffer);
+  WINGDIAPI WINBOOL WINAPI GetCharWidthW(HDC hdc,UINT iFirst,UINT iLast,LPINT lpBuffer);
+  WINGDIAPI WINBOOL WINAPI GetCharWidth32A(HDC hdc,UINT iFirst,UINT iLast,LPINT lpBuffer);
+  WINGDIAPI WINBOOL WINAPI GetCharWidth32W(HDC hdc,UINT iFirst,UINT iLast,LPINT lpBuffer);
+  WINGDIAPI WINBOOL WINAPI GetCharWidthFloatA(HDC hdc,UINT iFirst,UINT iLast,PFLOAT lpBuffer);
+  WINGDIAPI WINBOOL WINAPI GetCharWidthFloatW(HDC hdc,UINT iFirst,UINT iLast,PFLOAT lpBuffer);
+  WINGDIAPI WINBOOL WINAPI GetCharABCWidthsA(HDC hdc,UINT wFirst,UINT wLast,LPABC lpABC);
+  WINGDIAPI WINBOOL WINAPI GetCharABCWidthsW(HDC hdc,UINT wFirst,UINT wLast,LPABC lpABC);
+  WINGDIAPI WINBOOL WINAPI GetCharABCWidthsFloatA(HDC hdc,UINT iFirst,UINT iLast,LPABCFLOAT lpABC);
+  WINGDIAPI WINBOOL WINAPI GetCharABCWidthsFloatW(HDC hdc,UINT iFirst,UINT iLast,LPABCFLOAT lpABC);
+  WINGDIAPI inteiro WINAPI GetClipBox(HDC hdc,LPRECT lprect);
+  WINGDIAPI inteiro WINAPI GetClipRgn(HDC hdc,HRGN hrgn);
+  WINGDIAPI inteiro WINAPI GetMetaRgn(HDC hdc,HRGN hrgn);
+  WINGDIAPI HGDIOBJ WINAPI GetCurrentObject(HDC hdc,UINT type);
+  WINGDIAPI WINBOOL WINAPI GetCurrentPositionEx(HDC hdc,LPPOINT lppt);
+  WINGDIAPI inteiro WINAPI GetDeviceCaps(HDC hdc,inteiro index);
+  WINGDIAPI inteiro WINAPI GetDIBits(HDC hdc,HBITMAP hbm,UINT start,UINT cLines,LPVOID lpvBits,LPBITMAPINFO lpbmi,UINT usage);
+  WINGDIAPI DWORD WINAPI GetFontData (HDC hdc,DWORD dwTable,DWORD dwOffset,PVOID pvBuffer,DWORD cjBuffer);
+  WINGDIAPI DWORD WINAPI GetGlyphOutlineA(HDC hdc,UINT uChar,UINT fuFormat,LPGLYPHMETRICS lpgm,DWORD cjBuffer,LPVOID pvBuffer,CONST MAT2 *lpmat2);
+  WINGDIAPI DWORD WINAPI GetGlyphOutlineW(HDC hdc,UINT uChar,UINT fuFormat,LPGLYPHMETRICS lpgm,DWORD cjBuffer,LPVOID pvBuffer,CONST MAT2 *lpmat2);
+  WINGDIAPI inteiro WINAPI GetGraphicsMode(HDC hdc);
+  WINGDIAPI inteiro WINAPI GetMapMode(HDC hdc);
+  WINGDIAPI UINT WINAPI GetMetaFileBitsEx(HMETAFILE hMF,UINT cbBuffer,LPVOID lpData);
+  WINGDIAPI HMETAFILE WINAPI GetMetaFileA(LPCSTR lpName);
+  WINGDIAPI HMETAFILE WINAPI GetMetaFileW(LPCWSTR lpName);
+  WINGDIAPI COLORREF WINAPI GetNearestColor(HDC hdc,COLORREF color);
+  WINGDIAPI UINT WINAPI GetNearestPaletteIndex(HPALETTE h,COLORREF color);
+  WINGDIAPI DWORD WINAPI GetObjectType(HGDIOBJ h);
+
+#se_não_definido NOTEXTMETRIC
+#se_definido UNICODE
+#defina GetOutlineTextMetrics GetOutlineTextMetricsW
+#senão
+#defina GetOutlineTextMetrics GetOutlineTextMetricsA
+#fim_se
+
+  WINGDIAPI UINT WINAPI GetOutlineTextMetricsA(HDC hdc,UINT cjCopy,LPOUTLINETEXTMETRICA potm);
+  WINGDIAPI UINT WINAPI GetOutlineTextMetricsW(HDC hdc,UINT cjCopy,LPOUTLINETEXTMETRICW potm);
+#fim_se
+
+#se_definido UNICODE
+#defina GetTextExtentPoint GetTextExtentPointW
+#defina GetTextExtentPoint32 GetTextExtentPoint32W
+#defina GetTextExtentExPoint GetTextExtentExPointW
+#defina GetCharacterPlacement GetCharacterPlacementW
+#senão
+#defina GetTextExtentPoint GetTextExtentPointA
+#defina GetTextExtentPoint32 GetTextExtentPoint32A
+#defina GetTextExtentExPoint GetTextExtentExPointA
+#defina GetCharacterPlacement GetCharacterPlacementA
+#fim_se
+
+  WINGDIAPI UINT WINAPI GetPaletteEntries(HPALETTE hpal,UINT iStart,UINT cEntries,LPPALETTEENTRY pPalEntries);
+  WINGDIAPI COLORREF WINAPI GetPixel(HDC hdc,inteiro x,inteiro y);
+  WINGDIAPI inteiro WINAPI GetPixelFormat(HDC hdc);
+  WINGDIAPI inteiro WINAPI GetPolyFillMode(HDC hdc);
+  WINGDIAPI WINBOOL WINAPI GetRasterizerCaps(LPRASTERIZER_STATUS lpraststat,UINT cjBytes);
+  WINGDIAPI inteiro WINAPI GetRandomRgn (HDC hdc,HRGN hrgn,INT i);
+  WINGDIAPI DWORD WINAPI GetRegionData(HRGN hrgn,DWORD nCount,LPRGNDATA lpRgnData);
+  WINGDIAPI inteiro WINAPI GetRgnBox(HRGN hrgn,LPRECT lprc);
+  WINGDIAPI HGDIOBJ WINAPI GetStockObject(inteiro i);
+  WINGDIAPI inteiro WINAPI GetStretchBltMode(HDC hdc);
+  WINGDIAPI UINT WINAPI GetSystemPaletteEntries(HDC hdc,UINT iStart,UINT cEntries,LPPALETTEENTRY pPalEntries);
+  WINGDIAPI UINT WINAPI GetSystemPaletteUse(HDC hdc);
+  WINGDIAPI inteiro WINAPI GetTextCharacterExtra(HDC hdc);
+  WINGDIAPI UINT WINAPI GetTextAlign(HDC hdc);
+  WINGDIAPI COLORREF WINAPI GetTextColor(HDC hdc);
+  WINGDIAPI WINBOOL WINAPI GetTextExtentPointA(HDC hdc,LPCSTR lpString,inteiro c,LPSIZE lpsz);
+  WINGDIAPI WINBOOL WINAPI GetTextExtentPointW(HDC hdc,LPCWSTR lpString,inteiro c,LPSIZE lpsz);
+  WINGDIAPI WINBOOL WINAPI GetTextExtentPoint32A(HDC hdc,LPCSTR lpString,inteiro c,LPSIZE psizl);
+  WINGDIAPI WINBOOL WINAPI GetTextExtentPoint32W(HDC hdc,LPCWSTR lpString,inteiro c,LPSIZE psizl);
+  WINGDIAPI WINBOOL WINAPI GetTextExtentExPointA(HDC hdc,LPCSTR lpszString,inteiro cchString,inteiro nMaxExtent,LPINT lpnFit,LPINT lpnDx,LPSIZE lpSize);
+  WINGDIAPI WINBOOL WINAPI GetTextExtentExPointW(HDC hdc,LPCWSTR lpszString,inteiro cchString,inteiro nMaxExtent,LPINT lpnFit,LPINT lpnDx,LPSIZE lpSize);
+  WINGDIAPI inteiro WINAPI GetTextCharset(HDC hdc);
+  WINGDIAPI inteiro WINAPI GetTextCharsetInfo(HDC hdc,LPFONTSIGNATURE lpSig,DWORD dwFlags);
+  WINGDIAPI WINBOOL WINAPI TranslateCharsetInfo(DWORD *lpSrc,LPCHARSETINFO lpCs,DWORD dwFlags);
+  WINGDIAPI DWORD WINAPI GetFontLanguageInfo(HDC hdc);
+  WINGDIAPI DWORD WINAPI GetCharacterPlacementA(HDC hdc,LPCSTR lpString,inteiro nCount,inteiro nMexExtent,LPGCP_RESULTSA lpResults,DWORD dwFlags);
+  WINGDIAPI DWORD WINAPI GetCharacterPlacementW(HDC hdc,LPCWSTR lpString,inteiro nCount,inteiro nMexExtent,LPGCP_RESULTSW lpResults,DWORD dwFlags);
+
+  defina_tipo estrutura tagWCRANGE {
+    WCHAR wcLow;
+    USHORT cGlyphs;
+  } WCRANGE,*PWCRANGE,*LPWCRANGE;
+
+  defina_tipo estrutura tagGLYPHSET {
+    DWORD cbThis;
+    DWORD flAccel;
+    DWORD cGlyphsSupported;
+    DWORD cRanges;
+    WCRANGE ranges[1];
+  } GLYPHSET,*PGLYPHSET,*LPGLYPHSET;
+
+#defina GS_8BIT_INDICES 0x00000001
+
+#defina GGI_MARK_NONEXISTING_GLYPHS 0X0001
+
+#se_definido UNICODE
+#defina GetGlyphIndices GetGlyphIndicesW
+#senão
+#defina GetGlyphIndices GetGlyphIndicesA
+#fim_se
+
+  WINGDIAPI DWORD WINAPI GetFontUnicodeRanges(HDC hdc,LPGLYPHSET lpgs);
+  WINGDIAPI DWORD WINAPI GetGlyphIndicesA(HDC hdc,LPCSTR lpstr,inteiro c,LPWORD pgi,DWORD fl);
+  WINGDIAPI DWORD WINAPI GetGlyphIndicesW(HDC hdc,LPCWSTR lpstr,inteiro c,LPWORD pgi,DWORD fl);
+  WINGDIAPI WINBOOL WINAPI GetTextExtentPointI(HDC hdc,LPWORD pgiIn,inteiro cgi,LPSIZE psize);
+  WINGDIAPI WINBOOL WINAPI GetTextExtentExPointI (HDC hdc,LPWORD lpwszString,inteiro cwchString,inteiro nMaxExtent,LPINT lpnFit,LPINT lpnDx,LPSIZE lpSize);
+  WINGDIAPI WINBOOL WINAPI GetCharWidthI(HDC hdc,UINT giFirst,UINT cgi,LPWORD pgi,LPINT piWidths);
+  WINGDIAPI WINBOOL WINAPI GetCharABCWidthsI(HDC hdc,UINT giFirst,UINT cgi,LPWORD pgi,LPABC pabc);
+
+#defina STAMP_DESIGNVECTOR (0x8000000 + 'd' + ('v' << 8))
+#defina STAMP_AXESLIST (0x8000000 + 'a' + ('l' << 8))
+#defina MM_MAX_NUMAXES 16
+
+  defina_tipo estrutura tagDESIGNVECTOR {
+    DWORD dvReserved;
+    DWORD dvNumAxes;
+    LONG dvValues[MM_MAX_NUMAXES];
+  } DESIGNVECTOR,*PDESIGNVECTOR,*LPDESIGNVECTOR;
+
+#se_definido UNICODE
+#defina AddFontResourceEx AddFontResourceExW
+#defina RemoveFontResourceEx RemoveFontResourceExW
+#senão
+#defina AddFontResourceEx AddFontResourceExA
+#defina RemoveFontResourceEx RemoveFontResourceExA
+#fim_se
+
+  WINGDIAPI inteiro WINAPI AddFontResourceExA(LPCSTR name,DWORD fl,PVOID res);
+  WINGDIAPI inteiro WINAPI AddFontResourceExW(LPCWSTR name,DWORD fl,PVOID res);
+  WINGDIAPI WINBOOL WINAPI RemoveFontResourceExA(LPCSTR name,DWORD fl,PVOID pdv);
+  WINGDIAPI WINBOOL WINAPI RemoveFontResourceExW(LPCWSTR name,DWORD fl,PVOID pdv);
+  WINGDIAPI HANDLE WINAPI AddFontMemResourceEx(PVOID pFileView,DWORD cjSize,PVOID pvResrved,DWORD *pNumFonts);
+  WINGDIAPI WINBOOL WINAPI RemoveFontMemResourceEx(HANDLE h);
+
+#defina FR_PRIVATE 0x10
+#defina FR_NOT_ENUM 0x20
+
+#defina MM_MAX_AXES_NAMELEN 16
+
+  defina_tipo estrutura tagAXISINFOA {
+    LONG axMinValue;
+    LONG axMaxValue;
+    BYTE axAxisName[MM_MAX_AXES_NAMELEN];
+  } AXISINFOA,*PAXISINFOA,*LPAXISINFOA;
+
+  defina_tipo estrutura tagAXISINFOW {
+    LONG axMinValue;
+    LONG axMaxValue;
+    WCHAR axAxisName[MM_MAX_AXES_NAMELEN];
+  } AXISINFOW,*PAXISINFOW,*LPAXISINFOW;
+#se_definido UNICODE
+  defina_tipo AXISINFOW AXISINFO;
+  defina_tipo PAXISINFOW PAXISINFO;
+  defina_tipo LPAXISINFOW LPAXISINFO;
+#senão
+  defina_tipo AXISINFOA AXISINFO;
+  defina_tipo PAXISINFOA PAXISINFO;
+  defina_tipo LPAXISINFOA LPAXISINFO;
+#fim_se
+
+  defina_tipo estrutura tagAXESLISTA {
+    DWORD axlReserved;
+    DWORD axlNumAxes;
+    AXISINFOA axlAxisInfo[MM_MAX_NUMAXES];
+  } AXESLISTA,*PAXESLISTA,*LPAXESLISTA;
+
+  defina_tipo estrutura tagAXESLISTW {
+    DWORD axlReserved;
+    DWORD axlNumAxes;
+    AXISINFOW axlAxisInfo[MM_MAX_NUMAXES];
+  } AXESLISTW,*PAXESLISTW,*LPAXESLISTW;
+#se_definido UNICODE
+  defina_tipo AXESLISTW AXESLIST;
+  defina_tipo PAXESLISTW PAXESLIST;
+  defina_tipo LPAXESLISTW LPAXESLIST;
+#senão
+  defina_tipo AXESLISTA AXESLIST;
+  defina_tipo PAXESLISTA PAXESLIST;
+  defina_tipo LPAXESLISTA LPAXESLIST;
+#fim_se
+
+  defina_tipo estrutura tagENUMLOGFONTEXDVA {
+    ENUMLOGFONTEXA elfEnumLogfontEx;
+    DESIGNVECTOR elfDesignVector;
+  } ENUMLOGFONTEXDVA,*PENUMLOGFONTEXDVA,*LPENUMLOGFONTEXDVA;
+
+  defina_tipo estrutura tagENUMLOGFONTEXDVW {
+    ENUMLOGFONTEXW elfEnumLogfontEx;
+    DESIGNVECTOR elfDesignVector;
+  } ENUMLOGFONTEXDVW,*PENUMLOGFONTEXDVW,*LPENUMLOGFONTEXDVW;
+#se_definido UNICODE
+  defina_tipo ENUMLOGFONTEXDVW ENUMLOGFONTEXDV;
+  defina_tipo PENUMLOGFONTEXDVW PENUMLOGFONTEXDV;
+  defina_tipo LPENUMLOGFONTEXDVW LPENUMLOGFONTEXDV;
+#senão
+  defina_tipo ENUMLOGFONTEXDVA ENUMLOGFONTEXDV;
+  defina_tipo PENUMLOGFONTEXDVA PENUMLOGFONTEXDV;
+  defina_tipo LPENUMLOGFONTEXDVA LPENUMLOGFONTEXDV;
+#fim_se
+
+#se_definido UNICODE
+#defina CreateFontIndirectEx CreateFontIndirectExW
+#senão
+#defina CreateFontIndirectEx CreateFontIndirectExA
+#fim_se
+
+  WINGDIAPI HFONT WINAPI CreateFontIndirectExA(CONST ENUMLOGFONTEXDVA *);
+  WINGDIAPI HFONT WINAPI CreateFontIndirectExW(CONST ENUMLOGFONTEXDVW *);
+
+#se_não_definido NOTEXTMETRIC
+  defina_tipo estrutura tagENUMTEXTMETRICA {
+    NEWTEXTMETRICEXA etmNewTextMetricEx;
+    AXESLISTA etmAxesList;
+  } ENUMTEXTMETRICA,*PENUMTEXTMETRICA,*LPENUMTEXTMETRICA;
+  defina_tipo estrutura tagENUMTEXTMETRICW
+  {
+    NEWTEXTMETRICEXW etmNewTextMetricEx;
+    AXESLISTW etmAxesList;
+  } ENUMTEXTMETRICW,*PENUMTEXTMETRICW,*LPENUMTEXTMETRICW;
+#se_definido UNICODE
+  defina_tipo ENUMTEXTMETRICW ENUMTEXTMETRIC;
+  defina_tipo PENUMTEXTMETRICW PENUMTEXTMETRIC;
+  defina_tipo LPENUMTEXTMETRICW LPENUMTEXTMETRIC;
+#senão
+  defina_tipo ENUMTEXTMETRICA ENUMTEXTMETRIC;
+  defina_tipo PENUMTEXTMETRICA PENUMTEXTMETRIC;
+  defina_tipo LPENUMTEXTMETRICA LPENUMTEXTMETRIC;
+#fim_se
+#fim_se
+
+#se_definido UNICODE
+#defina ResetDC ResetDCW
+#defina RemoveFontResource RemoveFontResourceW
+#senão
+#defina ResetDC ResetDCA
+#defina RemoveFontResource RemoveFontResourceA
+#fim_se
+
+  WINGDIAPI WINBOOL WINAPI GetViewportExtEx(HDC hdc,LPSIZE lpsize);
+  WINGDIAPI WINBOOL WINAPI GetViewportOrgEx(HDC hdc,LPPOINT lppoint);
+  WINGDIAPI WINBOOL WINAPI GetWindowExtEx(HDC hdc,LPSIZE lpsize);
+  WINGDIAPI WINBOOL WINAPI GetWindowOrgEx(HDC hdc,LPPOINT lppoint);
+  WINGDIAPI inteiro WINAPI IntersectClipRect(HDC hdc,inteiro left,inteiro top,inteiro right,inteiro bottom);
+  WINGDIAPI WINBOOL WINAPI InvertRgn(HDC hdc,HRGN hrgn);
+  WINGDIAPI WINBOOL WINAPI LineDDA(inteiro xStart,inteiro yStart,inteiro xEnd,inteiro yEnd,LINEDDAPROC lpProc,LPARAM data);
+  WINGDIAPI WINBOOL WINAPI LineTo(HDC hdc,inteiro x,inteiro y);
+  WINGDIAPI WINBOOL WINAPI MaskBlt(HDC hdcDest,inteiro xDest,inteiro yDest,inteiro width,inteiro height,HDC hdcSrc,inteiro xSrc,inteiro ySrc,HBITMAP hbmMask,inteiro xMask,inteiro yMask,DWORD rop);
+  WINGDIAPI WINBOOL WINAPI PlgBlt(HDC hdcDest,CONST POINT *lpPoint,HDC hdcSrc,inteiro xSrc,inteiro ySrc,inteiro width,inteiro height,HBITMAP hbmMask,inteiro xMask,inteiro yMask);
+  WINGDIAPI inteiro WINAPI OffsetClipRgn(HDC hdc,inteiro x,inteiro y);
+  WINGDIAPI inteiro WINAPI OffsetRgn(HRGN hrgn,inteiro x,inteiro y);
+  WINGDIAPI WINBOOL WINAPI PatBlt(HDC hdc,inteiro x,inteiro y,inteiro w,inteiro h,DWORD rop);
+  WINGDIAPI WINBOOL WINAPI Pie(HDC hdc,inteiro left,inteiro top,inteiro right,inteiro bottom,inteiro xr1,inteiro yr1,inteiro xr2,inteiro yr2);
+  WINGDIAPI WINBOOL WINAPI PlayMetaFile(HDC hdc,HMETAFILE hmf);
+  WINGDIAPI WINBOOL WINAPI PaintRgn(HDC hdc,HRGN hrgn);
+  WINGDIAPI WINBOOL WINAPI PolyPolygon(HDC hdc,CONST POINT *apt,CONST INT *asz,inteiro csz);
+  WINGDIAPI WINBOOL WINAPI PtInRegion(HRGN hrgn,inteiro x,inteiro y);
+  WINGDIAPI WINBOOL WINAPI PtVisible(HDC hdc,inteiro x,inteiro y);
+  WINGDIAPI WINBOOL WINAPI RectInRegion(HRGN hrgn,CONST RECT *lprect);
+  WINGDIAPI WINBOOL WINAPI RectVisible(HDC hdc,CONST RECT *lprect);
+  WINGDIAPI WINBOOL WINAPI Rectangle(HDC hdc,inteiro left,inteiro top,inteiro right,inteiro bottom);
+  WINGDIAPI WINBOOL WINAPI RestoreDC(HDC hdc,inteiro nSavedDC);
+  WINGDIAPI HDC WINAPI ResetDCA(HDC hdc,CONST DEVMODEA *lpdm);
+  WINGDIAPI HDC WINAPI ResetDCW(HDC hdc,CONST DEVMODEW *lpdm);
+  WINGDIAPI UINT WINAPI RealizePalette(HDC hdc);
+  WINGDIAPI WINBOOL WINAPI RemoveFontResourceA(LPCSTR lpFileName);
+  WINGDIAPI WINBOOL WINAPI RemoveFontResourceW(LPCWSTR lpFileName);
+  WINGDIAPI WINBOOL WINAPI RoundRect(HDC hdc,inteiro left,inteiro top,inteiro right,inteiro bottom,inteiro width,inteiro height);
+  WINGDIAPI WINBOOL WINAPI ResizePalette(HPALETTE hpal,UINT n);
+  WINGDIAPI inteiro WINAPI SaveDC(HDC hdc);
+  WINGDIAPI inteiro WINAPI SelectClipRgn(HDC hdc,HRGN hrgn);
+  WINGDIAPI inteiro WINAPI ExtSelectClipRgn(HDC hdc,HRGN hrgn,inteiro mode);
+  WINGDIAPI inteiro WINAPI SetMetaRgn(HDC hdc);
+  WINGDIAPI HGDIOBJ WINAPI SelectObject(HDC hdc,HGDIOBJ h);
+  WINGDIAPI HPALETTE WINAPI SelectPalette(HDC hdc,HPALETTE hPal,WINBOOL bForceBkgd);
+  WINGDIAPI COLORREF WINAPI SetBkColor(HDC hdc,COLORREF color);
+  WINGDIAPI COLORREF WINAPI SetDCBrushColor(HDC hdc,COLORREF color);
+  WINGDIAPI COLORREF WINAPI SetDCPenColor(HDC hdc,COLORREF color);
+  WINGDIAPI inteiro WINAPI SetBkMode(HDC hdc,inteiro mode);
+  WINGDIAPI LONG WINAPI SetBitmapBits(HBITMAP hbm,DWORD cb,CONST VOID *pvBits);
+  WINGDIAPI UINT WINAPI SetBoundsRect(HDC hdc,CONST RECT *lprect,UINT flags);
+  WINGDIAPI inteiro WINAPI SetDIBits(HDC hdc,HBITMAP hbm,UINT start,UINT cLines,CONST VOID *lpBits,CONST BITMAPINFO *lpbmi,UINT ColorUse);
+  WINGDIAPI inteiro WINAPI SetDIBitsToDevice(HDC hdc,inteiro xDest,inteiro yDest,DWORD w,DWORD h,inteiro xSrc,inteiro ySrc,UINT StartScan,UINT cLines,CONST VOID *lpvBits,CONST BITMAPINFO *lpbmi,UINT ColorUse);
+  WINGDIAPI DWORD WINAPI SetMapperFlags(HDC hdc,DWORD flags);
+  WINGDIAPI inteiro WINAPI SetGraphicsMode(HDC hdc,inteiro iMode);
+  WINGDIAPI inteiro WINAPI SetMapMode(HDC hdc,inteiro iMode);
+  WINGDIAPI DWORD WINAPI SetLayout(HDC hdc,DWORD l);
+  WINGDIAPI DWORD WINAPI GetLayout(HDC hdc);
+  WINGDIAPI HMETAFILE WINAPI SetMetaFileBitsEx(UINT cbBuffer,CONST BYTE *lpData);
+  WINGDIAPI UINT WINAPI SetPaletteEntries(HPALETTE hpal,UINT iStart,UINT cEntries,CONST PALETTEENTRY *pPalEntries);
+  WINGDIAPI COLORREF WINAPI SetPixel(HDC hdc,inteiro x,inteiro y,COLORREF color);
+  WINGDIAPI WINBOOL WINAPI SetPixelV(HDC hdc,inteiro x,inteiro y,COLORREF color);
+  WINGDIAPI WINBOOL WINAPI SetPixelFormat(HDC hdc,inteiro format,CONST PIXELFORMATDESCRIPTOR *ppfd);
+  WINGDIAPI inteiro WINAPI SetPolyFillMode(HDC hdc,inteiro mode);
+  WINGDIAPI WINBOOL WINAPI StretchBlt(HDC hdcDest,inteiro xDest,inteiro yDest,inteiro wDest,inteiro hDest,HDC hdcSrc,inteiro xSrc,inteiro ySrc,inteiro wSrc,inteiro hSrc,DWORD rop);
+  WINGDIAPI WINBOOL WINAPI SetRectRgn(HRGN hrgn,inteiro left,inteiro top,inteiro right,inteiro bottom);
+  WINGDIAPI inteiro WINAPI StretchDIBits(HDC hdc,inteiro xDest,inteiro yDest,inteiro DestWidth,inteiro DestHeight,inteiro xSrc,inteiro ySrc,inteiro SrcWidth,inteiro SrcHeight,CONST VOID *lpBits,CONST BITMAPINFO *lpbmi,UINT iUsage,DWORD rop);
+  WINGDIAPI inteiro WINAPI SetROP2(HDC hdc,inteiro rop2);
+  WINGDIAPI inteiro WINAPI SetStretchBltMode(HDC hdc,inteiro mode);
+  WINGDIAPI UINT WINAPI SetSystemPaletteUse(HDC hdc,UINT use);
+  WINGDIAPI inteiro WINAPI SetTextCharacterExtra(HDC hdc,inteiro extra);
+  WINGDIAPI COLORREF WINAPI SetTextColor(HDC hdc,COLORREF color);
+  WINGDIAPI UINT WINAPI SetTextAlign(HDC hdc,UINT align);
+  WINGDIAPI WINBOOL WINAPI SetTextJustification(HDC hdc,inteiro extra,inteiro count);
+  WINGDIAPI WINBOOL WINAPI UpdateColors(HDC hdc);
+
+  defina_tipo USHORT COLOR16;
+
+  defina_tipo estrutura _TRIVERTEX {
+    LONG x;
+    LONG y;
+    COLOR16 Red;
+    COLOR16 Green;
+    COLOR16 Blue;
+    COLOR16 Alpha;
+  } TRIVERTEX,*PTRIVERTEX,*LPTRIVERTEX;
+
+  defina_tipo estrutura _GRADIENT_TRIANGLE {
+    ULONG Vertex1;
+    ULONG Vertex2;
+    ULONG Vertex3;
+  } GRADIENT_TRIANGLE,*PGRADIENT_TRIANGLE,*LPGRADIENT_TRIANGLE;
+
+  defina_tipo estrutura _GRADIENT_RECT {
+    ULONG UpperLeft;
+    ULONG LowerRight;
+  } GRADIENT_RECT,*PGRADIENT_RECT,*LPGRADIENT_RECT;
+
+  defina_tipo estrutura _BLENDFUNCTION {
+    BYTE BlendOp;
+    BYTE BlendFlags;
+    BYTE SourceConstantAlpha;
+    BYTE AlphaFormat;
+  } BLENDFUNCTION,*PBLENDFUNCTION;
+
+#defina AC_SRC_OVER 0x00
+#defina AC_SRC_ALPHA 0x01
+
+  WINGDIAPI WINBOOL WINAPI AlphaBlend(HDC hdcDest,inteiro xoriginDest,inteiro yoriginDest,inteiro wDest,inteiro hDest,HDC hdcSrc,inteiro xoriginSrc,inteiro yoriginSrc,inteiro wSrc,inteiro hSrc,BLENDFUNCTION ftn);
+  WINGDIAPI WINBOOL WINAPI TransparentBlt(HDC hdcDest,inteiro xoriginDest,inteiro yoriginDest,inteiro wDest,inteiro hDest,HDC hdcSrc,inteiro xoriginSrc,inteiro yoriginSrc,inteiro wSrc,inteiro hSrc,UINT crTransparent);
+
+#defina GRADIENT_FILL_RECT_H 0x00000000
+#defina GRADIENT_FILL_RECT_V 0x00000001
+#defina GRADIENT_FILL_TRIANGLE 0x00000002
+#defina GRADIENT_FILL_OP_FLAG 0x000000ff
+
+  WINGDIAPI WINBOOL WINAPI GradientFill(HDC hdc,PTRIVERTEX pVertex,ULONG nVertex,PVOID pMesh,ULONG nMesh,ULONG ulMode);
+
+#se_não_definido NOMETAFILE
+
+#se_definido UNICODE
+#defina CopyEnhMetaFile CopyEnhMetaFileW
+#defina CreateEnhMetaFile CreateEnhMetaFileW
+#defina GetEnhMetaFile GetEnhMetaFileW
+#defina GetEnhMetaFileDescription GetEnhMetaFileDescriptionW
+#senão
+#defina CopyEnhMetaFile CopyEnhMetaFileA
+#defina CreateEnhMetaFile CreateEnhMetaFileA
+#defina GetEnhMetaFile GetEnhMetaFileA
+#defina GetEnhMetaFileDescription GetEnhMetaFileDescriptionA
+#fim_se
+
+  WINGDIAPI WINBOOL WINAPI PlayMetaFileRecord(HDC hdc,LPHANDLETABLE lpHandleTable,LPMETARECORD lpMR,UINT noObjs);
+
+  defina_tipo inteiro (CALLBACK *MFENUMPROC)(HDC hdc,HANDLETABLE *lpht,METARECORD *lpMR,inteiro nObj,LPARAM param);
+
+  WINGDIAPI WINBOOL WINAPI EnumMetaFile(HDC hdc,HMETAFILE hmf,MFENUMPROC proc,LPARAM param);
+
+  defina_tipo inteiro (CALLBACK *ENHMFENUMPROC)(HDC hdc,HANDLETABLE *lpht,CONST ENHMETARECORD *lpmr,inteiro hHandles,LPARAM data);
+
+  WINGDIAPI HENHMETAFILE WINAPI CloseEnhMetaFile(HDC hdc);
+  WINGDIAPI HENHMETAFILE WINAPI CopyEnhMetaFileA(HENHMETAFILE hEnh,LPCSTR lpFileName);
+  WINGDIAPI HENHMETAFILE WINAPI CopyEnhMetaFileW(HENHMETAFILE hEnh,LPCWSTR lpFileName);
+  WINGDIAPI HDC WINAPI CreateEnhMetaFileA(HDC hdc,LPCSTR lpFilename,CONST RECT *lprc,LPCSTR lpDesc);
+  WINGDIAPI HDC WINAPI CreateEnhMetaFileW(HDC hdc,LPCWSTR lpFilename,CONST RECT *lprc,LPCWSTR lpDesc);
+  WINGDIAPI WINBOOL WINAPI DeleteEnhMetaFile(HENHMETAFILE hmf);
+  WINGDIAPI WINBOOL WINAPI EnumEnhMetaFile(HDC hdc,HENHMETAFILE hmf,ENHMFENUMPROC proc,LPVOID param,CONST RECT *lpRect);
+  WINGDIAPI HENHMETAFILE WINAPI GetEnhMetaFileA(LPCSTR lpName);
+  WINGDIAPI HENHMETAFILE WINAPI GetEnhMetaFileW(LPCWSTR lpName);
+  WINGDIAPI UINT WINAPI GetEnhMetaFileBits(HENHMETAFILE hEMF,UINT nSize,LPBYTE lpData);
+  WINGDIAPI UINT WINAPI GetEnhMetaFileDescriptionA(HENHMETAFILE hemf,UINT cchBuffer,LPSTR lpDescription);
+  WINGDIAPI UINT WINAPI GetEnhMetaFileDescriptionW(HENHMETAFILE hemf,UINT cchBuffer,LPWSTR lpDescription);
+  WINGDIAPI UINT WINAPI GetEnhMetaFileHeader(HENHMETAFILE hemf,UINT nSize,LPENHMETAHEADER lpEnhMetaHeader);
+  WINGDIAPI UINT WINAPI GetEnhMetaFilePaletteEntries(HENHMETAFILE hemf,UINT nNumEntries,LPPALETTEENTRY lpPaletteEntries);
+  WINGDIAPI UINT WINAPI GetEnhMetaFilePixelFormat(HENHMETAFILE hemf,UINT cbBuffer,PIXELFORMATDESCRIPTOR *ppfd);
+  WINGDIAPI UINT WINAPI GetWinMetaFileBits(HENHMETAFILE hemf,UINT cbData16,LPBYTE pData16,INT iMapMode,HDC hdcRef);
+  WINGDIAPI WINBOOL WINAPI PlayEnhMetaFile(HDC hdc,HENHMETAFILE hmf,CONST RECT *lprect);
+  WINGDIAPI WINBOOL WINAPI PlayEnhMetaFileRecord(HDC hdc,LPHANDLETABLE pht,CONST ENHMETARECORD *pmr,UINT cht);
+  WINGDIAPI HENHMETAFILE WINAPI SetEnhMetaFileBits(UINT nSize,CONST BYTE *pb);
+  WINGDIAPI HENHMETAFILE WINAPI SetWinMetaFileBits(UINT nSize,CONST BYTE *lpMeta16Data,HDC hdcRef,CONST METAFILEPICT *lpMFP);
+  WINGDIAPI WINBOOL WINAPI GdiComment(HDC hdc,UINT nSize,CONST BYTE *lpData);
+#fim_se
+
+#se_não_definido NOTEXTMETRIC
+#se_definido UNICODE
+#defina GetTextMetrics GetTextMetricsW
+#senão
+#defina GetTextMetrics GetTextMetricsA
+#fim_se
+
+  WINGDIAPI WINBOOL WINAPI GetTextMetricsA(HDC hdc,LPTEXTMETRICA lptm);
+  WINGDIAPI WINBOOL WINAPI GetTextMetricsW(HDC hdc,LPTEXTMETRICW lptm);
+#fim_se
+
+  defina_tipo estrutura tagDIBSECTION {
+    BITMAP dsBm;
+    BITMAPINFOHEADER dsBmih;
+    DWORD dsBitfields[3];
+    HANDLE dshSection;
+    DWORD dsOffset;
+  } DIBSECTION,*LPDIBSECTION,*PDIBSECTION;
+
+  WINGDIAPI WINBOOL WINAPI AngleArc(HDC hdc,inteiro x,inteiro y,DWORD r,FLOAT StartAngle,FLOAT SweepAngle);
+  WINGDIAPI WINBOOL WINAPI PolyPolyline(HDC hdc,CONST POINT *apt,CONST DWORD *asz,DWORD csz);
+  WINGDIAPI WINBOOL WINAPI GetWorldTransform(HDC hdc,LPXFORM lpxf);
+  WINGDIAPI WINBOOL WINAPI SetWorldTransform(HDC hdc,CONST XFORM *lpxf);
+  WINGDIAPI WINBOOL WINAPI ModifyWorldTransform(HDC hdc,CONST XFORM *lpxf,DWORD mode);
+  WINGDIAPI WINBOOL WINAPI CombineTransform(LPXFORM lpxfOut,CONST XFORM *lpxf1,CONST XFORM *lpxf2);
+  WINGDIAPI HBITMAP WINAPI CreateDIBSection(HDC hdc,CONST BITMAPINFO *lpbmi,UINT usage,VOID **ppvBits,HANDLE hSection,DWORD offset);
+  WINGDIAPI UINT WINAPI GetDIBColorTable(HDC hdc,UINT iStart,UINT cEntries,RGBQUAD *prgbq);
+  WINGDIAPI UINT WINAPI SetDIBColorTable(HDC hdc,UINT iStart,UINT cEntries,CONST RGBQUAD *prgbq);
+
+#defina CA_NEGATIVE 0x0001
+#defina CA_LOG_FILTER 0x0002
+
+#defina ILLUMINANT_DEVICE_DEFAULT 0
+#defina ILLUMINANT_A 1
+#defina ILLUMINANT_B 2
+#defina ILLUMINANT_C 3
+#defina ILLUMINANT_D50 4
+#defina ILLUMINANT_D55 5
+#defina ILLUMINANT_D65 6
+#defina ILLUMINANT_D75 7
+#defina ILLUMINANT_F2 8
+#defina ILLUMINANT_MAX_INDEX ILLUMINANT_F2
+
+#defina ILLUMINANT_TUNGSTEN ILLUMINANT_A
+#defina ILLUMINANT_DAYLIGHT ILLUMINANT_C
+#defina ILLUMINANT_FLUORESCENT ILLUMINANT_F2
+#defina ILLUMINANT_NTSC ILLUMINANT_C
+
+#defina RGB_GAMMA_MIN (WORD)02500
+#defina RGB_GAMMA_MAX (WORD)65000
+
+#defina REFERENCE_WHITE_MIN (WORD)6000
+#defina REFERENCE_WHITE_MAX (WORD)10000
+#defina REFERENCE_BLACK_MIN (WORD)0
+#defina REFERENCE_BLACK_MAX (WORD)4000
+
+#defina COLOR_ADJ_MIN (SHORT)-100
+#defina COLOR_ADJ_MAX (SHORT)100
+
+  defina_tipo estrutura tagCOLORADJUSTMENT {
+    WORD caSize;
+    WORD caFlags;
+    WORD caIlluminantIndex;
+    WORD caRedGamma;
+    WORD caGreenGamma;
+    WORD caBlueGamma;
+    WORD caReferenceBlack;
+    WORD caReferenceWhite;
+    SHORT caContrast;
+    SHORT caBrightness;
+    SHORT caColorfulness;
+    SHORT caRedGreenTint;
+  } COLORADJUSTMENT,*PCOLORADJUSTMENT,*LPCOLORADJUSTMENT;
+
+  WINGDIAPI WINBOOL WINAPI SetColorAdjustment(HDC hdc,CONST COLORADJUSTMENT *lpca);
+  WINGDIAPI WINBOOL WINAPI GetColorAdjustment(HDC hdc,LPCOLORADJUSTMENT lpca);
+  WINGDIAPI HPALETTE WINAPI CreateHalftonePalette(HDC hdc);
+
+  defina_tipo WINBOOL (CALLBACK *ABORTPROC)(HDC,inteiro);
+
+  defina_tipo estrutura _DOCINFOA {
+    inteiro cbSize;
+    LPCSTR lpszDocName;
+    LPCSTR lpszOutput;
+    LPCSTR lpszDatatype;
+    DWORD fwType;
+  } DOCINFOA,*LPDOCINFOA;
+
+  defina_tipo estrutura _DOCINFOW {
+    inteiro cbSize;
+    LPCWSTR lpszDocName;
+    LPCWSTR lpszOutput;
+    LPCWSTR lpszDatatype;
+    DWORD fwType;
+  } DOCINFOW,*LPDOCINFOW;
+
+#se_definido UNICODE
+  defina_tipo DOCINFOW DOCINFO;
+  defina_tipo LPDOCINFOW LPDOCINFO;
+#senão
+  defina_tipo DOCINFOA DOCINFO;
+  defina_tipo LPDOCINFOA LPDOCINFO;
+#fim_se
+
+#defina DI_APPBANDING 0x00000001
+#defina DI_ROPS_READ_DESTINATION 0x00000002
+
+#se_definido UNICODE
+#defina StartDoc StartDocW
+#defina GetObject GetObjectW
+#defina TextOut TextOutW
+#defina ExtTextOut ExtTextOutW
+#defina PolyTextOut PolyTextOutW
+#defina GetTextFace GetTextFaceW
+#senão
+#defina StartDoc StartDocA
+#defina GetObject GetObjectA
+#defina TextOut TextOutA
+#defina ExtTextOut ExtTextOutA
+#defina PolyTextOut PolyTextOutA
+#defina GetTextFace GetTextFaceA
+#fim_se
+
+  WINGDIAPI inteiro WINAPI StartDocA(HDC hdc,CONST DOCINFOA *lpdi);
+  WINGDIAPI inteiro WINAPI StartDocW(HDC hdc,CONST DOCINFOW *lpdi);
+  WINGDIAPI inteiro WINAPI EndDoc(HDC hdc);
+  WINGDIAPI inteiro WINAPI StartPage(HDC hdc);
+  WINGDIAPI inteiro WINAPI EndPage(HDC hdc);
+  WINGDIAPI inteiro WINAPI AbortDoc(HDC hdc);
+  WINGDIAPI inteiro WINAPI SetAbortProc(HDC hdc,ABORTPROC proc);
+  WINGDIAPI WINBOOL WINAPI AbortPath(HDC hdc);
+  WINGDIAPI WINBOOL WINAPI ArcTo(HDC hdc,inteiro left,inteiro top,inteiro right,inteiro bottom,inteiro xr1,inteiro yr1,inteiro xr2,inteiro yr2);
+  WINGDIAPI WINBOOL WINAPI BeginPath(HDC hdc);
+  WINGDIAPI WINBOOL WINAPI CloseFigure(HDC hdc);
+  WINGDIAPI WINBOOL WINAPI EndPath(HDC hdc);
+  WINGDIAPI WINBOOL WINAPI FillPath(HDC hdc);
+  WINGDIAPI WINBOOL WINAPI FlattenPath(HDC hdc);
+  WINGDIAPI inteiro WINAPI GetPath(HDC hdc,LPPOINT apt,LPBYTE aj,inteiro cpt);
+  WINGDIAPI HRGN WINAPI PathToRegion(HDC hdc);
+  WINGDIAPI WINBOOL WINAPI PolyDraw(HDC hdc,CONST POINT *apt,CONST BYTE *aj,inteiro cpt);
+  WINGDIAPI WINBOOL WINAPI SelectClipPath(HDC hdc,inteiro mode);
+  WINGDIAPI inteiro WINAPI SetArcDirection(HDC hdc,inteiro dir);
+  WINGDIAPI WINBOOL WINAPI SetMiterLimit(HDC hdc,FLOAT limit,PFLOAT old);
+  WINGDIAPI WINBOOL WINAPI StrokeAndFillPath(HDC hdc);
+  WINGDIAPI WINBOOL WINAPI StrokePath(HDC hdc);
+  WINGDIAPI WINBOOL WINAPI WidenPath(HDC hdc);
+  WINGDIAPI HPEN WINAPI ExtCreatePen(DWORD iPenStyle,DWORD cWidth,CONST LOGBRUSH *plbrush,DWORD cStyle,CONST DWORD *pstyle);
+  WINGDIAPI WINBOOL WINAPI GetMiterLimit(HDC hdc,PFLOAT plimit);
+  WINGDIAPI inteiro WINAPI GetArcDirection(HDC hdc);
+  WINGDIAPI inteiro WINAPI GetObjectA(HANDLE h,inteiro c,LPVOID pv);
+  WINGDIAPI inteiro WINAPI GetObjectW(HANDLE h,inteiro c,LPVOID pv);
+  WINGDIAPI WINBOOL WINAPI MoveToEx(HDC hdc,inteiro x,inteiro y,LPPOINT lppt);
+  WINGDIAPI WINBOOL WINAPI TextOutA(HDC hdc,inteiro x,inteiro y,LPCSTR lpString,inteiro c);
+  WINGDIAPI WINBOOL WINAPI TextOutW(HDC hdc,inteiro x,inteiro y,LPCWSTR lpString,inteiro c);
+  WINGDIAPI WINBOOL WINAPI ExtTextOutA(HDC hdc,inteiro x,inteiro y,UINT options,CONST RECT *lprect,LPCSTR lpString,UINT c,CONST INT *lpDx);
+  WINGDIAPI WINBOOL WINAPI ExtTextOutW(HDC hdc,inteiro x,inteiro y,UINT options,CONST RECT *lprect,LPCWSTR lpString,UINT c,CONST INT *lpDx);
+  WINGDIAPI WINBOOL WINAPI PolyTextOutA(HDC hdc,CONST POLYTEXTA *ppt,inteiro nstrings);
+  WINGDIAPI WINBOOL WINAPI PolyTextOutW(HDC hdc,CONST POLYTEXTW *ppt,inteiro nstrings);
+  WINGDIAPI HRGN WINAPI CreatePolygonRgn(CONST POINT *pptl,inteiro cPoint,inteiro iMode);
+  WINGDIAPI WINBOOL WINAPI DPtoLP(HDC hdc,LPPOINT lppt,inteiro c);
+  WINGDIAPI WINBOOL WINAPI LPtoDP(HDC hdc,LPPOINT lppt,inteiro c);
+  WINGDIAPI WINBOOL WINAPI Polygon(HDC hdc,CONST POINT *apt,inteiro cpt);
+  WINGDIAPI WINBOOL WINAPI Polyline(HDC hdc,CONST POINT *apt,inteiro cpt);
+  WINGDIAPI WINBOOL WINAPI PolyBezier(HDC hdc,CONST POINT *apt,DWORD cpt);
+  WINGDIAPI WINBOOL WINAPI PolyBezierTo(HDC hdc,CONST POINT *apt,DWORD cpt);
+  WINGDIAPI WINBOOL WINAPI PolylineTo(HDC hdc,CONST POINT *apt,DWORD cpt);
+  WINGDIAPI WINBOOL WINAPI SetViewportExtEx(HDC hdc,inteiro x,inteiro y,LPSIZE lpsz);
+  WINGDIAPI WINBOOL WINAPI SetViewportOrgEx(HDC hdc,inteiro x,inteiro y,LPPOINT lppt);
+  WINGDIAPI WINBOOL WINAPI SetWindowExtEx(HDC hdc,inteiro x,inteiro y,LPSIZE lpsz);
+  WINGDIAPI WINBOOL WINAPI SetWindowOrgEx(HDC hdc,inteiro x,inteiro y,LPPOINT lppt);
+  WINGDIAPI WINBOOL WINAPI OffsetViewportOrgEx(HDC hdc,inteiro x,inteiro y,LPPOINT lppt);
+  WINGDIAPI WINBOOL WINAPI OffsetWindowOrgEx(HDC hdc,inteiro x,inteiro y,LPPOINT lppt);
+  WINGDIAPI WINBOOL WINAPI ScaleViewportExtEx(HDC hdc,inteiro xn,inteiro dx,inteiro yn,inteiro yd,LPSIZE lpsz);
+  WINGDIAPI WINBOOL WINAPI ScaleWindowExtEx(HDC hdc,inteiro xn,inteiro xd,inteiro yn,inteiro yd,LPSIZE lpsz);
+  WINGDIAPI WINBOOL WINAPI SetBitmapDimensionEx(HBITMAP hbm,inteiro w,inteiro h,LPSIZE lpsz);
+  WINGDIAPI WINBOOL WINAPI SetBrushOrgEx(HDC hdc,inteiro x,inteiro y,LPPOINT lppt);
+  WINGDIAPI inteiro WINAPI GetTextFaceA(HDC hdc,inteiro c,LPSTR lpName);
+  WINGDIAPI inteiro WINAPI GetTextFaceW(HDC hdc,inteiro c,LPWSTR lpName);
+
+#defina FONTMAPPER_MAX 10
+
+  defina_tipo estrutura tagKERNINGPAIR {
+    WORD wFirst;
+    WORD wSecond;
+    inteiro iKernAmount;
+  } KERNINGPAIR,*LPKERNINGPAIR;
+
+#se_definido UNICODE
+#defina GetKerningPairs GetKerningPairsW
+#senão
+#defina GetKerningPairs GetKerningPairsA
+#fim_se
+
+  WINGDIAPI DWORD WINAPI GetKerningPairsA(HDC hdc,DWORD nPairs,LPKERNINGPAIR lpKernPair);
+  WINGDIAPI DWORD WINAPI GetKerningPairsW(HDC hdc,DWORD nPairs,LPKERNINGPAIR lpKernPair);
+  WINGDIAPI WINBOOL WINAPI GetDCOrgEx(HDC hdc,LPPOINT lppt);
+  WINGDIAPI WINBOOL WINAPI FixBrushOrgEx(HDC hdc,inteiro x,inteiro y,LPPOINT ptl);
+  WINGDIAPI WINBOOL WINAPI UnrealizeObject(HGDIOBJ h);
+  WINGDIAPI WINBOOL WINAPI GdiFlush();
+  WINGDIAPI DWORD WINAPI GdiSetBatchLimit(DWORD dw);
+  WINGDIAPI DWORD WINAPI GdiGetBatchLimit();
+
+#defina ICM_OFF 1
+#defina ICM_ON 2
+#defina ICM_QUERY 3
+#defina ICM_DONE_OUTSIDEDC 4
+
+  defina_tipo inteiro (CALLBACK *ICMENUMPROCA)(LPSTR,LPARAM);
+  defina_tipo inteiro (CALLBACK *ICMENUMPROCW)(LPWSTR,LPARAM);
+
+#se_definido UNICODE
+#defina ICMENUMPROC ICMENUMPROCW
+#defina EnumICMProfiles EnumICMProfilesW
+#defina UpdateICMRegKey UpdateICMRegKeyW
+#defina GetLogColorSpace GetLogColorSpaceW
+#defina CreateColorSpace CreateColorSpaceW
+#defina GetICMProfile GetICMProfileW
+#defina SetICMProfile SetICMProfileW
+#senão
+#defina ICMENUMPROC ICMENUMPROCA
+#defina EnumICMProfiles EnumICMProfilesA
+#defina UpdateICMRegKey UpdateICMRegKeyA
+#defina GetLogColorSpace GetLogColorSpaceA
+#defina CreateColorSpace CreateColorSpaceA
+#defina GetICMProfile GetICMProfileA
+#defina SetICMProfile SetICMProfileA
+#fim_se
+
+  WINGDIAPI inteiro WINAPI SetICMMode(HDC hdc,inteiro mode);
+  WINGDIAPI WINBOOL WINAPI CheckColorsInGamut(HDC hdc,LPVOID lpRGBTriple,LPVOID dlpBuffer,DWORD nCount);
+  WINGDIAPI HCOLORSPACE WINAPI GetColorSpace(HDC hdc);
+  WINGDIAPI WINBOOL WINAPI GetLogColorSpaceA(HCOLORSPACE hColorSpace,LPLOGCOLORSPACEA lpBuffer,DWORD nSize);
+  WINGDIAPI WINBOOL WINAPI GetLogColorSpaceW(HCOLORSPACE hColorSpace,LPLOGCOLORSPACEW lpBuffer,DWORD nSize);
+  WINGDIAPI HCOLORSPACE WINAPI CreateColorSpaceA(LPLOGCOLORSPACEA lplcs);
+  WINGDIAPI HCOLORSPACE WINAPI CreateColorSpaceW(LPLOGCOLORSPACEW lplcs);
+  WINGDIAPI HCOLORSPACE WINAPI SetColorSpace(HDC hdc,HCOLORSPACE hcs);
+  WINGDIAPI WINBOOL WINAPI DeleteColorSpace(HCOLORSPACE hcs);
+  WINGDIAPI WINBOOL WINAPI GetICMProfileA(HDC hdc,LPDWORD pBufSize,LPSTR pszFilename);
+  WINGDIAPI WINBOOL WINAPI GetICMProfileW(HDC hdc,LPDWORD pBufSize,LPWSTR pszFilename);
+  WINGDIAPI WINBOOL WINAPI SetICMProfileA(HDC hdc,LPSTR lpFileName);
+  WINGDIAPI WINBOOL WINAPI SetICMProfileW(HDC hdc,LPWSTR lpFileName);
+  WINGDIAPI WINBOOL WINAPI GetDeviceGammaRamp(HDC hdc,LPVOID lpRamp);
+  WINGDIAPI WINBOOL WINAPI SetDeviceGammaRamp(HDC hdc,LPVOID lpRamp);
+  WINGDIAPI WINBOOL WINAPI ColorMatchToTarget(HDC hdc,HDC hdcTarget,DWORD action);
+  WINGDIAPI inteiro WINAPI EnumICMProfilesA(HDC hdc,ICMENUMPROCA proc,LPARAM param);
+  WINGDIAPI inteiro WINAPI EnumICMProfilesW(HDC hdc,ICMENUMPROCW proc,LPARAM param);
+  WINGDIAPI WINBOOL WINAPI UpdateICMRegKeyA(DWORD reserved,LPSTR lpszCMID,LPSTR lpszFileName,UINT command);
+  WINGDIAPI WINBOOL WINAPI UpdateICMRegKeyW(DWORD reserved,LPWSTR lpszCMID,LPWSTR lpszFileName,UINT command);
+  WINGDIAPI WINBOOL WINAPI ColorCorrectPalette(HDC hdc,HPALETTE hPal,DWORD deFirst,DWORD num);
+
+#se_não_definido NOMETAFILE
+
+#defina ENHMETA_SIGNATURE 0x464D4520
+#defina ENHMETA_STOCK_OBJECT 0x80000000
+
+#defina EMR_HEADER 1
+#defina EMR_POLYBEZIER 2
+#defina EMR_POLYGON 3
+#defina EMR_POLYLINE 4
+#defina EMR_POLYBEZIERTO 5
+#defina EMR_POLYLINETO 6
+#defina EMR_POLYPOLYLINE 7
+#defina EMR_POLYPOLYGON 8
+#defina EMR_SETWINDOWEXTEX 9
+#defina EMR_SETWINDOWORGEX 10
+#defina EMR_SETVIEWPORTEXTEX 11
+#defina EMR_SETVIEWPORTORGEX 12
+#defina EMR_SETBRUSHORGEX 13
+#defina EMR_EOF 14
+#defina EMR_SETPIXELV 15
+#defina EMR_SETMAPPERFLAGS 16
+#defina EMR_SETMAPMODE 17
+#defina EMR_SETBKMODE 18
+#defina EMR_SETPOLYFILLMODE 19
+#defina EMR_SETROP2 20
+#defina EMR_SETSTRETCHBLTMODE 21
+#defina EMR_SETTEXTALIGN 22
+#defina EMR_SETCOLORADJUSTMENT 23
+#defina EMR_SETTEXTCOLOR 24
+#defina EMR_SETBKCOLOR 25
+#defina EMR_OFFSETCLIPRGN 26
+#defina EMR_MOVETOEX 27
+#defina EMR_SETMETARGN 28
+#defina EMR_EXCLUDECLIPRECT 29
+#defina EMR_INTERSECTCLIPRECT 30
+#defina EMR_SCALEVIEWPORTEXTEX 31
+#defina EMR_SCALEWINDOWEXTEX 32
+#defina EMR_SAVEDC 33
+#defina EMR_RESTOREDC 34
+#defina EMR_SETWORLDTRANSFORM 35
+#defina EMR_MODIFYWORLDTRANSFORM 36
+#defina EMR_SELECTOBJECT 37
+#defina EMR_CREATEPEN 38
+#defina EMR_CREATEBRUSHINDIRECT 39
+#defina EMR_DELETEOBJECT 40
+#defina EMR_ANGLEARC 41
+#defina EMR_ELLIPSE 42
+#defina EMR_RECTANGLE 43
+#defina EMR_ROUNDRECT 44
+#defina EMR_ARC 45
+#defina EMR_CHORD 46
+#defina EMR_PIE 47
+#defina EMR_SELECTPALETTE 48
+#defina EMR_CREATEPALETTE 49
+#defina EMR_SETPALETTEENTRIES 50
+#defina EMR_RESIZEPALETTE 51
+#defina EMR_REALIZEPALETTE 52
+#defina EMR_EXTFLOODFILL 53
+#defina EMR_LINETO 54
+#defina EMR_ARCTO 55
+#defina EMR_POLYDRAW 56
+#defina EMR_SETARCDIRECTION 57
+#defina EMR_SETMITERLIMIT 58
+#defina EMR_BEGINPATH 59
+#defina EMR_ENDPATH 60
+#defina EMR_CLOSEFIGURE 61
+#defina EMR_FILLPATH 62
+#defina EMR_STROKEANDFILLPATH 63
+#defina EMR_STROKEPATH 64
+#defina EMR_FLATTENPATH 65
+#defina EMR_WIDENPATH 66
+#defina EMR_SELECTCLIPPATH 67
+#defina EMR_ABORTPATH 68
+
+#defina EMR_GDICOMMENT 70
+#defina EMR_FILLRGN 71
+#defina EMR_FRAMERGN 72
+#defina EMR_INVERTRGN 73
+#defina EMR_PAINTRGN 74
+#defina EMR_EXTSELECTCLIPRGN 75
+#defina EMR_BITBLT 76
+#defina EMR_STRETCHBLT 77
+#defina EMR_MASKBLT 78
+#defina EMR_PLGBLT 79
+#defina EMR_SETDIBITSTODEVICE 80
+#defina EMR_STRETCHDIBITS 81
+#defina EMR_EXTCREATEFONTINDIRECTW 82
+#defina EMR_EXTTEXTOUTA 83
+#defina EMR_EXTTEXTOUTW 84
+#defina EMR_POLYBEZIER16 85
+#defina EMR_POLYGON16 86
+#defina EMR_POLYLINE16 87
+#defina EMR_POLYBEZIERTO16 88
+#defina EMR_POLYLINETO16 89
+#defina EMR_POLYPOLYLINE16 90
+#defina EMR_POLYPOLYGON16 91
+#defina EMR_POLYDRAW16 92
+#defina EMR_CREATEMONOBRUSH 93
+#defina EMR_CREATEDIBPATTERNBRUSHPT 94
+#defina EMR_EXTCREATEPEN 95
+#defina EMR_POLYTEXTOUTA 96
+#defina EMR_POLYTEXTOUTW 97
+
+#defina EMR_SETICMMODE 98
+#defina EMR_CREATECOLORSPACE 99
+#defina EMR_SETCOLORSPACE 100
+#defina EMR_DELETECOLORSPACE 101
+#defina EMR_GLSRECORD 102
+#defina EMR_GLSBOUNDEDRECORD 103
+#defina EMR_PIXELFORMAT 104
+#defina EMR_RESERVED_105 105
+#defina EMR_RESERVED_106 106
+#defina EMR_RESERVED_107 107
+#defina EMR_RESERVED_108 108
+#defina EMR_RESERVED_109 109
+#defina EMR_RESERVED_110 110
+#defina EMR_COLORCORRECTPALETTE 111
+#defina EMR_SETICMPROFILEA 112
+#defina EMR_SETICMPROFILEW 113
+#defina EMR_ALPHABLEND 114
+#defina EMR_SETLAYOUT 115
+#defina EMR_TRANSPARENTBLT 116
+#defina EMR_RESERVED_117 117
+#defina EMR_GRADIENTFILL 118
+#defina EMR_RESERVED_119 119
+#defina EMR_RESERVED_120 120
+#defina EMR_COLORMATCHTOTARGETW 121
+#defina EMR_CREATECOLORSPACEW 122
+
+#defina EMR_MIN 1
+
+#defina EMR_MAX 122
+
+  defina_tipo estrutura tagEMR {
+    DWORD iType;
+    DWORD nSize;
+  } EMR,*PEMR;
+
+  defina_tipo estrutura tagEMRTEXT {
+    POINTL ptlReference;
+    DWORD nChars;
+    DWORD offString;
+    DWORD fOptions;
+    RECTL rcl;
+    DWORD offDx;
+  } EMRTEXT,*PEMRTEXT;
+
+  defina_tipo estrutura tagABORTPATH {
+    EMR emr;
+  } EMRABORTPATH,*PEMRABORTPATH,EMRBEGINPATH,*PEMRBEGINPATH,EMRENDPATH,*PEMRENDPATH,EMRCLOSEFIGURE,*PEMRCLOSEFIGURE,EMRFLATTENPATH,*PEMRFLATTENPATH,EMRWIDENPATH,*PEMRWIDENPATH,EMRSETMETARGN,*PEMRSETMETARGN,EMRSAVEDC,*PEMRSAVEDC,EMRREALIZEPALETTE,*PEMRREALIZEPALETTE;
+
+  defina_tipo estrutura tagEMRSELECTCLIPPATH {
+    EMR emr;
+    DWORD iMode;
+  } EMRSELECTCLIPPATH,*PEMRSELECTCLIPPATH,EMRSETBKMODE,*PEMRSETBKMODE,EMRSETMAPMODE,*PEMRSETMAPMODE,EMRSETLAYOUT,*PEMRSETLAYOUT,
+    EMRSETPOLYFILLMODE,*PEMRSETPOLYFILLMODE,EMRSETROP2,*PEMRSETROP2,EMRSETSTRETCHBLTMODE,*PEMRSETSTRETCHBLTMODE,EMRSETICMMODE,
+    *PEMRSETICMMODE,EMRSETTEXTALIGN,*PEMRSETTEXTALIGN;
+
+  defina_tipo estrutura tagEMRSETMITERLIMIT {
+    EMR emr;
+    FLOAT eMiterLimit;
+  } EMRSETMITERLIMIT,*PEMRSETMITERLIMIT;
+
+  defina_tipo estrutura tagEMRRESTOREDC {
+    EMR emr;
+    LONG iRelative;
+  } EMRRESTOREDC,*PEMRRESTOREDC;
+
+  defina_tipo estrutura tagEMRSETARCDIRECTION {
+    EMR emr;
+    DWORD iArcDirection;
+
+  } EMRSETARCDIRECTION,*PEMRSETARCDIRECTION;
+
+  defina_tipo estrutura tagEMRSETMAPPERFLAGS {
+    EMR emr;
+    DWORD dwFlags;
+  } EMRSETMAPPERFLAGS,*PEMRSETMAPPERFLAGS;
+
+  defina_tipo estrutura tagEMRSETTEXTCOLOR {
+    EMR emr;
+    COLORREF crColor;
+  } EMRSETBKCOLOR,*PEMRSETBKCOLOR,EMRSETTEXTCOLOR,*PEMRSETTEXTCOLOR;
+
+  defina_tipo estrutura tagEMRSELECTOBJECT {
+    EMR emr;
+    DWORD ihObject;
+  } EMRSELECTOBJECT,*PEMRSELECTOBJECT,EMRDELETEOBJECT,*PEMRDELETEOBJECT;
+
+  defina_tipo estrutura tagEMRSELECTPALETTE {
+    EMR emr;
+    DWORD ihPal;
+  } EMRSELECTPALETTE,*PEMRSELECTPALETTE;
+
+  defina_tipo estrutura tagEMRRESIZEPALETTE {
+    EMR emr;
+    DWORD ihPal;
+    DWORD cEntries;
+  } EMRRESIZEPALETTE,*PEMRRESIZEPALETTE;
+
+  defina_tipo estrutura tagEMRSETPALETTEENTRIES {
+    EMR emr;
+    DWORD ihPal;
+    DWORD iStart;
+    DWORD cEntries;
+    PALETTEENTRY aPalEntries[1];
+  } EMRSETPALETTEENTRIES,*PEMRSETPALETTEENTRIES;
+
+  defina_tipo estrutura tagEMRSETCOLORADJUSTMENT {
+    EMR emr;
+    COLORADJUSTMENT ColorAdjustment;
+  } EMRSETCOLORADJUSTMENT,*PEMRSETCOLORADJUSTMENT;
+
+  defina_tipo estrutura tagEMRGDICOMMENT {
+    EMR emr;
+    DWORD cbData;
+    BYTE Data[1];
+  } EMRGDICOMMENT,*PEMRGDICOMMENT;
+
+  defina_tipo estrutura tagEMREOF {
+    EMR emr;
+    DWORD nPalEntries;
+    DWORD offPalEntries;
+    DWORD nSizeLast;
+  } EMREOF,*PEMREOF;
+
+  defina_tipo estrutura tagEMRLINETO {
+    EMR emr;
+    POINTL ptl;
+  } EMRLINETO,*PEMRLINETO,EMRMOVETOEX,*PEMRMOVETOEX;
+
+  defina_tipo estrutura tagEMROFFSETCLIPRGN {
+    EMR emr;
+    POINTL ptlOffset;
+  } EMROFFSETCLIPRGN,*PEMROFFSETCLIPRGN;
+
+  defina_tipo estrutura tagEMRFILLPATH {
+    EMR emr;
+    RECTL rclBounds;
+  } EMRFILLPATH,*PEMRFILLPATH,EMRSTROKEANDFILLPATH,*PEMRSTROKEANDFILLPATH,EMRSTROKEPATH,*PEMRSTROKEPATH;
+
+  defina_tipo estrutura tagEMREXCLUDECLIPRECT {
+    EMR emr;
+    RECTL rclClip;
+  } EMREXCLUDECLIPRECT,*PEMREXCLUDECLIPRECT,EMRINTERSECTCLIPRECT,*PEMRINTERSECTCLIPRECT;
+
+  defina_tipo estrutura tagEMRSETVIEWPORTORGEX {
+    EMR emr;
+    POINTL ptlOrigin;
+  } EMRSETVIEWPORTORGEX,*PEMRSETVIEWPORTORGEX,EMRSETWINDOWORGEX,*PEMRSETWINDOWORGEX,EMRSETBRUSHORGEX,*PEMRSETBRUSHORGEX;
+
+  defina_tipo estrutura tagEMRSETVIEWPORTEXTEX {
+    EMR emr;
+    SIZEL szlExtent;
+  } EMRSETVIEWPORTEXTEX,*PEMRSETVIEWPORTEXTEX,EMRSETWINDOWEXTEX,*PEMRSETWINDOWEXTEX;
+
+  defina_tipo estrutura tagEMRSCALEVIEWPORTEXTEX {
+    EMR emr;
+    LONG xNum;
+    LONG xDenom;
+    LONG yNum;
+    LONG yDenom;
+  } EMRSCALEVIEWPORTEXTEX,*PEMRSCALEVIEWPORTEXTEX,EMRSCALEWINDOWEXTEX,*PEMRSCALEWINDOWEXTEX;
+
+  defina_tipo estrutura tagEMRSETWORLDTRANSFORM {
+    EMR emr;
+    XFORM xform;
+  } EMRSETWORLDTRANSFORM,*PEMRSETWORLDTRANSFORM;
+
+  defina_tipo estrutura tagEMRMODIFYWORLDTRANSFORM {
+    EMR emr;
+    XFORM xform;
+    DWORD iMode;
+  } EMRMODIFYWORLDTRANSFORM,*PEMRMODIFYWORLDTRANSFORM;
+
+  defina_tipo estrutura tagEMRSETPIXELV {
+    EMR emr;
+    POINTL ptlPixel;
+    COLORREF crColor;
+  } EMRSETPIXELV,*PEMRSETPIXELV;
+
+  defina_tipo estrutura tagEMREXTFLOODFILL {
+    EMR emr;
+    POINTL ptlStart;
+    COLORREF crColor;
+    DWORD iMode;
+  } EMREXTFLOODFILL,*PEMREXTFLOODFILL;
+
+  defina_tipo estrutura tagEMRELLIPSE {
+    EMR emr;
+    RECTL rclBox;
+  } EMRELLIPSE,*PEMRELLIPSE,EMRRECTANGLE,*PEMRRECTANGLE;
+
+  defina_tipo estrutura tagEMRROUNDRECT {
+    EMR emr;
+    RECTL rclBox;
+    SIZEL szlCorner;
+  } EMRROUNDRECT,*PEMRROUNDRECT;
+
+  defina_tipo estrutura tagEMRARC {
+    EMR emr;
+    RECTL rclBox;
+    POINTL ptlStart;
+    POINTL ptlEnd;
+  } EMRARC,*PEMRARC,EMRARCTO,*PEMRARCTO,EMRCHORD,*PEMRCHORD,EMRPIE,*PEMRPIE;
+
+  defina_tipo estrutura tagEMRANGLEARC {
+    EMR emr;
+    POINTL ptlCenter;
+    DWORD nRadius;
+    FLOAT eStartAngle;
+    FLOAT eSweepAngle;
+  } EMRANGLEARC,*PEMRANGLEARC;
+
+  defina_tipo estrutura tagEMRPOLYLINE {
+    EMR emr;
+    RECTL rclBounds;
+    DWORD cptl;
+    POINTL aptl[1];
+  } EMRPOLYLINE,*PEMRPOLYLINE,EMRPOLYBEZIER,*PEMRPOLYBEZIER,EMRPOLYGON,*PEMRPOLYGON,EMRPOLYBEZIERTO,*PEMRPOLYBEZIERTO,EMRPOLYLINETO,*PEMRPOLYLINETO;
+
+  defina_tipo estrutura tagEMRPOLYLINE16 {
+    EMR emr;
+    RECTL rclBounds;
+    DWORD cpts;
+    POINTS apts[1];
+  } EMRPOLYLINE16,*PEMRPOLYLINE16,EMRPOLYBEZIER16,*PEMRPOLYBEZIER16,EMRPOLYGON16,*PEMRPOLYGON16,EMRPOLYBEZIERTO16,*PEMRPOLYBEZIERTO16,EMRPOLYLINETO16,*PEMRPOLYLINETO16;
+
+  defina_tipo estrutura tagEMRPOLYDRAW {
+    EMR emr;
+    RECTL rclBounds;
+    DWORD cptl;
+    POINTL aptl[1];
+    BYTE abTypes[1];
+  } EMRPOLYDRAW,*PEMRPOLYDRAW;
+
+  defina_tipo estrutura tagEMRPOLYDRAW16 {
+    EMR emr;
+    RECTL rclBounds;
+    DWORD cpts;
+    POINTS apts[1];
+    BYTE abTypes[1];
+  } EMRPOLYDRAW16,*PEMRPOLYDRAW16;
+
+  defina_tipo estrutura tagEMRPOLYPOLYLINE {
+    EMR emr;
+    RECTL rclBounds;
+    DWORD nPolys;
+    DWORD cptl;
+    DWORD aPolyCounts[1];
+    POINTL aptl[1];
+  } EMRPOLYPOLYLINE,*PEMRPOLYPOLYLINE,EMRPOLYPOLYGON,*PEMRPOLYPOLYGON;
+
+  defina_tipo estrutura tagEMRPOLYPOLYLINE16 {
+    EMR emr;
+    RECTL rclBounds;
+    DWORD nPolys;
+    DWORD cpts;
+    DWORD aPolyCounts[1];
+    POINTS apts[1];
+  } EMRPOLYPOLYLINE16,*PEMRPOLYPOLYLINE16,EMRPOLYPOLYGON16,*PEMRPOLYPOLYGON16;
+
+  defina_tipo estrutura tagEMRINVERTRGN {
+    EMR emr;
+    RECTL rclBounds;
+    DWORD cbRgnData;
+    BYTE RgnData[1];
+  } EMRINVERTRGN,*PEMRINVERTRGN,EMRPAINTRGN,*PEMRPAINTRGN;
+
+  defina_tipo estrutura tagEMRFILLRGN {
+    EMR emr;
+    RECTL rclBounds;
+    DWORD cbRgnData;
+    DWORD ihBrush;
+    BYTE RgnData[1];
+  } EMRFILLRGN,*PEMRFILLRGN;
+
+  defina_tipo estrutura tagEMRFRAMERGN {
+    EMR emr;
+    RECTL rclBounds;
+    DWORD cbRgnData;
+    DWORD ihBrush;
+    SIZEL szlStroke;
+    BYTE RgnData[1];
+  } EMRFRAMERGN,*PEMRFRAMERGN;
+
+  defina_tipo estrutura tagEMREXTSELECTCLIPRGN {
+    EMR emr;
+    DWORD cbRgnData;
+    DWORD iMode;
+    BYTE RgnData[1];
+  } EMREXTSELECTCLIPRGN,*PEMREXTSELECTCLIPRGN;
+
+  defina_tipo estrutura tagEMREXTTEXTOUTA {
+    EMR emr;
+    RECTL rclBounds;
+    DWORD iGraphicsMode;
+    FLOAT exScale;
+    FLOAT eyScale;
+    EMRTEXT emrtext;
+  } EMREXTTEXTOUTA,*PEMREXTTEXTOUTA,EMREXTTEXTOUTW,*PEMREXTTEXTOUTW;
+
+  defina_tipo estrutura tagEMRPOLYTEXTOUTA {
+    EMR emr;
+    RECTL rclBounds;
+    DWORD iGraphicsMode;
+    FLOAT exScale;
+    FLOAT eyScale;
+    LONG cStrings;
+    EMRTEXT aemrtext[1];
+  } EMRPOLYTEXTOUTA,*PEMRPOLYTEXTOUTA,EMRPOLYTEXTOUTW,*PEMRPOLYTEXTOUTW;
+
+  defina_tipo estrutura tagEMRBITBLT {
+    EMR emr;
+    RECTL rclBounds;
+    LONG xDest;
+    LONG yDest;
+    LONG cxDest;
+    LONG cyDest;
+    DWORD dwRop;
+    LONG xSrc;
+    LONG ySrc;
+    XFORM xformSrc;
+    COLORREF crBkColorSrc;
+    DWORD iUsageSrc;
+    DWORD offBmiSrc;
+    DWORD cbBmiSrc;
+    DWORD offBitsSrc;
+    DWORD cbBitsSrc;
+  } EMRBITBLT,*PEMRBITBLT;
+
+  defina_tipo estrutura tagEMRSTRETCHBLT {
+    EMR emr;
+    RECTL rclBounds;
+    LONG xDest;
+    LONG yDest;
+    LONG cxDest;
+    LONG cyDest;
+    DWORD dwRop;
+    LONG xSrc;
+    LONG ySrc;
+    XFORM xformSrc;
+    COLORREF crBkColorSrc;
+    DWORD iUsageSrc;
+    DWORD offBmiSrc;
+    DWORD cbBmiSrc;
+    DWORD offBitsSrc;
+    DWORD cbBitsSrc;
+    LONG cxSrc;
+    LONG cySrc;
+  } EMRSTRETCHBLT,*PEMRSTRETCHBLT;
+
+  defina_tipo estrutura tagEMRMASKBLT {
+    EMR emr;
+    RECTL rclBounds;
+    LONG xDest;
+    LONG yDest;
+    LONG cxDest;
+    LONG cyDest;
+    DWORD dwRop;
+    LONG xSrc;
+    LONG ySrc;
+    XFORM xformSrc;
+    COLORREF crBkColorSrc;
+    DWORD iUsageSrc;
+    DWORD offBmiSrc;
+    DWORD cbBmiSrc;
+    DWORD offBitsSrc;
+    DWORD cbBitsSrc;
+    LONG xMask;
+    LONG yMask;
+    DWORD iUsageMask;
+    DWORD offBmiMask;
+    DWORD cbBmiMask;
+    DWORD offBitsMask;
+    DWORD cbBitsMask;
+  } EMRMASKBLT,*PEMRMASKBLT;
+
+  defina_tipo estrutura tagEMRPLGBLT {
+    EMR emr;
+    RECTL rclBounds;
+    POINTL aptlDest[3];
+    LONG xSrc;
+    LONG ySrc;
+    LONG cxSrc;
+    LONG cySrc;
+    XFORM xformSrc;
+    COLORREF crBkColorSrc;
+    DWORD iUsageSrc;
+    DWORD offBmiSrc;
+    DWORD cbBmiSrc;
+    DWORD offBitsSrc;
+    DWORD cbBitsSrc;
+    LONG xMask;
+    LONG yMask;
+    DWORD iUsageMask;
+    DWORD offBmiMask;
+    DWORD cbBmiMask;
+    DWORD offBitsMask;
+    DWORD cbBitsMask;
+  } EMRPLGBLT,*PEMRPLGBLT;
+
+  defina_tipo estrutura tagEMRSETDIBITSTODEVICE {
+    EMR emr;
+    RECTL rclBounds;
+    LONG xDest;
+    LONG yDest;
+    LONG xSrc;
+    LONG ySrc;
+    LONG cxSrc;
+    LONG cySrc;
+    DWORD offBmiSrc;
+    DWORD cbBmiSrc;
+    DWORD offBitsSrc;
+    DWORD cbBitsSrc;
+    DWORD iUsageSrc;
+    DWORD iStartScan;
+    DWORD cScans;
+  } EMRSETDIBITSTODEVICE,*PEMRSETDIBITSTODEVICE;
+
+  defina_tipo estrutura tagEMRSTRETCHDIBITS {
+    EMR emr;
+    RECTL rclBounds;
+    LONG xDest;
+    LONG yDest;
+    LONG xSrc;
+    LONG ySrc;
+    LONG cxSrc;
+    LONG cySrc;
+    DWORD offBmiSrc;
+    DWORD cbBmiSrc;
+    DWORD offBitsSrc;
+    DWORD cbBitsSrc;
+    DWORD iUsageSrc;
+    DWORD dwRop;
+    LONG cxDest;
+    LONG cyDest;
+  } EMRSTRETCHDIBITS,*PEMRSTRETCHDIBITS;
+
+  defina_tipo estrutura tagEMREXTCREATEFONTINDIRECTW {
+    EMR emr;
+    DWORD ihFont;
+    EXTLOGFONTW elfw;
+  } EMREXTCREATEFONTINDIRECTW,*PEMREXTCREATEFONTINDIRECTW;
+
+  defina_tipo estrutura tagEMRCREATEPALETTE {
+    EMR emr;
+    DWORD ihPal;
+    LOGPALETTE lgpl;
+  } EMRCREATEPALETTE,*PEMRCREATEPALETTE;
+
+  defina_tipo estrutura tagEMRCREATEPEN {
+    EMR emr;
+    DWORD ihPen;
+    LOGPEN lopn;
+  } EMRCREATEPEN,*PEMRCREATEPEN;
+
+  defina_tipo estrutura tagEMREXTCREATEPEN {
+    EMR emr;
+    DWORD ihPen;
+    DWORD offBmi;
+    DWORD cbBmi;
+    DWORD offBits;
+    DWORD cbBits;
+    EXTLOGPEN elp;
+  } EMREXTCREATEPEN,*PEMREXTCREATEPEN;
+
+  defina_tipo estrutura tagEMRCREATEBRUSHINDIRECT {
+    EMR emr;
+    DWORD ihBrush;
+    LOGBRUSH32 lb;
+  } EMRCREATEBRUSHINDIRECT,*PEMRCREATEBRUSHINDIRECT;
+
+  defina_tipo estrutura tagEMRCREATEMONOBRUSH {
+    EMR emr;
+    DWORD ihBrush;
+    DWORD iUsage;
+    DWORD offBmi;
+    DWORD cbBmi;
+    DWORD offBits;
+    DWORD cbBits;
+  } EMRCREATEMONOBRUSH,*PEMRCREATEMONOBRUSH;
+
+  defina_tipo estrutura tagEMRCREATEDIBPATTERNBRUSHPT {
+    EMR emr;
+    DWORD ihBrush;
+    DWORD iUsage;
+    DWORD offBmi;
+    DWORD cbBmi;
+    DWORD offBits;
+    DWORD cbBits;
+  } EMRCREATEDIBPATTERNBRUSHPT,*PEMRCREATEDIBPATTERNBRUSHPT;
+
+  defina_tipo estrutura tagEMRFORMAT {
+    DWORD dSignature;
+    DWORD nVersion;
+    DWORD cbData;
+    DWORD offData;
+  } EMRFORMAT,*PEMRFORMAT;
+
+  defina_tipo estrutura tagEMRGLSRECORD {
+    EMR emr;
+    DWORD cbData;
+    BYTE Data[1];
+  } EMRGLSRECORD,*PEMRGLSRECORD;
+
+  defina_tipo estrutura tagEMRGLSBOUNDEDRECORD {
+    EMR emr;
+    RECTL rclBounds;
+    DWORD cbData;
+    BYTE Data[1];
+  } EMRGLSBOUNDEDRECORD,*PEMRGLSBOUNDEDRECORD;
+
+  defina_tipo estrutura tagEMRPIXELFORMAT {
+    EMR emr;
+    PIXELFORMATDESCRIPTOR pfd;
+  } EMRPIXELFORMAT,*PEMRPIXELFORMAT;
+
+  defina_tipo estrutura tagEMRCREATECOLORSPACE {
+    EMR emr;
+    DWORD ihCS;
+    LOGCOLORSPACEA lcs;
+  } EMRCREATECOLORSPACE,*PEMRCREATECOLORSPACE;
+
+  defina_tipo estrutura tagEMRSETCOLORSPACE {
+    EMR emr;
+    DWORD ihCS;
+  } EMRSETCOLORSPACE,*PEMRSETCOLORSPACE,EMRSELECTCOLORSPACE,*PEMRSELECTCOLORSPACE,EMRDELETECOLORSPACE,*PEMRDELETECOLORSPACE;
+
+  defina_tipo estrutura tagEMREXTESCAPE {
+    EMR emr;
+    INT iEscape;
+    INT cbEscData;
+    BYTE EscData[1];
+  } EMREXTESCAPE,*PEMREXTESCAPE,EMRDRAWESCAPE,*PEMRDRAWESCAPE;
+
+  defina_tipo estrutura tagEMRNAMEDESCAPE {
+    EMR emr;
+    INT iEscape;
+    INT cbDriver;
+    INT cbEscData;
+    BYTE EscData[1];
+  } EMRNAMEDESCAPE,*PEMRNAMEDESCAPE;
+
+#defina SETICMPROFILE_EMBEDED 0x00000001
+
+  defina_tipo estrutura tagEMRSETICMPROFILE {
+    EMR emr;
+    DWORD dwFlags;
+    DWORD cbName;
+    DWORD cbData;
+    BYTE Data[1];
+  } EMRSETICMPROFILE,*PEMRSETICMPROFILE,EMRSETICMPROFILEA,*PEMRSETICMPROFILEA,EMRSETICMPROFILEW,*PEMRSETICMPROFILEW;
+
+#defina CREATECOLORSPACE_EMBEDED 0x00000001
+
+  defina_tipo estrutura tagEMRCREATECOLORSPACEW {
+    EMR emr;
+    DWORD ihCS;
+    LOGCOLORSPACEW lcs;
+    DWORD dwFlags;
+    DWORD cbData;
+    BYTE Data[1];
+  } EMRCREATECOLORSPACEW,*PEMRCREATECOLORSPACEW;
+
+#defina COLORMATCHTOTARGET_EMBEDED 0x00000001
+
+  defina_tipo estrutura tagCOLORMATCHTOTARGET {
+    EMR emr;
+    DWORD dwAction;
+    DWORD dwFlags;
+    DWORD cbName;
+    DWORD cbData;
+    BYTE Data[1];
+  } EMRCOLORMATCHTOTARGET,*PEMRCOLORMATCHTOTARGET;
+
+  defina_tipo estrutura tagCOLORCORRECTPALETTE {
+    EMR emr;
+    DWORD ihPalette;
+    DWORD nFirstEntry;
+    DWORD nPalEntries;
+    DWORD nReserved;
+  } EMRCOLORCORRECTPALETTE,*PEMRCOLORCORRECTPALETTE;
+
+  defina_tipo estrutura tagEMRALPHABLEND {
+    EMR emr;
+    RECTL rclBounds;
+    LONG xDest;
+    LONG yDest;
+    LONG cxDest;
+    LONG cyDest;
+    DWORD dwRop;
+    LONG xSrc;
+    LONG ySrc;
+    XFORM xformSrc;
+    COLORREF crBkColorSrc;
+    DWORD iUsageSrc;
+    DWORD offBmiSrc;
+    DWORD cbBmiSrc;
+    DWORD offBitsSrc;
+    DWORD cbBitsSrc;
+    LONG cxSrc;
+    LONG cySrc;
+  } EMRALPHABLEND,*PEMRALPHABLEND;
+
+  defina_tipo estrutura tagEMRGRADIENTFILL {
+    EMR emr;
+    RECTL rclBounds;
+    DWORD nVer;
+    DWORD nTri;
+    ULONG ulMode;
+    TRIVERTEX Ver[1];
+  } EMRGRADIENTFILL,*PEMRGRADIENTFILL;
+
+  defina_tipo estrutura tagEMRTRANSPARENTBLT {
+    EMR emr;
+    RECTL rclBounds;
+    LONG xDest;
+    LONG yDest;
+    LONG cxDest;
+    LONG cyDest;
+    DWORD dwRop;
+    LONG xSrc;
+    LONG ySrc;
+    XFORM xformSrc;
+    COLORREF crBkColorSrc;
+    DWORD iUsageSrc;
+    DWORD offBmiSrc;
+    DWORD cbBmiSrc;
+    DWORD offBitsSrc;
+    DWORD cbBitsSrc;
+    LONG cxSrc;
+    LONG cySrc;
+  } EMRTRANSPARENTBLT,*PEMRTRANSPARENTBLT;
+
+#defina GDICOMMENT_IDENTIFIER 0x43494447
+#defina GDICOMMENT_WINDOWS_METAFILE 0x80000001
+#defina GDICOMMENT_BEGINGROUP 0x00000002
+#defina GDICOMMENT_ENDGROUP 0x00000003
+#defina GDICOMMENT_MULTIFORMATS 0x40000004
+#defina EPS_SIGNATURE 0x46535045
+#defina GDICOMMENT_UNICODE_STRING 0x00000040
+#defina GDICOMMENT_UNICODE_END 0x00000080
+#fim_se
+
+#se_definido UNICODE
+#defina wglUseFontBitmaps wglUseFontBitmapsW
+#senão
+#defina wglUseFontBitmaps wglUseFontBitmapsA
+#fim_se
+
+  WINGDIAPI WINBOOL WINAPI wglCopyContext(HGLRC,HGLRC,UINT);
+  WINGDIAPI HGLRC WINAPI wglCreateContext(HDC);
+  WINGDIAPI HGLRC WINAPI wglCreateLayerContext(HDC,inteiro);
+  WINGDIAPI WINBOOL WINAPI wglDeleteContext(HGLRC);
+  WINGDIAPI HGLRC WINAPI wglGetCurrentContext(VOID);
+  WINGDIAPI HDC WINAPI wglGetCurrentDC(VOID);
+  WINGDIAPI PROC WINAPI wglGetProcAddress(LPCSTR);
+  WINGDIAPI WINBOOL WINAPI wglMakeCurrent(HDC,HGLRC);
+  WINGDIAPI WINBOOL WINAPI wglShareLists(HGLRC,HGLRC);
+  WINGDIAPI WINBOOL WINAPI wglUseFontBitmapsA(HDC,DWORD,DWORD,DWORD);
+  WINGDIAPI WINBOOL WINAPI wglUseFontBitmapsW(HDC,DWORD,DWORD,DWORD);
+  WINGDIAPI WINBOOL WINAPI SwapBuffers(HDC);
+
+  defina_tipo estrutura _POINTFLOAT {
+    FLOAT x;
+    FLOAT y;
+  } POINTFLOAT,*PPOINTFLOAT;
+
+  defina_tipo estrutura _GLYPHMETRICSFLOAT {
+    FLOAT gmfBlackBoxX;
+    FLOAT gmfBlackBoxY;
+    POINTFLOAT gmfptGlyphOrigin;
+    FLOAT gmfCellIncX;
+    FLOAT gmfCellIncY;
+  } GLYPHMETRICSFLOAT,*PGLYPHMETRICSFLOAT,*LPGLYPHMETRICSFLOAT;
+
+#defina WGL_FONT_LINES 0
+#defina WGL_FONT_POLYGONS 1
+
+#se_definido UNICODE
+#defina wglUseFontOutlines wglUseFontOutlinesW
+#senão
+#defina wglUseFontOutlines wglUseFontOutlinesA
+#fim_se
+
+  WINGDIAPI WINBOOL WINAPI wglUseFontOutlinesA(HDC,DWORD,DWORD,DWORD,FLOAT,FLOAT,inteiro,LPGLYPHMETRICSFLOAT);
+  WINGDIAPI WINBOOL WINAPI wglUseFontOutlinesW(HDC,DWORD,DWORD,DWORD,FLOAT,FLOAT,inteiro,LPGLYPHMETRICSFLOAT);
+
+  defina_tipo estrutura tagLAYERPLANEDESCRIPTOR {
+    WORD nSize;
+    WORD nVersion;
+    DWORD dwFlags;
+    BYTE iPixelType;
+    BYTE cColorBits;
+    BYTE cRedBits;
+    BYTE cRedShift;
+    BYTE cGreenBits;
+    BYTE cGreenShift;
+    BYTE cBlueBits;
+    BYTE cBlueShift;
+    BYTE cAlphaBits;
+    BYTE cAlphaShift;
+    BYTE cAccumBits;
+    BYTE cAccumRedBits;
+    BYTE cAccumGreenBits;
+    BYTE cAccumBlueBits;
+    BYTE cAccumAlphaBits;
+    BYTE cDepthBits;
+    BYTE cStencilBits;
+    BYTE cAuxBuffers;
+    BYTE iLayerPlane;
+    BYTE bReserved;
+    COLORREF crTransparent;
+  } LAYERPLANEDESCRIPTOR,*PLAYERPLANEDESCRIPTOR,*LPLAYERPLANEDESCRIPTOR;
+
+#defina LPD_DOUBLEBUFFER 0x00000001
+#defina LPD_STEREO 0x00000002
+#defina LPD_SUPPORT_GDI 0x00000010
+#defina LPD_SUPPORT_OPENGL 0x00000020
+#defina LPD_SHARE_DEPTH 0x00000040
+#defina LPD_SHARE_STENCIL 0x00000080
+#defina LPD_SHARE_ACCUM 0x00000100
+#defina LPD_SWAP_EXCHANGE 0x00000200
+#defina LPD_SWAP_COPY 0x00000400
+#defina LPD_TRANSPARENT 0x00001000
+
+#defina LPD_TYPE_RGBA 0
+#defina LPD_TYPE_COLORINDEX 1
+
+#defina WGL_SWAP_MAIN_PLANE 0x00000001
+#defina WGL_SWAP_OVERLAY1 0x00000002
+#defina WGL_SWAP_OVERLAY2 0x00000004
+#defina WGL_SWAP_OVERLAY3 0x00000008
+#defina WGL_SWAP_OVERLAY4 0x00000010
+#defina WGL_SWAP_OVERLAY5 0x00000020
+#defina WGL_SWAP_OVERLAY6 0x00000040
+#defina WGL_SWAP_OVERLAY7 0x00000080
+#defina WGL_SWAP_OVERLAY8 0x00000100
+#defina WGL_SWAP_OVERLAY9 0x00000200
+#defina WGL_SWAP_OVERLAY10 0x00000400
+#defina WGL_SWAP_OVERLAY11 0x00000800
+#defina WGL_SWAP_OVERLAY12 0x00001000
+#defina WGL_SWAP_OVERLAY13 0x00002000
+#defina WGL_SWAP_OVERLAY14 0x00004000
+#defina WGL_SWAP_OVERLAY15 0x00008000
+#defina WGL_SWAP_UNDERLAY1 0x00010000
+#defina WGL_SWAP_UNDERLAY2 0x00020000
+#defina WGL_SWAP_UNDERLAY3 0x00040000
+#defina WGL_SWAP_UNDERLAY4 0x00080000
+#defina WGL_SWAP_UNDERLAY5 0x00100000
+#defina WGL_SWAP_UNDERLAY6 0x00200000
+#defina WGL_SWAP_UNDERLAY7 0x00400000
+#defina WGL_SWAP_UNDERLAY8 0x00800000
+#defina WGL_SWAP_UNDERLAY9 0x01000000
+#defina WGL_SWAP_UNDERLAY10 0x02000000
+#defina WGL_SWAP_UNDERLAY11 0x04000000
+#defina WGL_SWAP_UNDERLAY12 0x08000000
+#defina WGL_SWAP_UNDERLAY13 0x10000000
+#defina WGL_SWAP_UNDERLAY14 0x20000000
+#defina WGL_SWAP_UNDERLAY15 0x40000000
+
+  WINGDIAPI WINBOOL WINAPI wglDescribeLayerPlane(HDC,inteiro,inteiro,UINT,LPLAYERPLANEDESCRIPTOR);
+  WINGDIAPI inteiro WINAPI wglSetLayerPaletteEntries(HDC,inteiro,inteiro,inteiro,CONST COLORREF *);
+  WINGDIAPI inteiro WINAPI wglGetLayerPaletteEntries(HDC,inteiro,inteiro,inteiro,COLORREF *);
+  WINGDIAPI WINBOOL WINAPI wglRealizeLayerPalette(HDC,inteiro,WINBOOL);
+  WINGDIAPI WINBOOL WINAPI wglSwapLayerBuffers(HDC,UINT);
+
+  defina_tipo estrutura _WGLSWAP {
+    HDC hdc;
+    UINT uiFlags;
+  } WGLSWAP,*PWGLSWAP,*LPWGLSWAP;
+
+#defina WGL_SWAPMULTIPLE_MAX 16
+
+  WINGDIAPI DWORD WINAPI wglSwapMultipleBuffers(UINT,CONST WGLSWAP *);
+#fim_se
+
+#se_definido __cplusplus
+}
+#fim_se
+#fim_se
