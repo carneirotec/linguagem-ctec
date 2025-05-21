@@ -1,5 +1,5 @@
 @rem ------------------------------------------------------
-@rem batch file to build tcc using mingw, msvc or tcc itself
+@rem batch file to build ctec using mingw, msvc or ctec itself
 @rem ------------------------------------------------------
 
 @echo off
@@ -30,15 +30,15 @@ if (%1)==(-d) set DOC=yes&& goto :a3
 if (%1)==(-x) set EXES_ONLY=yes&& goto :a3
 if (%1)==() goto :p1
 :usage
-echo usage: build-tcc.bat [ options ... ]
+echo usage: build-ctec.bat [ options ... ]
 echo options:
-echo   -c prog              use prog (gcc/tcc/cl) to compile tcc
-echo   -c "prog options"    use prog with options to compile tcc
+echo   -c prog              use prog (gcc/ctec/cl) to compile ctec
+echo   -c "prog options"    use prog with options to compile ctec
 echo   -t 32/64             force 32/64 bit default target
-echo   -v "version"         set tcc version
-echo   -i tccdir            install tcc into tccdir
+echo   -v "version"         set ctec version
+echo   -i ctecdir            install ctec into ctecdir
 echo   -b bindir            optionally install binaries into bindir elsewhere
-echo   -d                   create tcc-doc.html too (needs makeinfo)
+echo   -d                   create ctec-doc.html too (needs makeinfo)
 echo   -x                   just create the executables
 echo   -clean               delete all previously produced files and directories
 exit /B 1
@@ -49,13 +49,13 @@ exit /B 1
 :cleanup
 set LOG=echo
 %LOG% removing files:
-for %%f in (*tcc.exe libtcc.dll lib\*.a) do call :del_file %%f
+for %%f in (*ctec.exe libctec.dll lib\*.a) do call :del_file %%f
 for %%f in (..\config.h ..\config.texi) do call :del_file %%f
 for %%f in (include\*.h) do @if exist ..\%%f call :del_file %%f
-for %%f in (include\tcclib.h examples\libtcc_test.c) do call :del_file %%f
+for %%f in (include\cteclib.h examples\libctec_test.c) do call :del_file %%f
 for %%f in (*.o *.obj *.def *.pdb *.lib *.exp *.ilk) do call :del_file %%f
 %LOG% removing directories:
-for %%f in (doc libtcc) do call :del_dir %%f
+for %%f in (doc libctec) do call :del_dir %%f
 %LOG% done.
 exit /B 0
 :del_file
@@ -90,8 +90,8 @@ if %PROCESSOR_ARCHITECTURE%_==AMD64_ set T=64
 if %PROCESSOR_ARCHITEW6432%_==AMD64_ set T=64
 :p2
 if "%CC:~-3%"=="gcc" set CC=%CC% -Os -s -static
-set D32=-DTCC_TARGET_PE -DTCC_TARGET_I386
-set D64=-DTCC_TARGET_PE -DTCC_TARGET_X86_64
+set D32=-DCTEC_TARGET_PE -DCTEC_TARGET_I386
+set D64=-DCTEC_TARGET_PE -DCTEC_TARGET_X86_64
 set P32=i386-win32
 set P64=x86_64-win32
 if %T%==64 goto :t64
@@ -109,67 +109,67 @@ goto :p3
 @echo on
 
 :config.h
-echo>..\config.h #define TCC_VERSION "%VERSION%"
-echo>> ..\config.h #ifdef TCC_TARGET_X86_64
-echo>> ..\config.h #define TCC_LIBTCC1 "libtcc1-64.a"
+echo>..\config.h #define CTEC_VERSION "%VERSION%"
+echo>> ..\config.h #ifdef CTEC_TARGET_X86_64
+echo>> ..\config.h #define CTEC_LIBCTEC1 "libctec1-64.a"
 echo>> ..\config.h #else
-echo>> ..\config.h #define TCC_LIBTCC1 "libtcc1-32.a"
+echo>> ..\config.h #define CTEC_LIBCTEC1 "libctec1-32.a"
 echo>> ..\config.h #endif
 
-for %%f in (*tcc.exe *tcc.dll) do @del %%f
+for %%f in (*ctec.exe *ctec.dll) do @del %%f
 
 :compiler
-%CC% -o libtcc.dll -shared ..\libtcc.c %D% -DLIBTCC_AS_DLL
+%CC% -o libctec.dll -shared ..\libctec.c %D% -DLIBCTEC_AS_DLL
 @if errorlevel 1 goto :the_end
-%CC% -o tcc.exe ..\tcc.c libtcc.dll %D% -DONE_SOURCE"=0"
-%CC% -o %PX%-tcc.exe ..\tcc.c %DX%
+%CC% -o ctec.exe ..\ctec.c libctec.dll %D% -DONE_SOURCE"=0"
+%CC% -o %PX%-ctec.exe ..\ctec.c %DX%
 
 @if (%EXES_ONLY%)==(yes) goto :files-done
 
-if not exist libtcc mkdir libtcc
+if not exist libctec mkdir libctec
 if not exist doc mkdir doc
 copy>nul ..\include\*.h include
-copy>nul ..\tcclib.h include
-copy>nul ..\libtcc.h libtcc
-copy>nul ..\tests\libtcc_test.c examples
-copy>nul tcc-win32.txt doc
+copy>nul ..\cteclib.h include
+copy>nul ..\libctec.h libctec
+copy>nul ..\tests\libctec_test.c examples
+copy>nul ctec-win32.txt doc
 
-.\tcc -impdef libtcc.dll -o libtcc\libtcc.def
+.\ctec -impdef libctec.dll -o libctec\libctec.def
 @if errorlevel 1 goto :the_end
 
-:libtcc1.a
-@set O1=libtcc1.o crt1.o crt1w.o wincrt1.o wincrt1w.o dllcrt1.o dllmain.o chkstk.o bcheck.o
-.\tcc -m32 -c ../lib/libtcc1.c
-.\tcc -m32 -c lib/crt1.c
-.\tcc -m32 -c lib/crt1w.c
-.\tcc -m32 -c lib/wincrt1.c
-.\tcc -m32 -c lib/wincrt1w.c
-.\tcc -m32 -c lib/dllcrt1.c
-.\tcc -m32 -c lib/dllmain.c
-.\tcc -m32 -c lib/chkstk.S
-.\tcc -m32 -w -c ../lib/bcheck.c
-.\tcc -m32 -c ../lib/alloca86.S
-.\tcc -m32 -c ../lib/alloca86-bt.S
-.\tcc -m32 -ar lib/libtcc1-32.a %O1% alloca86.o alloca86-bt.o
+:libctec1.a
+@set O1=libctec1.o crt1.o crt1w.o wincrt1.o wincrt1w.o dllcrt1.o dllmain.o chkstk.o bcheck.o
+.\ctec -m32 -c ../lib/libctec1.c
+.\ctec -m32 -c lib/crt1.c
+.\ctec -m32 -c lib/crt1w.c
+.\ctec -m32 -c lib/wincrt1.c
+.\ctec -m32 -c lib/wincrt1w.c
+.\ctec -m32 -c lib/dllcrt1.c
+.\ctec -m32 -c lib/dllmain.c
+.\ctec -m32 -c lib/chkstk.S
+.\ctec -m32 -w -c ../lib/bcheck.c
+.\ctec -m32 -c ../lib/alloca86.S
+.\ctec -m32 -c ../lib/alloca86-bt.S
+.\ctec -m32 -ar lib/libctec1-32.a %O1% alloca86.o alloca86-bt.o
 @if errorlevel 1 goto :the_end
-.\tcc -m64 -c ../lib/libtcc1.c
-.\tcc -m64 -c lib/crt1.c
-.\tcc -m64 -c lib/crt1w.c
-.\tcc -m64 -c lib/wincrt1.c
-.\tcc -m64 -c lib/wincrt1w.c
-.\tcc -m64 -c lib/dllcrt1.c
-.\tcc -m64 -c lib/dllmain.c
-.\tcc -m64 -c lib/chkstk.S
-.\tcc -m64 -w -c ../lib/bcheck.c
-.\tcc -m64 -c ../lib/alloca86_64.S
-.\tcc -m64 -c ../lib/alloca86_64-bt.S
-.\tcc -m64 -ar lib/libtcc1-64.a %O1% alloca86_64.o alloca86_64-bt.o
+.\ctec -m64 -c ../lib/libctec1.c
+.\ctec -m64 -c lib/crt1.c
+.\ctec -m64 -c lib/crt1w.c
+.\ctec -m64 -c lib/wincrt1.c
+.\ctec -m64 -c lib/wincrt1w.c
+.\ctec -m64 -c lib/dllcrt1.c
+.\ctec -m64 -c lib/dllmain.c
+.\ctec -m64 -c lib/chkstk.S
+.\ctec -m64 -w -c ../lib/bcheck.c
+.\ctec -m64 -c ../lib/alloca86_64.S
+.\ctec -m64 -c ../lib/alloca86_64-bt.S
+.\ctec -m64 -ar lib/libctec1-64.a %O1% alloca86_64.o alloca86_64-bt.o
 @if errorlevel 1 goto :the_end
 
-:tcc-doc.html
+:ctec-doc.html
 @if not (%DOC%)==(yes) goto :doc-done
 echo>..\config.texi @set VERSION %VERSION%
-cmd /c makeinfo --html --no-split ../tcc-doc.texi -o doc/tcc-doc.html
+cmd /c makeinfo --html --no-split ../ctec-doc.texi -o doc/ctec-doc.html
 :doc-done
 
 :files-done
@@ -180,10 +180,10 @@ for %%f in (*.o *.def) do @del %%f
 if not exist %INST% mkdir %INST%
 @if (%BIN%)==() set BIN=%INST%
 if not exist %BIN% mkdir %BIN%
-for %%f in (*tcc.exe *tcc.dll) do @copy>nul %%f %BIN%\%%f
+for %%f in (*ctec.exe *ctec.dll) do @copy>nul %%f %BIN%\%%f
 @if not exist %INST%\lib mkdir %INST%\lib
 for %%f in (lib\*.a lib\*.def) do @copy>nul %%f %INST%\%%f
-for %%f in (include examples libtcc doc) do @xcopy>nul /s/i/q/y %%f %INST%\%%f
+for %%f in (include examples libctec doc) do @xcopy>nul /s/i/q/y %%f %INST%\%%f
 
 :the_end
 exit /B %ERRORLEVEL%

@@ -44,7 +44,7 @@ vazio *alloca(size_t size);
    _STDDEF_H guard, so that it works even when we've included the file
    already (without requiring wint_t).  Some other libs defina _WINT_T
    se they've already provided that type, so we can use that as guard.
-   TCC defines __WINT_TYPE__ para us.  */
+   CTEC defines __WINT_TYPE__ para us.  */
 #se definido (__need_wint_t)
 #se_não_definido _WINT_T
 #defina _WINT_T

@@ -67,8 +67,8 @@ all test tests2.all: $(filter-out $(SKIP),$(TESTS)) ;
 	@echo Test: $*...
 	@$(if $(NORUN),$(T1),$(T2)) $(if $(NODIFF),,$(T3))
 
-T1 = $(TCC) $(FLAGS) $< -o a.exe && ./a.exe $(ARGS)
-T2 = $(TCC) $(FLAGS) -run $< $(ARGS)
+T1 = $(CTEC) $(FLAGS) $< -o a.exe && ./a.exe $(ARGS)
+T2 = $(CTEC) $(FLAGS) -run $< $(ARGS)
 T3 = $(FILTER) >$*.output 2>&1 || true \
      && diff -Nbu $(filter %.expect,$^) $*.output \
      && rm -f $*.output $(filter $*.expect,$(GEN-ALWAYS))
@@ -77,7 +77,7 @@ T3 = $(FILTER) >$*.output 2>&1 || true \
 tests2.%+:
 	@$(MAKE) $(call F2,$(call F1,$*)) --no-print-directory
 
-# just run tcc to see the output, e.g. "make tests2.37-"
+# just run ctec to see the output, e.g. "make tests2.37-"
 tests2.%-:
 	@$(MAKE) $(call F1,$*) NODIFF=true --no-print-directory
 
@@ -94,10 +94,10 @@ F2 = $1 UPDATE="$(patsubst %.test,%.expect,$1)"
 	@$(call GEN,$(SRC)/$*.c) $(FILTER) >$@ 2>&1
 	@rm -f *.exe *.obj *.pdb
 
-# using TCC for .expect if -dt in FLAGS
-GEN = $(if $(filter -dt,$(FLAGS)),$(GEN-TCC),$(GEN-CC))
+# using CTEC for .expect if -dt in FLAGS
+GEN = $(if $(filter -dt,$(FLAGS)),$(GEN-CTEC),$(GEN-CC))
 GEN-CC = $(CC) -w -std=gnu99 $(FLAGS) $1 -o a.exe && ./a.exe $(ARGS)
-GEN-TCC = $(TCC) $(FLAGS) -run $1 $(ARGS)
+GEN-CTEC = $(CTEC) $(FLAGS) -run $1 $(ARGS)
 GEN-MSC = $(MS-CC) $1 && ./$(basename $@).exe
 MS-CC = cl
 

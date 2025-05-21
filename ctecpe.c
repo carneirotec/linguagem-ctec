@@ -1,5 +1,5 @@
 /*
- *  TCCPE.C - PE file output for the Tiny C Compiler
+ *  CTECPE.C - PE file output for the Tiny C Compiler
  *
  *  Copyright (c) 2005-2007 grischka
  *
@@ -18,7 +18,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "tcc.h"
+#include "ctec.h"
 
 #define PE_MERGE_DATA
 /* #define PE_PRINT_SECTIONS */
@@ -29,7 +29,7 @@
 #include <sys/stat.h> /* chmod() */
 #endif
 
-#ifdef TCC_TARGET_X86_64
+#ifdef CTEC_TARGET_X86_64
 # define ADDR3264 ULONGLONG
 # define PE_IMAGE_REL IMAGE_REL_BASED_DIR64
 # define REL_TYPE_DIRECT R_X86_64_64
@@ -38,7 +38,7 @@
 # define IMAGE_FILE_MACHINE 0x8664
 # define RSRC_RELTYPE 3
 
-#elif defined TCC_TARGET_ARM
+#elif defined CTEC_TARGET_ARM
 # define ADDR3264 DWORD
 # define PE_IMAGE_REL IMAGE_REL_BASED_HIGHLOW
 # define REL_TYPE_DIRECT R_ARM_ABS32
@@ -47,7 +47,7 @@
 # define IMAGE_FILE_MACHINE 0x01C0
 # define RSRC_RELTYPE 7 /* ??? (not tested) */
 
-#elif defined TCC_TARGET_I386
+#elif defined CTEC_TARGET_I386
 # define ADDR3264 DWORD
 # define PE_IMAGE_REL IMAGE_REL_BASED_HIGHLOW
 # define REL_TYPE_DIRECT R_386_32
@@ -122,7 +122,7 @@ typedef struct _IMAGE_OPTIONAL_HEADER {
     DWORD   SizeOfUninitializedData;
     DWORD   AddressOfEntryPoint;
     DWORD   BaseOfCode;
-#ifndef TCC_TARGET_X86_64
+#ifndef CTEC_TARGET_X86_64
     DWORD   BaseOfData;
 #endif
     /* NT additional fields. */
@@ -248,7 +248,7 @@ struct pe_header
     BYTE dosstub[0x40];
     DWORD nt_sig;
     IMAGE_FILE_HEADER filehdr;
-#ifdef TCC_TARGET_X86_64
+#ifdef CTEC_TARGET_X86_64
     IMAGE_OPTIONAL_HEADER64 opthdr;
 #else
 #ifdef _WIN64
@@ -339,7 +339,7 @@ struct pe_import_info {
 };
 
 struct pe_info {
-    TCCState *s1;
+    CTECState *s1;
     Section *reloc;
     Section *thunk;
     const char *filename;
@@ -371,7 +371,7 @@ struct pe_info {
 
 /* --------------------------------------------*/
 
-static const char *pe_export_name(TCCState *s1, ElfW(Sym) *sym)
+static const char *pe_export_name(CTECState *s1, ElfW(Sym) *sym)
 {
     const char *name = (char*)symtab_section->link->data + sym->st_name;
     if (s1->leading_underscore && name[0] == '_' && !(sym->st_other & ST_PE_STDCALL))
@@ -379,7 +379,7 @@ static const char *pe_export_name(TCCState *s1, ElfW(Sym) *sym)
     return name;
 }
 
-static int pe_find_import(TCCState * s1, ElfW(Sym) *sym)
+static int pe_find_import(CTECState * s1, ElfW(Sym) *sym)
 {
     char buffer[200];
     const char *s, *p;
@@ -530,15 +530,15 @@ static int pe_write(struct pe_info *pe)
     0x00000000, /*DWORD   TimeDateStamp; */
     0x00000000, /*DWORD   PointerToSymbolTable; */
     0x00000000, /*DWORD   NumberOfSymbols; */
-#if defined(TCC_TARGET_X86_64)
+#if defined(CTEC_TARGET_X86_64)
     0x00F0, /*WORD    SizeOfOptionalHeader; */
     0x022F  /*WORD    Characteristics; */
 #define CHARACTERISTICS_DLL 0x222E
-#elif defined(TCC_TARGET_I386)
+#elif defined(CTEC_TARGET_I386)
     0x00E0, /*WORD    SizeOfOptionalHeader; */
     0x030F  /*WORD    Characteristics; */
 #define CHARACTERISTICS_DLL 0x230E
-#elif defined(TCC_TARGET_ARM)
+#elif defined(CTEC_TARGET_ARM)
     0x00E0, /*WORD    SizeOfOptionalHeader; */
     0x010F, /*WORD    Characteristics; */
 #define CHARACTERISTICS_DLL 0x230F
@@ -546,7 +546,7 @@ static int pe_write(struct pe_info *pe)
 },{
     /* IMAGE_OPTIONAL_HEADER opthdr */
     /* Standard fields. */
-#ifdef TCC_TARGET_X86_64
+#ifdef CTEC_TARGET_X86_64
     0x020B, /*WORD    Magic; */
 #else
     0x010B, /*WORD    Magic; */
@@ -558,11 +558,11 @@ static int pe_write(struct pe_info *pe)
     0x00000000, /*DWORD   SizeOfUninitializedData; */
     0x00000000, /*DWORD   AddressOfEntryPoint; */
     0x00000000, /*DWORD   BaseOfCode; */
-#ifndef TCC_TARGET_X86_64
+#ifndef CTEC_TARGET_X86_64
     0x00000000, /*DWORD   BaseOfData; */
 #endif
     /* NT additional fields. */
-#if defined(TCC_TARGET_ARM)
+#if defined(CTEC_TARGET_ARM)
     0x00100000,	    /*DWORD   ImageBase; */
 #else
     0x00400000,	    /*DWORD   ImageBase; */
@@ -603,7 +603,7 @@ static int pe_write(struct pe_info *pe)
 
     op = fopen(pe->filename, "wb");
     if (NULL == op) {
-        tcc_error_noabort("could not write '%s': %s", pe->filename, strerror(errno));
+        ctec_error_noabort("could not write '%s': %s", pe->filename, strerror(errno));
         return -1;
     }
 
@@ -637,7 +637,7 @@ static int pe_write(struct pe_info *pe)
                 break;
 
             case sec_data:
-#ifndef TCC_TARGET_X86_64
+#ifndef CTEC_TARGET_X86_64
                 pe_header.opthdr.BaseOfData = addr;
 #endif
                 break;
@@ -754,7 +754,7 @@ static struct import_symbol *pe_add_import(struct pe_info *pe, int sym_index)
         p = pe->imp_info[i];
         goto found_dll;
     }
-    p = tcc_mallocz(sizeof *p);
+    p = ctec_mallocz(sizeof *p);
     p->dll_index = dll_index;
     dynarray_add(&pe->imp_info, &pe->imp_count, p);
 
@@ -763,7 +763,7 @@ found_dll:
     if (-1 != i)
         return p->symbols[i];
 
-    s = tcc_mallocz(sizeof *s);
+    s = ctec_mallocz(sizeof *s);
     dynarray_add(&p->symbols, &p->sym_count, s);
     s->sym_index = sym_index;
     return s;
@@ -839,9 +839,9 @@ static void pe_build_imports(struct pe_info *pe)
                 if (dllref)
                     v = 0, ordinal = imp_sym->st_value; /* ordinal from pe_load_def */
                 else
-                    ordinal = 0, v = imp_sym->st_value; /* address from tcc_add_symbol() */
+                    ordinal = 0, v = imp_sym->st_value; /* address from ctec_add_symbol() */
 
-#ifdef TCC_IS_NATIVE
+#ifdef CTEC_IS_NATIVE
                 if (pe->type == PE_RUN) {
                     if (dllref) {
                         if ( !dllref->handle )
@@ -849,7 +849,7 @@ static void pe_build_imports(struct pe_info *pe)
                         v = (ADDR3264)GetProcAddress(dllref->handle, ordinal?(char*)0+ordinal:name);
                     }
                     if (!v)
-                        tcc_error_noabort("can't build symbol '%s'", name);
+                        ctec_error_noabort("can't build symbol '%s'", name);
                 } else
 #endif
                 if (ordinal) {
@@ -912,7 +912,7 @@ static void pe_build_exports(struct pe_info *pe)
         if ((sym->st_other & ST_PE_EXPORT)
             /* export only symbols from actually written sections */
             && pe->s1->sections[sym->st_shndx]->sh_addr) {
-            p = tcc_malloc(sizeof *p);
+            p = ctec_malloc(sizeof *p);
             p->index = sym_index;
             p->name = name;
             dynarray_add(&sorted, &sym_count, p);
@@ -931,7 +931,7 @@ static void pe_build_exports(struct pe_info *pe)
     qsort (sorted, sym_count, sizeof *sorted, sym_cmp);
 
     pe_align_section(pe->thunk, 16);
-    dllname = tcc_basename(pe->filename);
+    dllname = ctec_basename(pe->filename);
 
     pe->exp_offs = pe->thunk->data_offset;
     func_o = pe->exp_offs + sizeof(IMAGE_EXPORT_DIRECTORY);
@@ -953,10 +953,10 @@ static void pe_build_exports(struct pe_info *pe)
 #if 1
     /* automatically write exports to <output-filename>.def */
     pstrcpy(buf, sizeof buf, pe->filename);
-    strcpy(tcc_fileextension(buf), ".def");
+    strcpy(ctec_fileextension(buf), ".def");
     op = fopen(buf, "wb");
     if (NULL == op) {
-        tcc_error_noabort("could not create '%s': %s", buf, strerror(errno));
+        ctec_error_noabort("could not create '%s': %s", buf, strerror(errno));
     } else {
         fprintf(op, "LIBRARY %s\n\nEXPORTS\n", dllname);
         if (pe->s1->verbose)
@@ -1091,7 +1091,7 @@ static int pe_assign_addresses (struct pe_info *pe)
 
     // pe->thunk = new_section(pe->s1, ".iedat", SHT_PROGBITS, SHF_ALLOC);
 
-    section_order = tcc_malloc(pe->s1->nb_sections * sizeof (int));
+    section_order = ctec_malloc(pe->s1->nb_sections * sizeof (int));
     for (o = k = 0 ; k < sec_last; ++k) {
         for (i = 1; i < pe->s1->nb_sections; ++i) {
             s = pe->s1->sections[i];
@@ -1103,7 +1103,7 @@ static int pe_assign_addresses (struct pe_info *pe)
         }
     }
 
-    pe->sec_info = tcc_mallocz(o * sizeof (struct section_info));
+    pe->sec_info = ctec_mallocz(o * sizeof (struct section_info));
     addr = pe->imagebase + 1;
 
     for (i = 0; i < o; ++i)
@@ -1177,7 +1177,7 @@ static int pe_assign_addresses (struct pe_info *pe)
     pe->s1->verbose = 2;
 #endif
 
-    tcc_free(section_order);
+    ctec_free(section_order);
     return 0;
 }
 
@@ -1241,14 +1241,14 @@ static int pe_check_symbols(struct pe_info *pe)
 
                     offset = text_section->data_offset;
                     /* add the 'jmp IAT[x]' instruction */
-#ifdef TCC_TARGET_ARM
+#ifdef CTEC_TARGET_ARM
                     p = section_ptr_add(text_section, 8+4); // room for code and address
                     (*(DWORD*)(p)) = 0xE59FC000; // arm code ldr ip, [pc] ; PC+8+0 = 0001xxxx
                     (*(DWORD*)(p+2)) = 0xE59CF000; // arm code ldr pc, [ip]
 #else
                     p = section_ptr_add(text_section, 8);
                     *p = 0x25FF;
-#ifdef TCC_TARGET_X86_64
+#ifdef CTEC_TARGET_X86_64
                     *(DWORD*)(p+1) = (DWORD)-4;
 #endif
 #endif
@@ -1259,7 +1259,7 @@ static int pe_check_symbols(struct pe_info *pe)
                         symtab_section, 0, sizeof(DWORD),
                         ELFW(ST_INFO)(STB_GLOBAL, STT_OBJECT),
                         0, SHN_UNDEF, buffer);
-#ifdef TCC_TARGET_ARM
+#ifdef CTEC_TARGET_ARM
                     put_elf_reloc(symtab_section, text_section,
                         offset + 8, R_XXX_THUNKFIX, is->iat_index); // offset to IAT position
 #else
@@ -1269,7 +1269,7 @@ static int pe_check_symbols(struct pe_info *pe)
                     is->thk_offset = offset;
                 }
 
-                /* tcc_realloc might have altered sym's address */
+                /* ctec_realloc might have altered sym's address */
                 sym = (ElfW(Sym) *)symtab_section->data + sym_index;
 
                 /* patch the original symbol */
@@ -1291,7 +1291,7 @@ static int pe_check_symbols(struct pe_info *pe)
             if (ELFW(ST_BIND)(sym->st_info) == STB_WEAK)
                 /* STB_WEAK undefined symbols are accepted */
                 continue;
-            tcc_error_noabort("undefined symbol '%s'%s", name,
+            ctec_error_noabort("undefined symbol '%s'%s", name,
                 imp_sym < 0 ? ", missing __declspec(dllimport)?":"");
             ret = -1;
 
@@ -1428,7 +1428,7 @@ static void pe_print_section(FILE * f, Section * s)
     fprintf(f, "\n\n");
 }
 
-static void pe_print_sections(TCCState *s1, const char *fname)
+static void pe_print_sections(CTECState *s1, const char *fname)
 {
     Section *s;
     FILE *f;
@@ -1446,7 +1446,7 @@ static void pe_print_sections(TCCState *s1, const char *fname)
 /* ------------------------------------------------------------- */
 /* helper function for load/store to insert one more indirection */
 
-#if defined TCC_TARGET_I386 || defined TCC_TARGET_X86_64
+#if defined CTEC_TARGET_I386 || defined CTEC_TARGET_X86_64
 ST_FUNC SValue *pe_getimport(SValue *sv, SValue *v2)
 {
     int r2;
@@ -1475,7 +1475,7 @@ ST_FUNC SValue *pe_getimport(SValue *sv, SValue *v2)
 }
 #endif
 
-ST_FUNC int pe_putimport(TCCState *s1, int dllindex, const char *name, addr_t value)
+ST_FUNC int pe_putimport(CTECState *s1, int dllindex, const char *name, addr_t value)
 {
     return set_elf_sym(
         s1->dynsymtab_section,
@@ -1488,14 +1488,14 @@ ST_FUNC int pe_putimport(TCCState *s1, int dllindex, const char *name, addr_t va
         );
 }
 
-static int add_dllref(TCCState *s1, const char *dllname)
+static int add_dllref(CTECState *s1, const char *dllname)
 {
     DLLReference *dllref;
     int i;
     for (i = 0; i < s1->nb_loaded_dlls; ++i)
         if (0 == strcmp(s1->loaded_dlls[i]->name, dllname))
             return i + 1;
-    dllref = tcc_mallocz(sizeof(DLLReference) + strlen(dllname));
+    dllref = ctec_mallocz(sizeof(DLLReference) + strlen(dllname));
     strcpy(dllref->name, dllname);
     dynarray_add(&s1->loaded_dlls, &s1->nb_loaded_dlls, dllref);
     return s1->nb_loaded_dlls;
@@ -1511,7 +1511,7 @@ static int read_mem(int fd, unsigned offset, void *buffer, unsigned len)
 
 /* ------------------------------------------------------------- */
 
-PUB_FUNC int tcc_get_dllexports(const char *filename, char **pp)
+PUB_FUNC int ctec_get_dllexports(const char *filename, char **pp)
 {
     int l, i, n, n0, ret;
     char *p;
@@ -1584,9 +1584,9 @@ found:
         namep += sizeof ptr;
         for (l = 0;;) {
             if (n+1 >= n0)
-                p = tcc_realloc(p, n0 = n0 ? n0 * 2 : 256);
+                p = ctec_realloc(p, n0 = n0 ? n0 * 2 : 256);
             if (!read_mem(fd, ptr - ref + l++, p + n, 1)) {
-                tcc_free(p), p = NULL;
+                ctec_free(p), p = NULL;
                 goto the_end;
             }
             if (p[n++] == 0)
@@ -1609,7 +1609,7 @@ the_end_1:
  *  as generated by 'windres.exe -O coff ...'.
  */
 
-static int pe_load_res(TCCState *s1, int fd)
+static int pe_load_res(CTECState *s1, int fd)
 {
     struct pe_rsrc_header hdr;
     Section *rsrc_section;
@@ -1666,7 +1666,7 @@ static char *trimback(char *a, char *e)
 }
 
 /* ------------------------------------------------------------- */
-static int pe_load_def(TCCState *s1, int fd)
+static int pe_load_def(CTECState *s1, int fd)
 {
     int state = 0, ret = -1, dllindex = 0, ord;
     char line[400], dllname[80], *p, *x;
@@ -1721,29 +1721,29 @@ quit:
 }
 
 /* ------------------------------------------------------------- */
-static int pe_load_dll(TCCState *s1, const char *filename)
+static int pe_load_dll(CTECState *s1, const char *filename)
 {
     char *p, *q;
     int index, ret;
 
-    ret = tcc_get_dllexports(filename, &p);
+    ret = ctec_get_dllexports(filename, &p);
     if (ret) {
         return -1;
     } else if (p) {
-        index = add_dllref(s1, tcc_basename(filename));
+        index = add_dllref(s1, ctec_basename(filename));
         for (q = p; *q; q += 1 + strlen(q))
             pe_putimport(s1, index, q, 0);
-        tcc_free(p);
+        ctec_free(p);
     }
     return 0;
 }
 
 /* ------------------------------------------------------------- */
-ST_FUNC int pe_load_file(struct TCCState *s1, const char *filename, int fd)
+ST_FUNC int pe_load_file(struct CTECState *s1, const char *filename, int fd)
 {
     int ret = -1;
     char buf[10];
-    if (0 == strcmp(tcc_fileextension(filename), ".def"))
+    if (0 == strcmp(ctec_fileextension(filename), ".def"))
         ret = pe_load_def(s1, fd);
     else if (pe_load_res(s1, fd) == 0)
         ret = 0;
@@ -1753,11 +1753,11 @@ ST_FUNC int pe_load_file(struct TCCState *s1, const char *filename, int fd)
 }
 
 /* ------------------------------------------------------------- */
-#ifdef TCC_TARGET_X86_64
-static unsigned pe_add_uwwind_info(TCCState *s1)
+#ifdef CTEC_TARGET_X86_64
+static unsigned pe_add_uwwind_info(CTECState *s1)
 {
     if (NULL == s1->uw_pdata) {
-        s1->uw_pdata = find_section(tcc_state, ".pdata");
+        s1->uw_pdata = find_section(ctec_state, ".pdata");
         s1->uw_pdata->sh_addralign = 4;
     }
     if (0 == s1->uw_sym)
@@ -1789,7 +1789,7 @@ static unsigned pe_add_uwwind_info(TCCState *s1)
 
 ST_FUNC void pe_add_unwind_data(unsigned start, unsigned end, unsigned stack)
 {
-    TCCState *s1 = tcc_state;
+    CTECState *s1 = ctec_state;
     Section *pd;
     unsigned o, n, d;
     struct /* _RUNTIME_FUNCTION */ {
@@ -1814,13 +1814,13 @@ ST_FUNC void pe_add_unwind_data(unsigned start, unsigned end, unsigned stack)
 }
 #endif
 /* ------------------------------------------------------------- */
-#ifdef TCC_TARGET_X86_64
+#ifdef CTEC_TARGET_X86_64
 #define PE_STDSYM(n,s) n
 #else
 #define PE_STDSYM(n,s) "_" n s
 #endif
 
-static void pe_add_runtime(TCCState *s1, struct pe_info *pe)
+static void pe_add_runtime(CTECState *s1, struct pe_info *pe)
 {
     const char *start_symbol;
     int pe_type = 0;
@@ -1834,10 +1834,10 @@ static void pe_add_runtime(TCCState *s1, struct pe_info *pe)
         unicode_entry = PE_GUI;
     }
     else
-    if (TCC_OUTPUT_DLL == s1->output_type) {
+    if (CTEC_OUTPUT_DLL == s1->output_type) {
         pe_type = PE_DLL;
-        /* need this for 'tccelf.c:relocate_section()' */
-        s1->output_type = TCC_OUTPUT_EXE;
+        /* need this for 'ctecelf.c:relocate_section()' */
+        s1->output_type = CTEC_OUTPUT_EXE;
     }
     else {
         pe_type = PE_EXE;
@@ -1846,7 +1846,7 @@ static void pe_add_runtime(TCCState *s1, struct pe_info *pe)
     }
 
     start_symbol =
-        TCC_OUTPUT_MEMORY == s1->output_type
+        CTEC_OUTPUT_MEMORY == s1->output_type
         ? PE_GUI == pe_type ? (unicode_entry ? "__runwwinmain" : "__runwinmain")
             : (unicode_entry ? "__runwmain" : "__runmain")
         : PE_DLL == pe_type ? PE_STDSYM("__dllstart","@12")
@@ -1857,54 +1857,54 @@ static void pe_add_runtime(TCCState *s1, struct pe_info *pe)
     if (!s1->leading_underscore || strchr(start_symbol, '@'))
         ++start_symbol;
 
-    /* grab the startup code from libtcc1 */
-#ifdef TCC_IS_NATIVE
-    if (TCC_OUTPUT_MEMORY != s1->output_type || s1->runtime_main)
+    /* grab the startup code from libctec1 */
+#ifdef CTEC_IS_NATIVE
+    if (CTEC_OUTPUT_MEMORY != s1->output_type || s1->runtime_main)
 #endif
     set_elf_sym(symtab_section,
         0, 0,
         ELFW(ST_INFO)(STB_GLOBAL, STT_NOTYPE), 0,
         SHN_UNDEF, start_symbol);
 
-    tcc_add_pragma_libs(s1);
+    ctec_add_pragma_libs(s1);
 
     if (0 == s1->nostdlib) {
         static const char *libs[] = {
-            TCC_LIBTCC1, "msvcrt", "kernel32", "", "user32", "gdi32", NULL
+            CTEC_LIBCTEC1, "msvcrt", "kernel32", "", "user32", "gdi32", NULL
         };
         const char **pp, *p;
         for (pp = libs; 0 != (p = *pp); ++pp) {
             if (0 == *p) {
                 if (PE_DLL != pe_type && PE_GUI != pe_type)
                     break;
-            } else if (pp == libs && tcc_add_dll(s1, p, 0) >= 0) {
+            } else if (pp == libs && ctec_add_dll(s1, p, 0) >= 0) {
                 continue;
             } else {
-                tcc_add_library_err(s1, p);
+                ctec_add_library_err(s1, p);
             }
         }
     }
 
-    if (TCC_OUTPUT_MEMORY == s1->output_type)
+    if (CTEC_OUTPUT_MEMORY == s1->output_type)
         pe_type = PE_RUN;
     pe->type = pe_type;
     pe->start_symbol = start_symbol;
 }
 
-static void pe_set_options(TCCState * s1, struct pe_info *pe)
+static void pe_set_options(CTECState * s1, struct pe_info *pe)
 {
     if (PE_DLL == pe->type) {
         /* XXX: check if is correct for arm-pe target */
         pe->imagebase = 0x10000000;
     } else {
-#if defined(TCC_TARGET_ARM)
+#if defined(CTEC_TARGET_ARM)
         pe->imagebase = 0x00010000;
 #else
         pe->imagebase = 0x00400000;
 #endif
     }
 
-#if defined(TCC_TARGET_ARM)
+#if defined(CTEC_TARGET_ARM)
     /* we use "console" subsystem by default */
     pe->subsystem = 9;
 #else
@@ -1938,7 +1938,7 @@ static void pe_set_options(TCCState * s1, struct pe_info *pe)
         pe->imagebase = s1->text_addr;
 }
 
-ST_FUNC int pe_output_file(TCCState *s1, const char *filename)
+ST_FUNC int pe_output_file(CTECState *s1, const char *filename)
 {
     int ret;
     struct pe_info pe;
@@ -1948,7 +1948,7 @@ ST_FUNC int pe_output_file(TCCState *s1, const char *filename)
     pe.filename = filename;
     pe.s1 = s1;
 
-    tcc_add_bcheck(s1);
+    ctec_add_bcheck(s1);
     pe_add_runtime(s1, &pe);
     resolve_common_syms(s1);
     pe_set_options(s1, &pe);
@@ -1967,19 +1967,19 @@ ST_FUNC int pe_output_file(TCCState *s1, const char *filename)
             }
         }
         pe.start_addr = (DWORD)
-            ((uintptr_t)tcc_get_symbol_err(s1, pe.start_symbol)
+            ((uintptr_t)ctec_get_symbol_err(s1, pe.start_symbol)
                 - pe.imagebase);
         if (s1->nb_errors)
             ret = -1;
         else
             ret = pe_write(&pe);
-        tcc_free(pe.sec_info);
+        ctec_free(pe.sec_info);
     } else {
-#ifdef TCC_IS_NATIVE
+#ifdef CTEC_IS_NATIVE
         pe.thunk = data_section;
         pe_build_imports(&pe);
         s1->runtime_main = pe.start_symbol;
-#ifdef TCC_TARGET_X86_64
+#ifdef CTEC_TARGET_X86_64
         s1->uw_pdata = find_section(s1, ".pdata");
 #endif
 #endif
@@ -1988,7 +1988,7 @@ ST_FUNC int pe_output_file(TCCState *s1, const char *filename)
     pe_free_imports(&pe);
 
 #ifdef PE_PRINT_SECTIONS
-    pe_print_sections(s1, "tcc.log");
+    pe_print_sections(s1, "ctec.log");
 #endif
     return ret;
 }

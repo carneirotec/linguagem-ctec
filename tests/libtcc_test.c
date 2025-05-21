@@ -1,13 +1,13 @@
 /*
- * Simple Test program for libtcc
+ * Simple Test program for libctec
  *
- * libtcc can be useful to use tcc as a "backend" for a code generator.
+ * libctec can be useful to use ctec as a "backend" for a code generator.
  */
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
-#include "libtcc.h"
+#include "libctec.h"
 
 /* this function is called by the generated code */
 int add(int a, int b)
@@ -19,7 +19,7 @@ int add(int a, int b)
 const char hello[] = "Hello World!";
 
 char my_program[] =
-"#include <tcclib.h>\n" /* include the "Simple libc header for TCC" */
+"#include <cteclib.h>\n" /* include the "Simple libc header for CTEC" */
 "extern int add(int a, int b);\n"
 "#ifdef _WIN32\n" /* dynamically linked data needs 'dllimport' */
 " __attribute__((dllimport))\n"
@@ -43,46 +43,46 @@ char my_program[] =
 
 int main(int argc, char **argv)
 {
-    TCCState *s;
+    CTECState *s;
     int i;
     int (*func)(int);
 
-    s = tcc_new();
+    s = ctec_new();
     if (!s) {
-        fprintf(stderr, "Could not create tcc state\n");
+        fprintf(stderr, "Could not create ctec state\n");
         exit(1);
     }
 
-    /* if tcclib.h and libtcc1.a are not installed, where can we find them */
+    /* if cteclib.h and libctec1.a are not installed, where can we find them */
     for (i = 1; i < argc; ++i) {
         char *a = argv[i];
         if (a[0] == '-') {
             if (a[1] == 'B')
-                tcc_set_lib_path(s, a+2);
+                ctec_set_lib_path(s, a+2);
             else if (a[1] == 'I')
-                tcc_add_include_path(s, a+2);
+                ctec_add_include_path(s, a+2);
             else if (a[1] == 'L')
-                tcc_add_library_path(s, a+2);
+                ctec_add_library_path(s, a+2);
         }
     }
 
     /* MUST BE CALLED before any compilation */
-    tcc_set_output_type(s, TCC_OUTPUT_MEMORY);
+    ctec_set_output_type(s, CTEC_OUTPUT_MEMORY);
 
-    if (tcc_compile_string(s, my_program) == -1)
+    if (ctec_compile_string(s, my_program) == -1)
         return 1;
 
     /* as a test, we add symbols that the compiled program can use.
-       You may also open a dll with tcc_add_dll() and use symbols from that */
-    tcc_add_symbol(s, "add", add);
-    tcc_add_symbol(s, "hello", hello);
+       You may also open a dll with ctec_add_dll() and use symbols from that */
+    ctec_add_symbol(s, "add", add);
+    ctec_add_symbol(s, "hello", hello);
 
     /* relocate the code */
-    if (tcc_relocate(s, TCC_RELOCATE_AUTO) < 0)
+    if (ctec_relocate(s, CTEC_RELOCATE_AUTO) < 0)
         return 1;
 
     /* get entry symbol */
-    func = tcc_get_symbol(s, "foo");
+    func = ctec_get_symbol(s, "foo");
     if (!func)
         return 1;
 
@@ -90,7 +90,7 @@ int main(int argc, char **argv)
     func(32);
 
     /* delete the state */
-    tcc_delete(s);
+    ctec_delete(s);
 
     return 0;
 }

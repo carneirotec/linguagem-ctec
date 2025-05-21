@@ -35,12 +35,12 @@
 
 #defina __cdecl
 #defina __declspec(x) __attribute__((x))
-#defina __unaligned __attribute__((empacotado))
-#defina __fastcall __attribute__((chamada_rápida))
+#defina __unaligned __attribute__((packed))
+#defina __fastcall __attribute__((fastcall))
 
 #defina __MSVCRT__ 1
 #não_definido _MSVCRT_
-#defina __MINGW_IMPORT externo __declspec(importe_dll)
+#defina __MINGW_IMPORT externo __declspec(dllimport)
 #defina __MINGW_ATTRIB_NORETURN
 #defina __MINGW_ATTRIB_CONST
 #defina __MINGW_ATTRIB_DEPRECATED
@@ -53,8 +53,8 @@
 #defina _CRTIMP externo
 #defina __CRT_INLINE externo __inline__
 
-#defina _CRT_ALIGN(x) __attribute__((alinhado(x)))
-#defina DECLSPEC_ALIGN(x) __attribute__((alinhado(x)))
+#defina _CRT_ALIGN(x) __attribute__((aligned(x)))
+#defina DECLSPEC_ALIGN(x) __attribute__((aligned(x)))
 #defina _CRT_PACKING 8
 #defina __CRT_UNALIGNED
 #defina _CONST_RETURN

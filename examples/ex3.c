@@ -1,4 +1,4 @@
-#include <tcclib.h>
+#include <cteclib.h>
 
 int fib(n)
 {

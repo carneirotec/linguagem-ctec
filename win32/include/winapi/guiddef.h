@@ -131,10 +131,10 @@ __inline inteiro InlineIsEqualGUID(REFGUID rguid1,REFGUID rguid2) {
   retorne (((sem_sinal longo *) &rguid1)[0]==((sem_sinal longo *) &rguid2)[0] && ((sem_sinal longo *) &rguid1)[1]==((sem_sinal longo *) &rguid2)[1] &&
     ((sem_sinal longo *) &rguid1)[2]==((sem_sinal longo *) &rguid2)[2] && ((sem_sinal longo *) &rguid1)[3]==((sem_sinal longo *) &rguid2)[3]);
 }
-__inline inteiro IsEqualGUID(REFGUID rguid1,REFGUID rguid2) { retorne !memcmp(&rguid1,&rguid2,tamanho_de(GUID)); }
+__inline inteiro IsEqualGUID(REFGUID rguid1,REFGUID rguid2) { retorne !memcmp(&rguid1,&rguid2,sizeof(GUID)); }
 #senão
 #defina InlineIsEqualGUID(rguid1,rguid2) (((sem_sinal longo *) rguid1)[0]==((sem_sinal longo *) rguid2)[0] && ((sem_sinal longo *) rguid1)[1]==((sem_sinal longo *) rguid2)[1] && ((sem_sinal longo *) rguid1)[2]==((sem_sinal longo *) rguid2)[2] && ((sem_sinal longo *) rguid1)[3]==((sem_sinal longo *) rguid2)[3])
-#defina IsEqualGUID(rguid1,rguid2) (!memcmp(rguid1,rguid2,tamanho_de(GUID)))
+#defina IsEqualGUID(rguid1,rguid2) (!memcmp(rguid1,rguid2,sizeof(GUID)))
 #fim_se
 
 #se_definido __INLINE_ISEQUAL_GUID

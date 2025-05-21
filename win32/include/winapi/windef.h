@@ -67,7 +67,7 @@ externo "C" {
 #defina near
 #defina pascal __stdcall
 
-#defina declaração
+#defina cdecl
 #se_não_definido CDECL
 #defina CDECL
 #fim_se

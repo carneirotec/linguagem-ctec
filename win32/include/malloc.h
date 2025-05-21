@@ -82,8 +82,8 @@ externo "C" {
 #não_definido _alloca
 #defina _alloca(x) __builtin_alloca((x))
 #senão
-  /* tcc implements alloca internally and exposes it (since commit d778bde7).
-  /* alloca is declared at inclua/stddef.h (which is distributed with tcc).
+  /* ctec implements alloca internally and exposes it (since commit d778bde7).
+  /* alloca is declared at inclua/stddef.h (which is distributed with ctec).
    */
 #se_definido _alloca
 #não_definido _alloca

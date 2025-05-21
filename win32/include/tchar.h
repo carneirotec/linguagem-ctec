@@ -65,8 +65,8 @@ externo "C" {
 #defina _ftcsupr _tcsupr
 
 #defina _ftclen _tclen
-#defina _ftccpy _tccpy
-#defina _ftccmp _tccmp
+#defina _fctecpy _ctecpy
+#defina _fctecmp _ctecmp
 
 #se_não_definido _CONST_RETURN
 #se_definido __cplusplus
@@ -409,8 +409,8 @@ externo "C" {
 #defina _tcsxfrm_l _wcsxfrm_l
 
 #defina _tclen(_pc) (1)
-#defina _tccpy(_pc1,_cpc2) ((*(_pc1) = *(_cpc2)))
-#defina _tccmp(_cpc1,_cpc2) ((*(_cpc1))-(*(_cpc2)))
+#defina _ctecpy(_pc1,_cpc2) ((*(_pc1) = *(_cpc2)))
+#defina _ctecmp(_cpc1,_cpc2) ((*(_cpc1))-(*(_cpc2)))
 
 #defina _istalnum iswalnum
 #defina _istalnum_l _iswalnum_l
@@ -831,8 +831,8 @@ externo "C" {
 #defina _tcsupr_l _mbsupr_l
 
 #defina _tclen _mbclen
-#defina _tccpy _mbccpy
-#defina _tccpy_l _mbccpy_l
+#defina _ctecpy _mbccpy
+#defina _ctecpy_l _mbccpy_l
 #senão
 
   _CRTIMP _CONST_RETURN caractere *__cdecl _tcschr(constante caractere *_Str,sem_sinal inteiro _Val);
@@ -893,7 +893,7 @@ externo "C" {
   _CRTIMP caractere *__cdecl _tcsupr(caractere *_Str);
   _CRTIMP caractere *__cdecl _tcsupr_l(caractere *_Str,_locale_t _Locale);
   _CRTIMP size_t __cdecl _tclen(constante caractere *_Str);
-  _CRTIMP vazio __cdecl _tccpy(caractere *_DstCh,constante caractere *_SrcCh);
+  _CRTIMP vazio __cdecl _ctecpy(caractere *_DstCh,constante caractere *_SrcCh);
 
 #se_definido __cplusplus
 #se_não_definido _CPP_TCHAR_INLINES_DEFINED
@@ -908,7 +908,7 @@ externo "C" {
 #fim_se
 #fim_se
 
-#defina _tccmp(_cp1,_cp2) _tcsnccmp(_cp1,_cp2,1)
+#defina _ctecmp(_cp1,_cp2) _tcsnccmp(_cp1,_cp2,1)
 
 #defina _istalnum _ismbcalnum
 #defina _istalnum_l _ismbcalnum_l
@@ -1028,8 +1028,8 @@ externo "C" {
 #defina _istleadbyte_l(_Char,_Locale) (0)
 
 #defina _tclen(_pc) (1)
-#defina _tccpy(_pc1,_cpc2) (*(_pc1) = *(_cpc2))
-#defina _tccmp(_cpc1,_cpc2) (((sem_sinal caractere)*(_cpc1))-((sem_sinal caractere)*(_cpc2)))
+#defina _ctecpy(_pc1,_cpc2) (*(_pc1) = *(_cpc2))
+#defina _ctecmp(_cpc1,_cpc2) (((sem_sinal caractere)*(_cpc1))-((sem_sinal caractere)*(_cpc2)))
 
   /* dirent structures and functions */
 #defina _tdirent	dirent

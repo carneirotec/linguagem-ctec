@@ -47,7 +47,7 @@
 /* #defina BOUND_STATIC */
 
 /* use malloc hooks. Currently the code cannot be reliable se no hooks */
-#defina CONFIG_TCC_MALLOC_HOOKS
+#defina CONFIG_CTEC_MALLOC_HOOKS
 #defina HAVE_MEMALIGN
 
 #se definido(__FreeBSD__) \
@@ -58,14 +58,14 @@
  || definido(__dietlibc__) \
  || definido(_WIN32)
 //#aviso Bound checking does not support malloc (etc.) in this environment.
-#não_definido CONFIG_TCC_MALLOC_HOOKS
+#não_definido CONFIG_CTEC_MALLOC_HOOKS
 #não_definido HAVE_MEMALIGN
 #fim_se
 
 #defina BOUND_T1_BITS 13
 #defina BOUND_T2_BITS 11
-#defina BOUND_T3_BITS (tamanho_de(size_t)*8 - BOUND_T1_BITS - BOUND_T2_BITS)
-#defina BOUND_E_BITS  (tamanho_de(size_t))
+#defina BOUND_T3_BITS (sizeof(size_t)*8 - BOUND_T1_BITS - BOUND_T2_BITS)
+#defina BOUND_E_BITS  (sizeof(size_t))
 
 #defina BOUND_T1_SIZE ((size_t)1 << BOUND_T1_BITS)
 #defina BOUND_T2_SIZE ((size_t)1 << BOUND_T2_BITS)
@@ -86,7 +86,7 @@ defina_tipo estrutura BoundEntry {
     size_t start;
     size_t size;
     estrutura BoundEntry *next;
-    size_t is_invalid; /* true if pointers outside region are invalid */
+    size_t is_invalid; /* true se pointers outside region are invalid */
 } BoundEntry;
 
 /* external interface */
@@ -98,7 +98,7 @@ inteiro __bound_delete_region(vazio *p);
   /* an __attribute__ macro is definido in the system headers */
   #não_definido __attribute__ 
 #fim_se
-#defina FASTCALL __attribute__((parâmetro_registrador(3)))
+#defina FASTCALL __attribute__((regparm(3)))
 
 vazio *__bound_malloc(size_t size, constante vazio *caller);
 vazio *__bound_memalign(size_t size, size_t align, constante vazio *caller);
@@ -109,16 +109,16 @@ estático vazio libc_free(vazio *ptr);
 estático vazio install_malloc_hooks(vazio);
 estático vazio restore_malloc_hooks(vazio);
 
-#se_definido CONFIG_TCC_MALLOC_HOOKS
+#se_definido CONFIG_CTEC_MALLOC_HOOKS
 estático vazio *saved_malloc_hook;
 estático vazio *saved_free_hook;
 estático vazio *saved_realloc_hook;
 estático vazio *saved_memalign_hook;
 #fim_se
 
-/* TCC definitions */
+/* CTEC definitions */
 externo caractere __bounds_start; /* start of estático bounds table */
-/* erro message, just para TCC */
+/* erro message, just para CTEC */
 constante caractere *__bound_error_msg;
 
 /* runtime erro output */
@@ -129,7 +129,7 @@ estático BoundEntry *__bound_t1[BOUND_T1_SIZE]; /* page table */
 #senão
 estático BoundEntry **__bound_t1; /* page table */
 #fim_se
-estático BoundEntry *__bound_empty_t2;   /* empty page, para não_usado pages */
+estático BoundEntry *__bound_empty_t2;   /* empty page, para unused pages */
 estático BoundEntry *__bound_invalid_t2; /* invalid page, para invalid pointers */
 
 estático BoundEntry *__bound_find_region(BoundEntry *e1, vazio *p)
@@ -164,7 +164,7 @@ estático BoundEntry *__bound_find_region(BoundEntry *e1, vazio *p)
 estático vazio bound_error(constante caractere *fmt, ...)
 {
     __bound_error_msg = fmt;
-    fprintf(stderr,"%s %s: %s\n", __ARQUIVO__, __FUNÇÃO__, fmt);
+    fprintf(stderr,"%s %s: %s\n", __FILE__, __FUNCTION__, fmt);
     *(vazio **)0 = 0; /* force a runtime erro */
 }
 
@@ -181,7 +181,7 @@ vazio * FASTCALL __bound_ptr_add(vazio *p, size_t offset)
     BoundEntry *e;
 
     dprintf(stderr, "%s %s: %p %x\n",
-        __ARQUIVO__, __FUNÇÃO__, p, (sem_sinal)offset);
+        __FILE__, __FUNCTION__, p, (sem_sinal)offset);
 
     __bound_init();
 
@@ -197,7 +197,7 @@ vazio * FASTCALL __bound_ptr_add(vazio *p, size_t offset)
     addr += offset;
     se (addr >= e->size) {
 	fprintf(stderr,"%s %s: %p is outside of the region\n",
-            __ARQUIVO__, __FUNÇÃO__, p + offset);
+            __FILE__, __FUNCTION__, p + offset);
         retorne INVALID_POINTER; /* retorne an invalid pointer */
     }
     retorne p + offset;
@@ -212,7 +212,7 @@ vazio * FASTCALL __bound_ptr_indir ## dsize (vazio *p, size_t offset)     \
     BoundEntry *e;                                                      \
                                                                         \
     dprintf(stderr, "%s %s: %p %x start\n",                             \
-        __ARQUIVO__, __FUNÇÃO__, p, (sem_sinal)offset);	                \
+        __FILE__, __FUNCTION__, p, (sem_sinal)offset);	                \
 									\
     __bound_init();							\
     e = __bound_t1[addr >> (BOUND_T2_BITS + BOUND_T3_BITS)];            \
@@ -227,11 +227,11 @@ vazio * FASTCALL __bound_ptr_indir ## dsize (vazio *p, size_t offset)     \
     addr += offset + dsize;                                             \
     se (addr > e->size) {                                               \
 	fprintf(stderr,"%s %s: %p is outside of the region\n",          \
-            __ARQUIVO__, __FUNÇÃO__, p + offset);                        \
+            __FILE__, __FUNCTION__, p + offset);                        \
         retorne INVALID_POINTER; /* retorne an invalid pointer */         \
     }									\
     dprintf(stderr, "%s %s: retorne p+offset = %p\n",                    \
-        __ARQUIVO__, __FUNÇÃO__, p + offset);                            \
+        __FILE__, __FUNCTION__, p + offset);                            \
     retorne p + offset;                                                  \
 }
 
@@ -262,7 +262,7 @@ vazio FASTCALL __bound_local_new(vazio *p1)
 {
     size_t addr, size, fp, *p = p1;
 
-    dprintf(stderr, "%s, %s start p1=%p\n", __ARQUIVO__, __FUNÇÃO__, p);
+    dprintf(stderr, "%s, %s start p1=%p\n", __FILE__, __FUNCTION__, p);
     GET_CALLER_FP(fp);
     para(;;) {
         addr = p[0];
@@ -273,7 +273,7 @@ vazio FASTCALL __bound_local_new(vazio *p1)
         p += 2;
         __bound_new_region((vazio *)addr, size);
     }
-    dprintf(stderr, "%s, %s end\n", __ARQUIVO__, __FUNÇÃO__);
+    dprintf(stderr, "%s, %s end\n", __FILE__, __FUNCTION__);
 }
 
 /* called when leaving a function to delete all the local regions */
@@ -300,7 +300,7 @@ estático BoundEntry *__bound_new_page(vazio)
     BoundEntry *page;
     size_t i;
 
-    page = libc_malloc(tamanho_de(BoundEntry) * BOUND_T2_SIZE);
+    page = libc_malloc(sizeof(BoundEntry) * BOUND_T2_SIZE);
     se (!page)
         bound_alloc_error();
     para(i=0;i<BOUND_T2_SIZE;i++) {
@@ -317,7 +317,7 @@ estático BoundEntry *__bound_new_page(vazio)
 estático BoundEntry *bound_new_entry(vazio)
 {
     BoundEntry *e;
-    e = libc_malloc(tamanho_de(BoundEntry));
+    e = libc_malloc(sizeof(BoundEntry));
     retorne e;
 }
 
@@ -405,23 +405,18 @@ vazio __bound_init(vazio)
 
     inited = 1;
 
-    dprintf(stderr, "%s, %s() start\n", __ARQUIVO__, __FUNÇÃO__);
+    dprintf(stderr, "%s, %s() start\n", __FILE__, __FUNCTION__);
 
     /* save malloc hooks and install bound check hooks */
     install_malloc_hooks();
 
 #se_não_definido BOUND_STATIC
-    /* O original é:
-    __bound_t1 = libc_malloc(BOUND_T1_SIZE * tamanho_de(BoundEntry *));
-    mas ao traduzir os tokens tive um problema que não consigo debugar,
-    então estou usando o número 8
-    */
-    __bound_t1 = libc_malloc(BOUND_T1_SIZE * tamanho_de(8));
+    __bound_t1 = libc_malloc(BOUND_T1_SIZE * sizeof(BoundEntry *));
     se (!__bound_t1)
         bound_alloc_error();
 #fim_se
     __bound_empty_t2 = __bound_new_page();
-    para (i=0;i<BOUND_T1_SIZE;i++) {
+    para(i=0;i<BOUND_T1_SIZE;i++) {
         __bound_t1[i] = __bound_empty_t2;
     }
 
@@ -440,13 +435,13 @@ vazio __bound_init(vazio)
     size = BOUND_T23_SIZE;
     mark_invalid(start, size);
 
-#se definido(CONFIG_TCC_MALLOC_HOOKS)
+#se definido(CONFIG_CTEC_MALLOC_HOOKS)
     /* malloc zone is also marked invalid. can only use that with
      * hooks because all libs should use the same malloc. The solution
-     * would be to build a new malloc para tcc.
+     * would be to build a new malloc para ctec.
      *
      * usually heap (= malloc zone) comes right after bss, i.e. after _end, but
-     * not always - either se we are running from under `tcc -b -run`, or se
+     * not always - either se we are running from under `ctec -b -run`, or se
      * address space randomization is turned on(a), heap start will be separated
      * from bss end.
      *
@@ -456,7 +451,7 @@ vazio __bound_init(vazio)
      *     and sbrk(0) should be equal or very near to start_brk(b) (in caso other
      *     constructors malloc something), or
      *
-     *   - se we are running from under `tcc -b -run`, sbrk(0) will retorne
+     *   - se we are running from under `ctec -b -run`, sbrk(0) will retorne
      *     start of heap portion which is under this program control, and not
      *     mark as invalid earlier allocated memory.
      *
@@ -479,7 +474,7 @@ vazio __bound_init(vazio)
         p += 2;
     }
 
-    dprintf(stderr, "%s, %s() end\n\n", __ARQUIVO__, __FUNÇÃO__);
+    dprintf(stderr, "%s, %s() end\n\n", __FILE__, __FUNCTION__);
 }
 
 vazio __bound_main_arg(vazio **p)
@@ -488,14 +483,14 @@ vazio __bound_main_arg(vazio **p)
     enquanto (*p++);
 
     dprintf(stderr, "%s, %s calling __bound_new_region(%p %x)\n",
-            __ARQUIVO__, __FUNÇÃO__, start, (sem_sinal)((vazio *)p - start));
+            __FILE__, __FUNCTION__, start, (sem_sinal)((vazio *)p - start));
 
     __bound_new_region(start, (vazio *) p - start);
 }
 
 vazio __bound_exit(vazio)
 {
-    dprintf(stderr, "%s, %s()\n", __ARQUIVO__, __FUNÇÃO__);
+    dprintf(stderr, "%s, %s()\n", __FILE__, __FUNCTION__);
     restore_malloc_hooks();
 }
 
@@ -527,7 +522,7 @@ vazio __bound_new_region(vazio *p, size_t size)
     size_t t1_start, t1_end, i, t2_start, t2_end;
 
     dprintf(stderr, "%s, %s(%p, %x) start\n",
-        __ARQUIVO__, __FUNÇÃO__, p, (sem_sinal)size);
+        __FILE__, __FUNCTION__, p, (sem_sinal)size);
 
     __bound_init();
 
@@ -585,7 +580,7 @@ vazio __bound_new_region(vazio *p, size_t size)
         add_region(e, start, size);
     }
 
-    dprintf(stderr, "%s, %s end\n", __ARQUIVO__, __FUNÇÃO__);
+    dprintf(stderr, "%s, %s end\n", __FILE__, __FUNCTION__);
 }
 
 /* delete a region */
@@ -637,7 +632,7 @@ inteiro __bound_delete_region(vazio *p)
     BoundEntry *page, *e, *e2;
     size_t t1_start, t1_end, t2_start, t2_end, i;
 
-    dprintf(stderr, "%s %s() start\n", __ARQUIVO__, __FUNÇÃO__);
+    dprintf(stderr, "%s %s() start\n", __FILE__, __FUNCTION__);
 
     __bound_init();
 
@@ -708,7 +703,7 @@ inteiro __bound_delete_region(vazio *p)
         delete_region(e, p, empty_size);
     }
 
-    dprintf(stderr, "%s %s() end\n", __ARQUIVO__, __FUNÇÃO__);
+    dprintf(stderr, "%s %s() end\n", __FILE__, __FUNCTION__);
 
     retorne 0;
 }
@@ -739,7 +734,7 @@ estático size_t get_region_size(vazio *p)
 
 estático vazio install_malloc_hooks(vazio)
 {
-#se_definido CONFIG_TCC_MALLOC_HOOKS
+#se_definido CONFIG_CTEC_MALLOC_HOOKS
     saved_malloc_hook = __malloc_hook;
     saved_free_hook = __free_hook;
     saved_realloc_hook = __realloc_hook;
@@ -755,7 +750,7 @@ estático vazio install_malloc_hooks(vazio)
 
 estático vazio restore_malloc_hooks(vazio)
 {
-#se_definido CONFIG_TCC_MALLOC_HOOKS
+#se_definido CONFIG_CTEC_MALLOC_HOOKS
     __malloc_hook = saved_malloc_hook;
     __free_hook = saved_free_hook;
     __realloc_hook = saved_realloc_hook;
@@ -797,7 +792,7 @@ vazio *__bound_malloc(size_t size, constante vazio *caller)
         retorne NULL;
 
     dprintf(stderr, "%s, %s calling __bound_new_region(%p, %x)\n",
-           __ARQUIVO__, __FUNÇÃO__, ptr, (sem_sinal)size);
+           __FILE__, __FUNCTION__, ptr, (sem_sinal)size);
 
     __bound_new_region(ptr, size);
     retorne ptr;
@@ -830,7 +825,7 @@ vazio *__bound_memalign(size_t size, size_t align, constante vazio *caller)
         retorne NULL;
 
     dprintf(stderr, "%s, %s calling __bound_new_region(%p, %x)\n",
-           __ARQUIVO__, __FUNÇÃO__, ptr, (sem_sinal)size);
+           __FILE__, __FUNCTION__, ptr, (sem_sinal)size);
 
     __bound_new_region(ptr, size);
     retorne ptr;
@@ -867,7 +862,7 @@ vazio *__bound_realloc(vazio *ptr, size_t size, constante vazio *caller)
     }
 }
 
-#se_não_definido CONFIG_TCC_MALLOC_HOOKS
+#se_não_definido CONFIG_CTEC_MALLOC_HOOKS
 vazio *__bound_calloc(size_t nmemb, size_t size)
 {
     vazio *ptr;
@@ -924,7 +919,7 @@ vazio *__bound_memcpy(vazio *dst, constante vazio *src, size_t size)
     vazio* p;
 
     dprintf(stderr, "%s %s: start, dst=%p src=%p size=%x\n",
-            __ARQUIVO__, __FUNÇÃO__, dst, src, (sem_sinal)size);
+            __FILE__, __FUNCTION__, dst, src, (sem_sinal)size);
 
     __bound_check(dst, size);
     __bound_check(src, size);
@@ -934,7 +929,7 @@ vazio *__bound_memcpy(vazio *dst, constante vazio *src, size_t size)
 
     p = memcpy(dst, src, size);
 
-    dprintf(stderr, "%s %s: end, p=%p\n", __ARQUIVO__, __FUNÇÃO__, p);
+    dprintf(stderr, "%s %s: end, p=%p\n", __FILE__, __FUNCTION__, p);
     retorne p;
 }
 
@@ -975,10 +970,10 @@ caractere *__bound_strcpy(caractere *dst, constante caractere *src)
     vazio *p;
 
     dprintf(stderr, "%s %s: strcpy start, dst=%p src=%p\n",
-            __ARQUIVO__, __FUNÇÃO__, dst, src);
+            __FILE__, __FUNCTION__, dst, src);
     len = __bound_strlen(src);
     p = __bound_memcpy(dst, src, len + 1);
     dprintf(stderr, "%s %s: strcpy end, p = %p\n",
-            __ARQUIVO__, __FUNÇÃO__, p);
+            __FILE__, __FUNCTION__, p);
     retorne p;
 }

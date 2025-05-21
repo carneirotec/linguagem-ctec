@@ -1,12 +1,12 @@
 /*************************************************************/
 /*
- *  ARM dummy assembler for TCC
+ *  ARM dummy assembler for CTEC
  *
  */
 
 #ifdef TARGET_DEFS_ONLY
 
-#define CONFIG_TCC_ASM
+#define CONFIG_CTEC_ASM
 #define NB_ASM_REGS 16
 
 ST_FUNC void g(int c);
@@ -17,11 +17,11 @@ ST_FUNC void gen_le32(int c);
 #else
 /*************************************************************/
 
-#include "tcc.h"
+#include "ctec.h"
 
 static void asm_error(void)
 {
-    tcc_error("ARM asm not implemented.");
+    ctec_error("ARM asm not implemented.");
 }
 
 /* XXX: make it faster ? */
@@ -54,7 +54,7 @@ ST_FUNC void gen_expr32(ExprValue *pe)
     gen_le32(pe->v);
 }
 
-ST_FUNC void asm_opcode(TCCState *s1, int opcode)
+ST_FUNC void asm_opcode(CTECState *s1, int opcode)
 {
     asm_error();
 }

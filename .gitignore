@@ -14,10 +14,10 @@
 *.zip
 .gdb_history
 a.out
-tcc_g
-tcc
-*-tcc
-libtcc*.def
+ctec_g
+ctec
+*-ctec
+libctec*.def
 
 config*.h
 config*.mak
@@ -25,13 +25,13 @@ config.texi
 conftest*
 tags
 TAGS
-tcc.1
-tcc.pod
-tcc-doc.html
-tcc-doc.info
+ctec.1
+ctec.pod
+ctec-doc.html
+ctec-doc.info
 
 win32/doc
-win32/libtcc
+win32/libctec
 win32/lib/32
 win32/lib/64
 win32/include/float.h
@@ -39,17 +39,17 @@ win32/include/stdarg.h
 win32/include/stdbool.h
 win32/include/stddef.h
 win32/include/varargs.h
-win32/include/tcclib.h
+win32/include/cteclib.h
 
-tests/tcctest[1234]
-tests/tcctest.gcc
+tests/ctectest[1234]
+tests/ctectest.gcc
 tests/*.out*
 tests/*.ref
 tests/*.txt
 tests/*.gcc
 tests/*-cc*
-tests/*-tcc*
-tests/libtcc_test
+tests/*-ctec*
+tests/libctec_test
 tests/asm-c-connect
 tests/asm-c-connect-sep
 tests/vla_test

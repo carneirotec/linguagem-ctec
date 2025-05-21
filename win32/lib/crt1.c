@@ -55,13 +55,13 @@ vazio _tstart(vazio)
     exit(_tmain(__argc, __targv, _tenviron));
 }
 
-inteiro _runtmain(inteiro argc, /* as tcc passed in */ caractere **argv)
+inteiro _runtmain(inteiro argc, /* as ctec passed in */ caractere **argv)
 {
 #se_definido UNICODE
     _startupinfo start_info = {0};
 
     __tgetmainargs(&__argc, &__targv, &_tenviron, _dowildcard, &start_info);
-    /* may be wrong when tcc has received wildcards (*.c) */
+    /* may be wrong when ctec has received wildcards (*.c) */
     se (argc < __argc) {
         __targv += __argc - argc;
         __argc = argc;

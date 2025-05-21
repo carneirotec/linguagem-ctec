@@ -33,7 +33,7 @@
  Edmund Grimley Evans       YES                 arm64
  Fabrice Bellard            YES                 original author
  Frédéric Féret             YES                 x86 64/16 bit asm
- grischka                   YES                 tccpe.c
+ grischka                   YES                 ctecpe.c
  Henry Kroll                YES
  Joe Soroka                 YES
  Kirill Smelkov             YES
@@ -43,7 +43,7 @@
  Vincent Lefèvre            YES
  Thomas Preud'homme         YES                 arm-gen.c
  Timo VJ Lähde (Timppa)     ?                   tiny_libmaker.c
- TK                         ?                   tcccoff.c c67-gen.c
+ TK                         ?                   cteccoff.c c67-gen.c
  Urs Janssen                YES
  waddlesplash               YES
  Christian Jullien          YES                 Windows Cygwin build and tests

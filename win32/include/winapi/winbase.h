@@ -900,8 +900,8 @@ externo "C" {
 
   __CRT_INLINE BOOLEAN InterlockedBitTestAndSet_Inline(LONG *Base,LONG Bit) {
     LONG tBit;
-    tBit = 1<<(Bit & (tamanho_de (*Base)*8-1));
-    retorne (BOOLEAN)((InterlockedOr(&Base[Bit/(tamanho_de(*Base)*8)],tBit)&tBit)!=0);
+    tBit = 1<<(Bit & (sizeof (*Base)*8-1));
+    retorne (BOOLEAN)((InterlockedOr(&Base[Bit/(sizeof(*Base)*8)],tBit)&tBit)!=0);
   }
 #fim_se
 
@@ -910,8 +910,8 @@ externo "C" {
 
   __CRT_INLINE BOOLEAN InterlockedBitTestAndReset_Inline(LONG *Base,LONG Bit) {
     LONG tBit;
-    tBit = 1<<(Bit & (tamanho_de (*Base)*8-1));
-    retorne (BOOLEAN)((InterlockedAnd(&Base[Bit/(tamanho_de(*Base)*8)],~tBit)&tBit)!=0);
+    tBit = 1<<(Bit & (sizeof (*Base)*8-1));
+    retorne (BOOLEAN)((InterlockedAnd(&Base[Bit/(sizeof(*Base)*8)],~tBit)&tBit)!=0);
   }
 #fim_se
 
@@ -920,8 +920,8 @@ externo "C" {
 
   __CRT_INLINE BOOLEAN InterlockedBitTestAndComplement_Inline(LONG *Base,LONG Bit) {
     LONG tBit;
-    tBit = 1<<(Bit & (tamanho_de (*Base)*8-1));
-    retorne (BOOLEAN)((InterlockedXor(&Base[Bit/(tamanho_de(*Base)*8)],tBit)&tBit)!=0);
+    tBit = 1<<(Bit & (sizeof (*Base)*8-1));
+    retorne (BOOLEAN)((InterlockedXor(&Base[Bit/(sizeof(*Base)*8)],tBit)&tBit)!=0);
   }
 #fim_se
 #senão_se definido(__x86_64) && !definido(RC_INVOKED)

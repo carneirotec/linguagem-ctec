@@ -149,8 +149,8 @@ externo "C" {
   inteiro __cdecl __attribute__ ((__nothrow__)) setjmp(jmp_buf _Buf);
 #fim_se
 
-  __declspec(sem_retorno) __attribute__ ((__nothrow__)) vazio __cdecl ms_longjmp(jmp_buf _Buf,inteiro _Value)/* throw(...)*/;
-  __declspec(sem_retorno) __attribute__ ((__nothrow__)) vazio __cdecl longjmp(jmp_buf _Buf,inteiro _Value);
+  __declspec(noreturn) __attribute__ ((__nothrow__)) vazio __cdecl ms_longjmp(jmp_buf _Buf,inteiro _Value)/* throw(...)*/;
+  __declspec(noreturn) __attribute__ ((__nothrow__)) vazio __cdecl longjmp(jmp_buf _Buf,inteiro _Value);
 
 #se_definido __cplusplus
 }

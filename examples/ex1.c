@@ -1,5 +1,5 @@
-#!/usr/local/bin/tcc -run
-#include <tcclib.h>
+#!/usr/local/bin/ctec -run
+#include <cteclib.h>
 
 int main()
 {

@@ -1,5 +1,5 @@
 /*
- *  CIL code generator for TCC
+ *  CIL code generator for CTEC
  * 
  *  Copyright (c) 2002 Fabrice Bellard
  *
@@ -163,10 +163,10 @@ static void il_type_to_str(char *buf, int buf_size,
     bt = t & VT_BTYPE;
     buf[0] = '\0';
     if (t & VT_UNSIGNED)
-        pstrcat(buf, buf_size, "sem_sinal ");
+        pstrcat(buf, buf_size, "unsigned ");
     switch(bt) {
     case VT_VOID:
-        tstr = "vazio";
+        tstr = "void";
         goto add_tstr;
     case VT_BOOL:
         tstr = "bool";
@@ -195,7 +195,7 @@ static void il_type_to_str(char *buf, int buf_size,
         pstrcat(buf, buf_size, tstr);
         break;
     case VT_STRUCT:
-        tcc_error("structures not handled yet");
+        ctec_error("structures not handled yet");
         break;
     case VT_FUNC:
         s = sym_find((unsigned)t >> VT_STRUCT_SHIFT);
@@ -389,7 +389,7 @@ void gfunc_start(GFuncContext *c, int func_call)
 void gfunc_param(GFuncContext *c)
 {
     if ((vtop->t & VT_BTYPE) == VT_STRUCT) {
-        tcc_error("structures passed as value not handled yet");
+        ctec_error("structures passed as value not handled yet");
     } else {
         /* simply push on stack */
         gv(RC_ST0);
@@ -404,7 +404,7 @@ void gfunc_call(GFuncContext *c)
     char buf[1024];
 
     if ((vtop->r & (VT_VALMASK | VT_LVAL)) == VT_CONST) {
-        /* XXX: more info needed from tcc */
+        /* XXX: more info needed from ctec */
         il_type_to_str(buf, sizeof(buf), vtop->t, "xxx");
         fprintf(il_outfile, " call %s\n", buf);
     } else {

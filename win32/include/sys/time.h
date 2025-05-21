@@ -53,7 +53,7 @@ estrutura timezone
 #se_não_definido _GETTIMEOFDAY_DEFINED
 #defina _GETTIMEOFDAY_DEFINED
 inteiro __cdecl gettimeofday(estrutura timeval *__restrict__,
-                         vazio *__restrict__  /* tzp (não_usado) */);
+                         vazio *__restrict__  /* tzp (unused) */);
 #fim_se
 
 #fim_se /* __STRICT_ANSI__ */

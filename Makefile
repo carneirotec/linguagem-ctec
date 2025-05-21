@@ -14,9 +14,9 @@ ifeq (-$(CC)-$(GCC_MAJOR)-$(findstring $(GCC_MINOR),56789)-,-gcc-4--)
  CFLAGS += -D_FORTIFY_SOURCE=0
 endif
 
-LIBTCC = libtcc.a
-LIBTCC1 = libtcc1.a
-LINK_LIBTCC =
+LIBCTEC = libctec.a
+LIBCTEC1 = libctec1.a
+LINK_LIBCTEC =
 LIBS =
 CFLAGS += -I$(TOP)
 CFLAGS += $(CPPFLAGS)
@@ -24,8 +24,8 @@ VPATH = $(TOPSRC)
 
 ifdef CONFIG_WIN32
  ifneq ($(CONFIG_static),yes)
-  LIBTCC = libtcc$(DLLSUF)
-  LIBTCCDEF = libtcc.def
+  LIBCTEC = libctec$(DLLSUF)
+  LIBCTECDEF = libctec.def
  endif
  CFGWIN = -win
  NATIVE_TARGET = $(ARCH)-win$(if $(findstring arm,$(ARCH)),ce,32)
@@ -34,12 +34,12 @@ else
  ifneq ($(CONFIG_ldl),no)
   LIBS+=-ldl
  endif
- # make libtcc as static or dynamic library?
+ # make libctec as static or dynamic library?
  ifeq ($(CONFIG_static),no)
-  LIBTCC=libtcc$(DLLSUF)
+  LIBCTEC=libctec$(DLLSUF)
   export LD_LIBRARY_PATH := $(CURDIR)/$(TOP)
   ifneq ($(CONFIG_rpath),no)
-   LINK_LIBTCC += -Wl,-rpath,"$(libdir)"
+   LINK_LIBCTEC += -Wl,-rpath,"$(libdir)"
   endif
  endif
  CFGWIN =-unx
@@ -51,60 +51,60 @@ else
  endif
 endif
 
-# run local version of tcc with local libraries and includes
-TCCFLAGS-unx = -B$(TOP) -I$(TOPSRC)/include -I$(TOPSRC) -I$(TOP)
-TCCFLAGS-win = -B$(TOPSRC)/win32 -I$(TOPSRC)/include -I$(TOPSRC) -I$(TOP) -L$(TOP)
-TCCFLAGS = $(TCCFLAGS$(CFGWIN))
-TCC = $(TOP)/tcc$(EXESUF) $(TCCFLAGS)
+# run local version of ctec with local libraries and includes
+CTECFLAGS-unx = -B$(TOP) -I$(TOPSRC)/include -I$(TOPSRC) -I$(TOP)
+CTECFLAGS-win = -B$(TOPSRC)/win32 -I$(TOPSRC)/include -I$(TOPSRC) -I$(TOP) -L$(TOP)
+CTECFLAGS = $(CTECFLAGS$(CFGWIN))
+CTEC = $(TOP)/ctec$(EXESUF) $(CTECFLAGS)
 ifdef CONFIG_OSX
- TCCFLAGS += -D_ANSI_SOURCE
+ CTECFLAGS += -D_ANSI_SOURCE
 endif
 
-CFLAGS_P = $(CFLAGS) -pg -static -DCONFIG_TCC_STATIC -DTCC_PROFILE
+CFLAGS_P = $(CFLAGS) -pg -static -DCONFIG_CTEC_STATIC -DCTEC_PROFILE
 LIBS_P = $(LIBS)
 LDFLAGS_P = $(LDFLAGS)
 
 CONFIG_$(ARCH) = yes
-NATIVE_DEFINES_$(CONFIG_i386) += -DTCC_TARGET_I386
-NATIVE_DEFINES_$(CONFIG_x86_64) += -DTCC_TARGET_X86_64
-NATIVE_DEFINES_$(CONFIG_WIN32) += -DTCC_TARGET_PE
-NATIVE_DEFINES_$(CONFIG_OSX) += -DTCC_TARGET_MACHO
-NATIVE_DEFINES_$(CONFIG_uClibc) += -DTCC_UCLIBC
-NATIVE_DEFINES_$(CONFIG_musl) += -DTCC_MUSL
+NATIVE_DEFINES_$(CONFIG_i386) += -DCTEC_TARGET_I386
+NATIVE_DEFINES_$(CONFIG_x86_64) += -DCTEC_TARGET_X86_64
+NATIVE_DEFINES_$(CONFIG_WIN32) += -DCTEC_TARGET_PE
+NATIVE_DEFINES_$(CONFIG_OSX) += -DCTEC_TARGET_MACHO
+NATIVE_DEFINES_$(CONFIG_uClibc) += -DCTEC_UCLIBC
+NATIVE_DEFINES_$(CONFIG_musl) += -DCTEC_MUSL
 NATIVE_DEFINES_$(CONFIG_libgcc) += -DCONFIG_USE_LIBGCC
 NATIVE_DEFINES_$(CONFIG_selinux) += -DHAVE_SELINUX
-NATIVE_DEFINES_$(CONFIG_arm) += -DTCC_TARGET_ARM
-NATIVE_DEFINES_$(CONFIG_arm_eabihf) += -DTCC_ARM_EABI -DTCC_ARM_HARDFLOAT
-NATIVE_DEFINES_$(CONFIG_arm_eabi) += -DTCC_ARM_EABI
-NATIVE_DEFINES_$(CONFIG_arm_vfp) += -DTCC_ARM_VFP
-NATIVE_DEFINES_$(CONFIG_arm64) += -DTCC_TARGET_ARM64
+NATIVE_DEFINES_$(CONFIG_arm) += -DCTEC_TARGET_ARM
+NATIVE_DEFINES_$(CONFIG_arm_eabihf) += -DCTEC_ARM_EABI -DCTEC_ARM_HARDFLOAT
+NATIVE_DEFINES_$(CONFIG_arm_eabi) += -DCTEC_ARM_EABI
+NATIVE_DEFINES_$(CONFIG_arm_vfp) += -DCTEC_ARM_VFP
+NATIVE_DEFINES_$(CONFIG_arm64) += -DCTEC_TARGET_ARM64
 NATIVE_DEFINES += $(NATIVE_DEFINES_yes)
 
 ifeq ($(INCLUDED),no)
 # --------------------------------------------------------------------------
 # running top Makefile
 
-PROGS = tcc$(EXESUF)
-TCCLIBS = $(LIBTCC1) $(LIBTCC) $(LIBTCCDEF)
-TCCDOCS = tcc.1 tcc-doc.html tcc-doc.info
+PROGS = ctec$(EXESUF)
+CTECLIBS = $(LIBCTEC1) $(LIBCTEC) $(LIBCTECDEF)
+CTECDOCS = ctec.1 ctec-doc.html ctec-doc.info
 
-all: $(PROGS) $(TCCLIBS) $(TCCDOCS)
+all: $(PROGS) $(CTECLIBS) $(CTECDOCS)
 
 # cross compiler targets to build
-TCC_X = i386 x86_64 i386-win32 x86_64-win32 x86_64-osx arm arm64 arm-wince c67
-# TCC_X += arm-fpa arm-fpa-ld arm-vfp arm-eabi
+CTEC_X = i386 x86_64 i386-win32 x86_64-win32 x86_64-osx arm arm64 arm-wince c67
+# CTEC_X += arm-fpa arm-fpa-ld arm-vfp arm-eabi
 
-# cross libtcc1.a targets to build
-LIBTCC1_X = i386 x86_64 i386-win32 x86_64-win32 x86_64-osx arm arm64 arm-wince
+# cross libctec1.a targets to build
+LIBCTEC1_X = i386 x86_64 i386-win32 x86_64-win32 x86_64-osx arm arm64 arm-wince
 
-PROGS_CROSS = $(foreach X,$(TCC_X),$X-tcc$(EXESUF))
-LIBTCC1_CROSS = $(foreach X,$(LIBTCC1_X),$X-libtcc1.a)
+PROGS_CROSS = $(foreach X,$(CTEC_X),$X-ctec$(EXESUF))
+LIBCTEC1_CROSS = $(foreach X,$(LIBCTEC1_X),$X-libctec1.a)
 
 # build cross compilers & libs
-cross: $(LIBTCC1_CROSS) $(PROGS_CROSS)
+cross: $(LIBCTEC1_CROSS) $(PROGS_CROSS)
 
 # build specific cross compiler & lib
-cross-%: %-tcc$(EXESUF) %-libtcc1.a ;
+cross-%: %-ctec$(EXESUF) %-libctec1.a ;
 
 install: ; @$(MAKE) --no-print-directory install$(CFGWIN)
 install-strip: ; @$(MAKE) --no-print-directory install$(CFGWIN) CONFIG_strip=yes
@@ -119,134 +119,134 @@ endif
 T = $(or $(CROSS_TARGET),$(NATIVE_TARGET),unknown)
 X = $(if $(CROSS_TARGET),$(CROSS_TARGET)-)
 
-DEF-i386        = -DTCC_TARGET_I386
-DEF-x86_64      = -DTCC_TARGET_X86_64
-DEF-i386-win32  = -DTCC_TARGET_PE -DTCC_TARGET_I386
-DEF-x86_64-win32= -DTCC_TARGET_PE -DTCC_TARGET_X86_64
-DEF-x86_64-osx  = -DTCC_TARGET_MACHO -DTCC_TARGET_X86_64
-DEF-arm-wince   = -DTCC_TARGET_PE -DTCC_TARGET_ARM -DTCC_ARM_EABI -DTCC_ARM_VFP -DTCC_ARM_HARDFLOAT
-DEF-arm64       = -DTCC_TARGET_ARM64
-DEF-c67         = -DTCC_TARGET_C67 -w # disable warnigs
-DEF-arm-fpa     = -DTCC_TARGET_ARM
-DEF-arm-fpa-ld  = -DTCC_TARGET_ARM -DLDOUBLE_SIZE=12
-DEF-arm-vfp     = -DTCC_TARGET_ARM -DTCC_ARM_VFP
-DEF-arm-eabi    = -DTCC_TARGET_ARM -DTCC_ARM_VFP -DTCC_ARM_EABI
-DEF-arm-eabihf  = -DTCC_TARGET_ARM -DTCC_ARM_VFP -DTCC_ARM_EABI -DTCC_ARM_HARDFLOAT
+DEF-i386        = -DCTEC_TARGET_I386
+DEF-x86_64      = -DCTEC_TARGET_X86_64
+DEF-i386-win32  = -DCTEC_TARGET_PE -DCTEC_TARGET_I386
+DEF-x86_64-win32= -DCTEC_TARGET_PE -DCTEC_TARGET_X86_64
+DEF-x86_64-osx  = -DCTEC_TARGET_MACHO -DCTEC_TARGET_X86_64
+DEF-arm-wince   = -DCTEC_TARGET_PE -DCTEC_TARGET_ARM -DCTEC_ARM_EABI -DCTEC_ARM_VFP -DCTEC_ARM_HARDFLOAT
+DEF-arm64       = -DCTEC_TARGET_ARM64
+DEF-c67         = -DCTEC_TARGET_C67 -w # disable warnigs
+DEF-arm-fpa     = -DCTEC_TARGET_ARM
+DEF-arm-fpa-ld  = -DCTEC_TARGET_ARM -DLDOUBLE_SIZE=12
+DEF-arm-vfp     = -DCTEC_TARGET_ARM -DCTEC_ARM_VFP
+DEF-arm-eabi    = -DCTEC_TARGET_ARM -DCTEC_ARM_VFP -DCTEC_ARM_EABI
+DEF-arm-eabihf  = -DCTEC_TARGET_ARM -DCTEC_ARM_VFP -DCTEC_ARM_EABI -DCTEC_ARM_HARDFLOAT
 DEF-arm         = $(DEF-arm-eabihf)
 DEF-$(NATIVE_TARGET) = $(NATIVE_DEFINES)
 
 DEFINES += $(DEF-$T) $(DEF-all)
 DEFINES += $(if $(ROOT-$T),-DCONFIG_SYSROOT="\"$(ROOT-$T)\"")
-DEFINES += $(if $(CRT-$T),-DCONFIG_TCC_CRTPREFIX="\"$(CRT-$T)\"")
-DEFINES += $(if $(LIB-$T),-DCONFIG_TCC_LIBPATHS="\"$(LIB-$T)\"")
-DEFINES += $(if $(INC-$T),-DCONFIG_TCC_SYSINCLUDEPATHS="\"$(INC-$T)\"")
+DEFINES += $(if $(CRT-$T),-DCONFIG_CTEC_CRTPREFIX="\"$(CRT-$T)\"")
+DEFINES += $(if $(LIB-$T),-DCONFIG_CTEC_LIBPATHS="\"$(LIB-$T)\"")
+DEFINES += $(if $(INC-$T),-DCONFIG_CTEC_SYSINCLUDEPATHS="\"$(INC-$T)\"")
 DEFINES += $(DEF-$(or $(findstring win,$T),unx))
 
 ifneq ($(X),)
 ifeq ($(CONFIG_WIN32),yes)
-DEF-win += -DTCC_LIBTCC1="\"$(X)libtcc1.a\""
-DEF-unx += -DTCC_LIBTCC1="\"lib/$(X)libtcc1.a\""
+DEF-win += -DCTEC_LIBCTEC1="\"$(X)libctec1.a\""
+DEF-unx += -DCTEC_LIBCTEC1="\"lib/$(X)libctec1.a\""
 else
-DEF-all += -DTCC_LIBTCC1="\"$(X)libtcc1.a\""
-DEF-win += -DCONFIG_TCCDIR="\"$(tccdir)/win32\""
+DEF-all += -DCTEC_LIBCTEC1="\"$(X)libctec1.a\""
+DEF-win += -DCONFIG_CTECDIR="\"$(ctecdir)/win32\""
 endif
 endif
 
 # include custom configuration (see make help)
 -include config-extra.mak
 
-CORE_FILES = tcc.c tcctools.c libtcc.c tccpp.c tccgen.c tccelf.c tccasm.c tccrun.c
-CORE_FILES += tcc.h config.h libtcc.h tcctok.h
+CORE_FILES = ctec.c ctectools.c libctec.c ctecpp.c ctecgen.c ctecelf.c ctecasm.c ctecrun.c
+CORE_FILES += ctec.h config.h libctec.h ctectok.h
 i386_FILES = $(CORE_FILES) i386-gen.c i386-link.c i386-asm.c i386-asm.h i386-tok.h
-i386-win32_FILES = $(i386_FILES) tccpe.c
+i386-win32_FILES = $(i386_FILES) ctecpe.c
 x86_64_FILES = $(CORE_FILES) x86_64-gen.c x86_64-link.c i386-asm.c x86_64-asm.h
-x86_64-win32_FILES = $(x86_64_FILES) tccpe.c
+x86_64-win32_FILES = $(x86_64_FILES) ctecpe.c
 x86_64-osx_FILES = $(x86_64_FILES)
 arm_FILES = $(CORE_FILES) arm-gen.c arm-link.c arm-asm.c
-arm-wince_FILES = $(arm_FILES) tccpe.c
+arm-wince_FILES = $(arm_FILES) ctecpe.c
 arm64_FILES = $(CORE_FILES) arm64-gen.c arm64-link.c
-c67_FILES = $(CORE_FILES) c67-gen.c c67-link.c tcccoff.c
+c67_FILES = $(CORE_FILES) c67-gen.c c67-link.c cteccoff.c
 
-# libtcc sources
-LIBTCC_SRC = $(filter-out tcc.c tcctools.c,$(filter %.c,$($T_FILES)))
+# libctec sources
+LIBCTEC_SRC = $(filter-out ctec.c ctectools.c,$(filter %.c,$($T_FILES)))
 
 ifeq ($(ONE_SOURCE),yes)
-LIBTCC_OBJ = $(X)libtcc.o
-LIBTCC_INC = $($T_FILES)
-TCC_FILES = $(X)tcc.o
-tcc.o : DEFINES += -DONE_SOURCE=0
+LIBCTEC_OBJ = $(X)libctec.o
+LIBCTEC_INC = $($T_FILES)
+CTEC_FILES = $(X)ctec.o
+ctec.o : DEFINES += -DONE_SOURCE=0
 else
-LIBTCC_OBJ = $(patsubst %.c,$(X)%.o,$(LIBTCC_SRC))
-LIBTCC_INC = $(filter %.h %-gen.c %-link.c,$($T_FILES))
-TCC_FILES = $(X)tcc.o $(LIBTCC_OBJ)
-$(TCC_FILES) : DEFINES += -DONE_SOURCE=0
+LIBCTEC_OBJ = $(patsubst %.c,$(X)%.o,$(LIBCTEC_SRC))
+LIBCTEC_INC = $(filter %.h %-gen.c %-link.c,$($T_FILES))
+CTEC_FILES = $(X)ctec.o $(LIBCTEC_OBJ)
+$(CTEC_FILES) : DEFINES += -DONE_SOURCE=0
 endif
 
 # target specific object rule
-$(X)%.o : %.c $(LIBTCC_INC)
+$(X)%.o : %.c $(LIBCTEC_INC)
 	$(CC) -o $@ -c $< $(DEFINES) $(CFLAGS)
 
 # additional dependencies
-$(X)tcc.o : tcctools.c
+$(X)ctec.o : ctectools.c
 
 # Host Tiny C Compiler
-tcc$(EXESUF): tcc.o $(LIBTCC)
-	$(CC) -o $@ $^ $(LIBS) $(LDFLAGS) $(LINK_LIBTCC)
+ctec$(EXESUF): ctec.o $(LIBCTEC)
+	$(CC) -o $@ $^ $(LIBS) $(LDFLAGS) $(LINK_LIBCTEC)
 
 # Cross Tiny C Compilers
-%-tcc$(EXESUF): FORCE
+%-ctec$(EXESUF): FORCE
 	@$(MAKE) --no-print-directory $@ CROSS_TARGET=$* ONE_SOURCE=$(or $(ONE_SOURCE),yes)
 
-$(CROSS_TARGET)-tcc$(EXESUF): $(TCC_FILES)
+$(CROSS_TARGET)-ctec$(EXESUF): $(CTEC_FILES)
 	$(CC) -o $@ $^ $(LIBS) $(LDFLAGS)
 
 # profiling version
-tcc_p$(EXESUF): $($T_FILES)
+ctec_p$(EXESUF): $($T_FILES)
 	$(CC) -o $@ $< $(DEFINES) $(CFLAGS_P) $(LIBS_P) $(LDFLAGS_P)
 
-# static libtcc library
-libtcc.a: $(LIBTCC_OBJ)
+# static libctec library
+libctec.a: $(LIBCTEC_OBJ)
 	$(AR) rcs $@ $^
 
-# dynamic libtcc library
-libtcc.so: $(LIBTCC_OBJ)
+# dynamic libctec library
+libctec.so: $(LIBCTEC_OBJ)
 	$(CC) -shared -Wl,-soname,$@ -o $@ $^ $(LDFLAGS)
 
-libtcc.so: CFLAGS+=-fPIC
-libtcc.so: LDFLAGS+=-fPIC
+libctec.so: CFLAGS+=-fPIC
+libctec.so: LDFLAGS+=-fPIC
 
-# windows dynamic libtcc library
-libtcc.dll : $(LIBTCC_OBJ)
+# windows dynamic libctec library
+libctec.dll : $(LIBCTEC_OBJ)
 	$(CC) -shared -o $@ $^ $(LDFLAGS)
-libtcc.dll : DEFINES += -DLIBTCC_AS_DLL
+libctec.dll : DEFINES += -DLIBCTEC_AS_DLL
 
-# import file for windows libtcc.dll
-libtcc.def : libtcc.dll tcc$(EXESUF)
-	$(XTCC) -impdef $< -o $@
-XTCC ?= ./tcc$(EXESUF)
+# import file for windows libctec.dll
+libctec.def : libctec.dll ctec$(EXESUF)
+	$(XCTEC) -impdef $< -o $@
+XCTEC ?= ./ctec$(EXESUF)
 
 # TinyCC runtime libraries
-libtcc1.a : tcc$(EXESUF) FORCE
+libctec1.a : ctec$(EXESUF) FORCE
 	@$(MAKE) -C lib DEFINES='$(DEF-$T)'
 
-# Cross libtcc1.a
-%-libtcc1.a : %-tcc$(EXESUF) FORCE
+# Cross libctec1.a
+%-libctec1.a : %-ctec$(EXESUF) FORCE
 	@$(MAKE) -C lib DEFINES='$(DEF-$*)' CROSS_TARGET=$*
 
-.PRECIOUS: %-libtcc1.a
+.PRECIOUS: %-libctec1.a
 FORCE:
 
 # --------------------------------------------------------------------------
 # documentation and man page
-tcc-doc.html: tcc-doc.texi
+ctec-doc.html: ctec-doc.texi
 	makeinfo --no-split --html --number-sections -o $@ $< || true
 
-tcc.1: tcc-doc.texi
-	$(TOPSRC)/texi2pod.pl $< tcc.pod \
-	&& pod2man --section=1 --center="Tiny C Compiler" --release="$(VERSION)" tcc.pod >tmp.1 \
+ctec.1: ctec-doc.texi
+	$(TOPSRC)/texi2pod.pl $< ctec.pod \
+	&& pod2man --section=1 --center="Tiny C Compiler" --release="$(VERSION)" ctec.pod >tmp.1 \
 	&& mv tmp.1 $@ || rm -f tmp.1
 
-tcc-doc.info: tcc-doc.texi
+ctec-doc.info: ctec-doc.texi
 	makeinfo $< || true
 
 # --------------------------------------------------------------------------
@@ -256,8 +256,8 @@ INSTALL = install -m644
 INSTALLBIN = install -m755 $(STRIP_$(CONFIG_strip))
 STRIP_yes = -s
 
-LIBTCC1_W = $(filter %-win32-libtcc1.a %-wince-libtcc1.a,$(LIBTCC1_CROSS))
-LIBTCC1_U = $(filter-out $(LIBTCC1_W),$(LIBTCC1_CROSS))
+LIBCTEC1_W = $(filter %-win32-libctec1.a %-wince-libctec1.a,$(LIBCTEC1_CROSS))
+LIBCTEC1_U = $(filter-out $(LIBCTEC1_W),$(LIBCTEC1_CROSS))
 IB = $(if $1,mkdir -p $2 && $(INSTALLBIN) $1 $2)
 IBw = $(call IB,$(wildcard $1),$2)
 IF = $(if $1,mkdir -p $2 && $(INSTALL) $1 $2)
@@ -267,41 +267,41 @@ IR = mkdir -p $2 && cp -r $1/. $2
 # install progs & libs
 install-unx:
 	$(call IBw,$(PROGS) $(PROGS_CROSS),"$(bindir)")
-	$(call IFw,$(LIBTCC1) $(LIBTCC1_U),"$(tccdir)")
-	$(call IF,$(TOPSRC)/include/*.h $(TOPSRC)/tcclib.h,"$(tccdir)/include")
-	$(call $(if $(findstring .so,$(LIBTCC)),IBw,IFw),$(LIBTCC),"$(libdir)")
-	$(call IF,$(TOPSRC)/libtcc.h,"$(includedir)")
-	$(call IFw,tcc.1,"$(mandir)/man1")
-	$(call IFw,tcc-doc.info,"$(infodir)")
-	$(call IFw,tcc-doc.html,"$(docdir)")
-ifneq "$(wildcard $(LIBTCC1_W))" ""
-	$(call IFw,$(TOPSRC)/win32/lib/*.def $(LIBTCC1_W),"$(tccdir)/win32/lib")
-	$(call IR,$(TOPSRC)/win32/include,"$(tccdir)/win32/include")
-	$(call IF,$(TOPSRC)/include/*.h $(TOPSRC)/tcclib.h,"$(tccdir)/win32/include")
+	$(call IFw,$(LIBCTEC1) $(LIBCTEC1_U),"$(ctecdir)")
+	$(call IF,$(TOPSRC)/include/*.h $(TOPSRC)/cteclib.h,"$(ctecdir)/include")
+	$(call $(if $(findstring .so,$(LIBCTEC)),IBw,IFw),$(LIBCTEC),"$(libdir)")
+	$(call IF,$(TOPSRC)/libctec.h,"$(includedir)")
+	$(call IFw,ctec.1,"$(mandir)/man1")
+	$(call IFw,ctec-doc.info,"$(infodir)")
+	$(call IFw,ctec-doc.html,"$(docdir)")
+ifneq "$(wildcard $(LIBCTEC1_W))" ""
+	$(call IFw,$(TOPSRC)/win32/lib/*.def $(LIBCTEC1_W),"$(ctecdir)/win32/lib")
+	$(call IR,$(TOPSRC)/win32/include,"$(ctecdir)/win32/include")
+	$(call IF,$(TOPSRC)/include/*.h $(TOPSRC)/cteclib.h,"$(ctecdir)/win32/include")
 endif
 
 # uninstall
 uninstall-unx:
 	@rm -fv $(foreach P,$(PROGS) $(PROGS_CROSS),"$(bindir)/$P")
-	@rm -fv "$(libdir)/libtcc.a" "$(libdir)/libtcc.so" "$(includedir)/libtcc.h"
-	@rm -fv "$(mandir)/man1/tcc.1" "$(infodir)/tcc-doc.info"
-	@rm -fv "$(docdir)/tcc-doc.html"
-	rm -r "$(tccdir)"
+	@rm -fv "$(libdir)/libctec.a" "$(libdir)/libctec.so" "$(includedir)/libctec.h"
+	@rm -fv "$(mandir)/man1/ctec.1" "$(infodir)/ctec-doc.info"
+	@rm -fv "$(docdir)/ctec-doc.html"
+	rm -r "$(ctecdir)"
 
 # install progs & libs on windows
 install-win:
-	$(call IBw,$(PROGS) $(PROGS_CROSS) $(subst libtcc.a,,$(LIBTCC)),"$(bindir)")
-	$(call IF,$(TOPSRC)/win32/lib/*.def,"$(tccdir)/lib")
-	$(call IFw,libtcc1.a $(LIBTCC1_W),"$(tccdir)/lib")
-	$(call IF,$(TOPSRC)/include/*.h $(TOPSRC)/tcclib.h,"$(tccdir)/include")
-	$(call IR,$(TOPSRC)/win32/include,"$(tccdir)/include")
-	$(call IR,$(TOPSRC)/win32/examples,"$(tccdir)/examples")
-	$(call IF,$(TOPSRC)/tests/libtcc_test.c,"$(tccdir)/examples")
-	$(call IFw,$(TOPSRC)/libtcc.h $(subst .dll,.def,$(LIBTCC)),"$(libdir)")
-	$(call IFw,$(TOPSRC)/win32/tcc-win32.txt tcc-doc.html,"$(docdir)")
-ifneq "$(wildcard $(LIBTCC1_U))" ""
-	$(call IFw,$(LIBTCC1_U),"$(tccdir)/lib")
-	$(call IF,$(TOPSRC)/include/*.h $(TOPSRC)/tcclib.h,"$(tccdir)/lib/include")
+	$(call IBw,$(PROGS) $(PROGS_CROSS) $(subst libctec.a,,$(LIBCTEC)),"$(bindir)")
+	$(call IF,$(TOPSRC)/win32/lib/*.def,"$(ctecdir)/lib")
+	$(call IFw,libctec1.a $(LIBCTEC1_W),"$(ctecdir)/lib")
+	$(call IF,$(TOPSRC)/include/*.h $(TOPSRC)/cteclib.h,"$(ctecdir)/include")
+	$(call IR,$(TOPSRC)/win32/include,"$(ctecdir)/include")
+	$(call IR,$(TOPSRC)/win32/examples,"$(ctecdir)/examples")
+	$(call IF,$(TOPSRC)/tests/libctec_test.c,"$(ctecdir)/examples")
+	$(call IFw,$(TOPSRC)/libctec.h $(subst .dll,.def,$(LIBCTEC)),"$(libdir)")
+	$(call IFw,$(TOPSRC)/win32/ctec-win32.txt ctec-doc.html,"$(docdir)")
+ifneq "$(wildcard $(LIBCTEC1_U))" ""
+	$(call IFw,$(LIBCTEC1_U),"$(ctecdir)/lib")
+	$(call IF,$(TOPSRC)/include/*.h $(TOPSRC)/cteclib.h,"$(ctecdir)/lib/include")
 endif
 
 # the msys-git shell works to configure && make except it does not have install
@@ -312,10 +312,10 @@ endif
 
 # uninstall on windows
 uninstall-win:
-	@rm -fv $(foreach P,$(PROGS) $(PROGS_CROSS) libtcc.dll,"$(bindir)/$P")
-	@rm -fv $(foreach F,tcc-doc.html tcc-win32.txt,"$(docdir)/$F")
-	@rm -fv $(foreach F,libtcc.h libtcc.def libtcc.a,"$(libdir)/$F")
-	rm -r "$(tccdir)"
+	@rm -fv $(foreach P,$(PROGS) $(PROGS_CROSS) libctec.dll,"$(bindir)/$P")
+	@rm -fv $(foreach F,ctec-doc.html ctec-win32.txt,"$(docdir)/$F")
+	@rm -fv $(foreach F,libctec.h libctec.def libctec.a,"$(libdir)/$F")
+	rm -r "$(ctecdir)"
 
 # --------------------------------------------------------------------------
 # other stuff
@@ -325,18 +325,18 @@ tags : ; ctags $(TAGFILES)
 # cannot have both tags and TAGS on windows
 ETAGS : ; etags $(TAGFILES)
 
-# create release tarball from *current* git branch (including tcc-doc.html
+# create release tarball from *current* git branch (including ctec-doc.html
 # and converting two files to CRLF)
-TCC-VERSION = tcc-$(VERSION)
-tar:    tcc-doc.html
-	mkdir $(TCC-VERSION)
-	( cd $(TCC-VERSION) && git --git-dir ../.git checkout -f )
-	cp tcc-doc.html $(TCC-VERSION)
-	for f in tcc-win32.txt build-tcc.bat ; do \
-	    cat win32/$$f | sed 's,\(.*\),\1\r,g' > $(TCC-VERSION)/win32/$$f ; \
+CTEC-VERSION = ctec-$(VERSION)
+tar:    ctec-doc.html
+	mkdir $(CTEC-VERSION)
+	( cd $(CTEC-VERSION) && git --git-dir ../.git checkout -f )
+	cp ctec-doc.html $(CTEC-VERSION)
+	for f in ctec-win32.txt build-ctec.bat ; do \
+	    cat win32/$$f | sed 's,\(.*\),\1\r,g' > $(CTEC-VERSION)/win32/$$f ; \
 	done
-	tar cjf $(TCC-VERSION).tar.bz2 $(TCC-VERSION)
-	rm -rf $(TCC-VERSION)
+	tar cjf $(CTEC-VERSION).tar.bz2 $(CTEC-VERSION)
+	rm -rf $(CTEC-VERSION)
 	git reset
 
 config.mak:
@@ -350,13 +350,13 @@ tests2.%:
 	$(MAKE) -C tests/tests2 $@
 
 clean:
-	rm -f tcc$(EXESUF) tcc_p$(EXESUF) *-tcc$(EXESUF) tcc.pod
+	rm -f ctec$(EXESUF) ctec_p$(EXESUF) *-ctec$(EXESUF) ctec.pod
 	rm -f  *~ *.o *.a *.so* *.out *.log lib*.def *.exe *.dll a.out tags TAGS
 	@$(MAKE) -C lib $@
 	@$(MAKE) -C tests $@
 
 distclean: clean
-	rm -f config.h config.mak config.texi tcc.1 tcc-doc.info tcc-doc.html
+	rm -f config.h config.mak config.texi ctec.1 ctec-doc.info ctec-doc.html
 
 .PHONY: all clean test tar tags ETAGS distclean install uninstall FORCE
 
@@ -372,7 +372,7 @@ help:
 	@echo ""
 	@echo "make cross-TARGET"
 	@echo "   build one specific cross compiler for 'TARGET', as in"
-	@echo "   $(TCC_X)"
+	@echo "   $(CTEC_X)"
 	@echo ""
 	@echo "Custom configuration:"
 	@echo "   The makefile includes a file 'config-extra.mak' if it is present."
@@ -381,7 +381,7 @@ help:
 	@echo "      NATIVE_DEFINES += -D..."
 	@echo ""
 	@echo "   Or for example to configure the search paths for a cross-compiler"
-	@echo "   that expects the linux files in <tccdir>/i386-linux:"
+	@echo "   that expects the linux files in <ctecdir>/i386-linux:"
 	@echo ""
 	@echo "      ROOT-i386 = {B}/i386-linux"
 	@echo "      CRT-i386  = {B}/i386-linux/usr/lib"

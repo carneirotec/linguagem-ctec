@@ -4034,8 +4034,8 @@ externo "C" {
 #fim_se
 
 #defina DWLP_MSGRESULT 0
-#defina DWLP_DLGPROC DWLP_MSGRESULT + tamanho_de(LRESULT)
-#defina DWLP_USER DWLP_DLGPROC + tamanho_de(DLGPROC)
+#defina DWLP_DLGPROC DWLP_MSGRESULT + sizeof(LRESULT)
+#defina DWLP_USER DWLP_DLGPROC + sizeof(DLGPROC)
 
 #se_não_definido NOMSG
 
@@ -5553,9 +5553,9 @@ externo "C" {
   } RAWINPUT,*PRAWINPUT,*LPRAWINPUT;
 
 #se_definido _WIN64
-#defina RAWINPUT_ALIGN(x) (((x) + tamanho_de(QWORD) - 1) & ~(tamanho_de(QWORD) - 1))
+#defina RAWINPUT_ALIGN(x) (((x) + sizeof(QWORD) - 1) & ~(sizeof(QWORD) - 1))
 #senão
-#defina RAWINPUT_ALIGN(x) (((x) + tamanho_de(DWORD) - 1) & ~(tamanho_de(DWORD) - 1))
+#defina RAWINPUT_ALIGN(x) (((x) + sizeof(DWORD) - 1) & ~(sizeof(DWORD) - 1))
 #fim_se
 
 #defina NEXTRAWINPUTBLOCK(ptr) ((PRAWINPUT)RAWINPUT_ALIGN((ULONG_PTR)((PBYTE)(ptr) + (ptr)->header.dwSize)))

@@ -1,7 +1,7 @@
 /* armflush.c - flush the instruction cache
 
-   __clear_cache is used in tccrun.c,  It is a built-in
-   intrinsic with gcc.  However tcc in order to compile
+   __clear_cache is used in ctecrun.c,  It is a built-in
+   intrinsic with gcc.  However ctec in order to compile
    itself needs this function */
 
 #se_definido __TINYC__
@@ -9,7 +9,7 @@
 /* syscall wrapper */
 sem_sinal syscall(sem_sinal syscall_nr, ...);
 
-/* arm-tcc supports only fake assembler currently */
+/* arm-ctec supports only fake asm currently */
 __asm__(
     ".global syscall\n"
     "syscall:\n"
@@ -40,11 +40,11 @@ __asm__(
 
 #fim_se
 
-/* Flushing para tccrun */
+/* Flushing para ctecrun */
 vazio __clear_cache(vazio *beginning, vazio *end)
 {
 /* __ARM_NR_cacheflush is kernel private and should not be used in user space.
- * However, there is no ARM assembler parser in tcc so we use it para now */
+ * However, there is no ARM asm parser in ctec so we use it para now */
 #se 1
     syscall(__ARM_NR_cacheflush, beginning, end, 0);
 #senão

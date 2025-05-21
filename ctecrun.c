@@ -1,5 +1,5 @@
 /*
- *  TCC - Tiny C Compiler - Support for -run switch
+ *  CTEC - Tiny C Compiler - Support for -run switch
  *
  *  Copyright (c) 2001-2004 Fabrice Bellard
  *
@@ -18,16 +18,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "tcc.h"
+#include "ctec.h"
 
 /* only native compiler supports -run */
-#ifdef TCC_IS_NATIVE
+#ifdef CTEC_IS_NATIVE
 
 #ifndef _WIN32
 # include <sys/mman.h>
 #endif
 
-#ifdef CONFIG_TCC_BACKTRACE
+#ifdef CONFIG_CTEC_BACKTRACE
 # ifndef _WIN32
 #  include <signal.h>
 #  ifndef __OpenBSD__
@@ -45,26 +45,26 @@ static void set_exception_handler(void);
 #endif
 
 static void set_pages_executable(void *ptr, unsigned long length);
-static int tcc_relocate_ex(TCCState *s1, void *ptr, addr_t ptr_diff);
+static int ctec_relocate_ex(CTECState *s1, void *ptr, addr_t ptr_diff);
 
 #ifdef _WIN64
-static void *win64_add_function_table(TCCState *s1);
+static void *win64_add_function_table(CTECState *s1);
 static void win64_del_function_table(void *);
 #endif
 
 /* ------------------------------------------------------------- */
-/* Do all relocations (needed before using tcc_get_symbol())
+/* Do all relocations (needed before using ctec_get_symbol())
    Returns -1 on error. */
 
-LIBTCCAPI int tcc_relocate(TCCState *s1, void *ptr)
+LIBCTECAPI int ctec_relocate(CTECState *s1, void *ptr)
 {
     int size;
     addr_t ptr_diff = 0;
 
-    if (TCC_RELOCATE_AUTO != ptr)
-        return tcc_relocate_ex(s1, ptr, 0);
+    if (CTEC_RELOCATE_AUTO != ptr)
+        return ctec_relocate_ex(s1, ptr, 0);
 
-    size = tcc_relocate_ex(s1, NULL, 0);
+    size = ctec_relocate_ex(s1, NULL, 0);
     if (size < 0)
         return -1;
 
@@ -72,7 +72,7 @@ LIBTCCAPI int tcc_relocate(TCCState *s1, void *ptr)
 {
     /* Using mmap instead of malloc */
     void *prx;
-    char tmpfname[] = "/tmp/.tccrunXXXXXX";
+    char tmpfname[] = "/tmp/.ctecrunXXXXXX";
     int fd = mkstemp(tmpfname);
     unlink(tmpfname);
     ftruncate(fd, size);
@@ -80,20 +80,20 @@ LIBTCCAPI int tcc_relocate(TCCState *s1, void *ptr)
     ptr = mmap (NULL, size, PROT_READ|PROT_WRITE, MAP_SHARED, fd, 0);
     prx = mmap (NULL, size, PROT_READ|PROT_EXEC, MAP_SHARED, fd, 0);
     if (ptr == MAP_FAILED || prx == MAP_FAILED)
-	tcc_error("tccrun: could not map memory");
+	ctec_error("ctecrun: could not map memory");
     dynarray_add(&s1->runtime_mem, &s1->nb_runtime_mem, (void*)(addr_t)size);
     dynarray_add(&s1->runtime_mem, &s1->nb_runtime_mem, prx);
     ptr_diff = (char*)prx - (char*)ptr;
 }
 #else
-    ptr = tcc_malloc(size);
+    ptr = ctec_malloc(size);
 #endif
-    tcc_relocate_ex(s1, ptr, ptr_diff); /* no more errors expected */
+    ctec_relocate_ex(s1, ptr, ptr_diff); /* no more errors expected */
     dynarray_add(&s1->runtime_mem, &s1->nb_runtime_mem, ptr);
     return 0;
 }
 
-ST_FUNC void tcc_run_free(TCCState *s1)
+ST_FUNC void ctec_run_free(CTECState *s1)
 {
     int i;
 
@@ -106,25 +106,25 @@ ST_FUNC void tcc_run_free(TCCState *s1)
 #ifdef _WIN64
         win64_del_function_table(*(void**)s1->runtime_mem[i]);
 #endif
-        tcc_free(s1->runtime_mem[i]);
+        ctec_free(s1->runtime_mem[i]);
 #endif
     }
-    tcc_free(s1->runtime_mem);
+    ctec_free(s1->runtime_mem);
 }
 
 /* launch the compiled program with the given arguments */
-LIBTCCAPI int tcc_run(TCCState *s1, int argc, char **argv)
+LIBCTECAPI int ctec_run(CTECState *s1, int argc, char **argv)
 {
     int (*prog_main)(int, char **);
 
     s1->runtime_main = "main";
     if ((s1->dflag & 16) && !find_elf_sym(s1->symtab, s1->runtime_main))
         return 0;
-    if (tcc_relocate(s1, TCC_RELOCATE_AUTO) < 0)
+    if (ctec_relocate(s1, CTEC_RELOCATE_AUTO) < 0)
         return -1;
-    prog_main = tcc_get_symbol_err(s1, s1->runtime_main);
+    prog_main = ctec_get_symbol_err(s1, s1->runtime_main);
 
-#ifdef CONFIG_TCC_BACKTRACE
+#ifdef CONFIG_CTEC_BACKTRACE
     if (s1->do_debug) {
         set_exception_handler();
         rt_prog_main = prog_main;
@@ -133,7 +133,7 @@ LIBTCCAPI int tcc_run(TCCState *s1, int argc, char **argv)
 
     errno = 0; /* clean errno value */
 
-#ifdef CONFIG_TCC_BCHECK
+#ifdef CONFIG_CTEC_BCHECK
     if (s1->do_bounds_check) {
         void (*bound_init)(void);
         void (*bound_exit)(void);
@@ -142,12 +142,12 @@ LIBTCCAPI int tcc_run(TCCState *s1, int argc, char **argv)
         int i, ret;
 
         /* set error function */
-        rt_bound_error_msg = tcc_get_symbol_err(s1, "__bound_error_msg");
+        rt_bound_error_msg = ctec_get_symbol_err(s1, "__bound_error_msg");
         /* XXX: use .init section so that it also work in binary ? */
-        bound_init = tcc_get_symbol_err(s1, "__bound_init");
-        bound_exit = tcc_get_symbol_err(s1, "__bound_exit");
-        bound_new_region = tcc_get_symbol_err(s1, "__bound_new_region");
-        bound_delete_region = tcc_get_symbol_err(s1, "__bound_delete_region");
+        bound_init = ctec_get_symbol_err(s1, "__bound_init");
+        bound_exit = ctec_get_symbol_err(s1, "__bound_exit");
+        bound_new_region = ctec_get_symbol_err(s1, "__bound_new_region");
+        bound_delete_region = ctec_get_symbol_err(s1, "__bound_delete_region");
 
         bound_init();
         /* mark argv area as valid */
@@ -168,7 +168,7 @@ LIBTCCAPI int tcc_run(TCCState *s1, int argc, char **argv)
     return (*prog_main)(argc, argv);
 }
 
-#if defined TCC_TARGET_I386 || defined TCC_TARGET_X86_64
+#if defined CTEC_TARGET_I386 || defined CTEC_TARGET_X86_64
  #define RUN_SECTION_ALIGNMENT 63
 #else
  #define RUN_SECTION_ALIGNMENT 15
@@ -176,7 +176,7 @@ LIBTCCAPI int tcc_run(TCCState *s1, int argc, char **argv)
 
 /* relocate code. Return -1 on error, required size if ptr is NULL,
    otherwise copy code into buffer passed by the caller */
-static int tcc_relocate_ex(TCCState *s1, void *ptr, addr_t ptr_diff)
+static int ctec_relocate_ex(CTECState *s1, void *ptr, addr_t ptr_diff)
 {
     Section *s;
     unsigned offset, length, fill, i, k;
@@ -184,10 +184,10 @@ static int tcc_relocate_ex(TCCState *s1, void *ptr, addr_t ptr_diff)
 
     if (NULL == ptr) {
         s1->nb_errors = 0;
-#ifdef TCC_TARGET_PE
+#ifdef CTEC_TARGET_PE
         pe_output_file(s1, NULL);
 #else
-        tcc_add_runtime(s1);
+        ctec_add_runtime(s1);
 	resolve_common_syms(s1);
         build_got_entries(s1);
 #endif
@@ -238,7 +238,7 @@ static int tcc_relocate_ex(TCCState *s1, void *ptr, addr_t ptr_diff)
     if (0 == mem)
         return offset + RUN_SECTION_ALIGNMENT;
 
-#ifdef TCC_TARGET_PE
+#ifdef CTEC_TARGET_PE
     s1->pe_imagebase = mem;
 #endif
 
@@ -293,16 +293,16 @@ static void set_pages_executable(void *ptr, unsigned long length)
     end = (addr_t)ptr + length;
     end = (end + PAGESIZE - 1) & ~(PAGESIZE - 1);
     if (mprotect((void *)start, end - start, PROT_READ | PROT_WRITE | PROT_EXEC))
-        tcc_error("mprotect failed: did you mean to configure --with-selinux?");
+        ctec_error("mprotect failed: did you mean to configure --with-selinux?");
 # endif
-# if defined TCC_TARGET_ARM || defined TCC_TARGET_ARM64
+# if defined CTEC_TARGET_ARM || defined CTEC_TARGET_ARM64
     __clear_cache(ptr, (char *)ptr + length);
 # endif
 #endif
 }
 
 #ifdef _WIN64
-static void *win64_add_function_table(TCCState *s1)
+static void *win64_add_function_table(CTECState *s1)
 {
     void *p = NULL;
     if (s1->uw_pdata) {
@@ -326,9 +326,9 @@ static void win64_del_function_table(void *p)
 #endif
 
 /* ------------------------------------------------------------- */
-#ifdef CONFIG_TCC_BACKTRACE
+#ifdef CONFIG_CTEC_BACKTRACE
 
-ST_FUNC void tcc_set_num_callers(int n)
+ST_FUNC void ctec_set_num_callers(int n)
 {
     rt_num_callers = n;
 }
@@ -546,7 +546,7 @@ static void sig_error(int signum, siginfo_t *siginf, void *puc)
 static void set_exception_handler(void)
 {
     struct sigaction sigact;
-    /* install TCC signal handlers to print debug info on fatal
+    /* install CTEC signal handlers to print debug info on fatal
        runtime errors */
     sigact.sa_flags = SA_SIGINFO | SA_RESETHAND;
     sigact.sa_sigaction = sig_error;
@@ -789,9 +789,9 @@ static int rt_get_caller_pc(addr_t *paddr, CONTEXT *uc, int level)
 }
 
 #endif /* _WIN32 */
-#endif /* CONFIG_TCC_BACKTRACE */
+#endif /* CONFIG_CTEC_BACKTRACE */
 /* ------------------------------------------------------------- */
-#ifdef CONFIG_TCC_STATIC
+#ifdef CONFIG_CTEC_STATIC
 
 /* dummy function for profiling */
 ST_FUNC void *dlopen(const char *filename, int flag)
@@ -808,29 +808,29 @@ ST_FUNC const char *dlerror(void)
     return "error";
 }
 
-typedef struct TCCSyms {
+typedef struct CTECSyms {
     char *str;
     void *ptr;
-} TCCSyms;
+} CTECSyms;
 
 
 /* add the symbol you want here if no dynamic linking is done */
-static TCCSyms tcc_syms[] = {
-#if !defined(CONFIG_TCCBOOT)
-#define TCCSYM(a) { #a, &a, },
-    TCCSYM(printf)
-    TCCSYM(fprintf)
-    TCCSYM(fopen)
-    TCCSYM(fclose)
-#undef TCCSYM
+static CTECSyms ctec_syms[] = {
+#if !defined(CONFIG_CTECBOOT)
+#define CTECSYM(a) { #a, &a, },
+    CTECSYM(printf)
+    CTECSYM(fprintf)
+    CTECSYM(fopen)
+    CTECSYM(fclose)
+#undef CTECSYM
 #endif
     { NULL, NULL },
 };
 
 ST_FUNC void *dlsym(void *handle, const char *symbol)
 {
-    TCCSyms *p;
-    p = tcc_syms;
+    CTECSyms *p;
+    p = ctec_syms;
     while (p->str != NULL) {
         if (!strcmp(p->str, symbol))
             return p->ptr;
@@ -839,6 +839,6 @@ ST_FUNC void *dlsym(void *handle, const char *symbol)
     return NULL;
 }
 
-#endif /* CONFIG_TCC_STATIC */
-#endif /* TCC_IS_NATIVE */
+#endif /* CONFIG_CTEC_STATIC */
+#endif /* CTEC_IS_NATIVE */
 /* ------------------------------------------------------------- */

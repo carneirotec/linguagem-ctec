@@ -315,9 +315,9 @@ externo "C" {
   externo inteiro __cdecl __fpclassify (duplo);
   externo inteiro __cdecl __fpclassifyl (longo duplo);
 
-/* Implemented at tcc/tcc_libm.h */
-#defina fpclassify(x) (tamanho_de (x) == tamanho_de (real) ? __fpclassifyf (x)	  \
-  : tamanho_de (x) == tamanho_de (duplo) ? __fpclassify (x) \
+/* Implemented at ctec/ctec_libm.h */
+#defina fpclassify(x) (sizeof (x) == sizeof (real) ? __fpclassifyf (x)	  \
+  : sizeof (x) == sizeof (duplo) ? __fpclassify (x) \
   : __fpclassifyl (x))
 
   /* 7.12.3.2 */
@@ -340,9 +340,9 @@ externo "C" {
   externo inteiro __cdecl __signbit (duplo);
   externo inteiro __cdecl __signbitl (longo duplo);
 
-/* Implemented at tcc/tcc_libm.h */
-#defina signbit(x) (tamanho_de (x) == tamanho_de (real) ? __signbitf (x)	\
-  : tamanho_de (x) == tamanho_de (duplo) ? __signbit (x)	\
+/* Implemented at ctec/ctec_libm.h */
+#defina signbit(x) (sizeof (x) == sizeof (real) ? __signbitf (x)	\
+  : sizeof (x) == sizeof (duplo) ? __signbit (x)	\
   : __signbitl (x))
 
   externo duplo __cdecl exp2(duplo);
@@ -731,7 +731,7 @@ externo "C++" {
  */
 
 /* Mini libm (em_linha __fpclassify*, __signbit* and variants) */
-#inclua "tcc/tcc_libm.h"
+#inclua "ctec/ctec_libm.h"
 
 #fim_se /* End _MATH_H_ */
 

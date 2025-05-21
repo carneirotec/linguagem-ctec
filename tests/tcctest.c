@@ -1,5 +1,5 @@
 /*
- * TCC auto test program
+ * CTEC auto test program
  */
 #include "config.h"
 
@@ -24,7 +24,7 @@
 #define ULONG_LONG_FORMAT "%Lu"
 #endif
 
-// MinGW has 80-bit rather than 64-bit long double which isn't compatible with TCC or MSVC
+// MinGW has 80-bit rather than 64-bit long double which isn't compatible with CTEC or MSVC
 #if defined(_WIN32) && defined(__GNUC__)
 #define LONG_DOUBLE double
 #define LONG_DOUBLE_LITERAL(x) x
@@ -41,24 +41,24 @@
 
 /* test various include syntaxes */
 
-#define TCCLIB_INC <tcclib.h>
-#define TCCLIB_INC1 <tcclib
-#define TCCLIB_INC2 h>
-#define TCCLIB_INC3 "tcclib.h"
+#define CTECLIB_INC <cteclib.h>
+#define CTECLIB_INC1 <cteclib
+#define CTECLIB_INC2 h>
+#define CTECLIB_INC3 "cteclib.h"
 
-#include TCCLIB_INC
+#include CTECLIB_INC
 
-#include TCCLIB_INC1.TCCLIB_INC2
+#include CTECLIB_INC1.CTECLIB_INC2
 
-#include TCCLIB_INC1.h>
+#include CTECLIB_INC1.h>
 
-#include TCCLIB_INC3
+#include CTECLIB_INC3
 
-#include <tcclib.h>
+#include <cteclib.h>
 
-#include "tcclib.h"
+#include "cteclib.h"
 
-#include "tcctest.h"
+#include "ctectest.h"
 
 /* Test two more ways to include a file named like a pp-number */
 #define INC(name) <tests/name.h>
@@ -349,7 +349,7 @@ void macro_test(void)
 #line 203 "test" 
     printf("__LINE__=%d __FILE__=%s\n",
            __LINE__, __FILE__);
-#line 227 "tcctest.c"
+#line 227 "ctectest.c"
 #endif
 
     /* not strictly preprocessor, but we test it there */
@@ -810,8 +810,8 @@ void array_test()
 #ifdef C99_MACROS
     printf("sizeof(__func__) = %d\n", sizeof(__func__));
 #endif
-    printf("tamanho_de tab %d\n", sizeof(tab));
-    printf("tamanho_de tab2 %d\n", sizeof tab2);
+    printf("sizeof tab %d\n", sizeof(tab));
+    printf("sizeof tab2 %d\n", sizeof tab2);
     tab[0] = 1;
     tab[1] = 2;
     tab[2] = 3;
@@ -1046,7 +1046,7 @@ struct aligntest7
 struct aligntest5 altest5[2];
 struct aligntest6 altest6[2];
 int pad1;
-/* altest7 is correctly aligned to 16 bytes also with TCC,
+/* altest7 is correctly aligned to 16 bytes also with CTEC,
    but __alignof__ returns the wrong result (4) because we
    can't store the alignment yet when specified on symbols
    directly (it's stored in the type so we'd need to make
@@ -1856,7 +1856,7 @@ void init_test(void)
 	cix[0].b[1].a, cix[0].b[1].b,
 	cix[0].b[2].a, cix[0].b[2].b);
     printf("cix2: %d %d\n", cix21.b[2], cix22.b[5]);
-    printf("tamanho_de cix20 %d, cix21 %d, sizeof cix22 %d\n", sizeof cix20, sizeof cix21, sizeof cix22);
+    printf("sizeof cix20 %d, cix21 %d, sizeof cix22 %d\n", sizeof cix20, sizeof cix21, sizeof cix22);
 
     printf("arrtype1: %d %d %d\n", sinit19[0], sinit20[0], sinit20[1]);
     printf("arrtype2: %d %d\n", sizeof(sinit19), sizeof(sinit20));
@@ -2175,7 +2175,7 @@ void prefix ## call(void)\
 {\
     printf("float: " FLOAT_FMT, prefix ## retf(42.123456789));\
     printf("double: %f\n", prefix ## retd(42.123456789));\
-    printf("longo double: %Lf\n", prefix ## retld(42.123456789));\
+    printf("long double: %Lf\n", prefix ## retld(42.123456789));\
     printf("strto%s: %f\n", #prefix, (double)strto ## prefix("1.2", NULL));\
 }\
 \
@@ -2702,7 +2702,7 @@ long __pa_symbol(void)
 {
     /* This 64bit constant was handled incorrectly, it was used as addend
        (which can hold 64bit just fine) in connection with a symbol,
-       and TCC generates wrong code for that (displacements are 32bit only).
+       and CTEC generates wrong code for that (displacements are 32bit only).
        This effectively is "+ 0x80000000", and if addresses of globals
        are below 2GB the result should be a number without high 32 bits set.  */
        return ((long)(((unsigned long)(&rel1))) - (0xffffffff80000000UL));
@@ -2872,7 +2872,7 @@ void sizeof_test(void)
     printf("sizeof( (struct {int i; int j;}){4,5} ) = %d\n",
 	   sizeof( (struct {int i; int j;}){4,5} ));
     /* And as direct sizeof argument (as unary expression): */
-    printf("tamanho_de (struct {short i; short j;}){4,5} = %d\n",
+    printf("sizeof (struct {short i; short j;}){4,5} = %d\n",
 	   sizeof (struct {short i; short j;}){4,5} );
 
     /* sizeof(x && y) should be sizeof(int), even if constant
@@ -2922,7 +2922,7 @@ void statement_expr_test(void)
     }
     printf("a=%d\n", a);
     
-    /* Test that symbols aren't freed prematurely.
+    /* Test that syctecls aren't freed prematurely.
        With SYM_DEBUG valgrind will show a read from a freed
        symbol, and tcc will show an (invalid) warning on the initialization
        of 'ptr' below, if symbols are popped after the stmt expr.  */
@@ -3527,7 +3527,7 @@ void builtin_test(void)
     COMPAT_TYPE(int *, void *);
     COMPAT_TYPE(int *, const int *);
     COMPAT_TYPE(char *, unsigned char *);
-    COMPAT_TYPE(char *, signed char *);
+    COMPAT_TYPE(char *, sigctec char *);
     COMPAT_TYPE(char *, char *);
 /* space is needed because tcc preprocessor introduces a space between each token */
     COMPAT_TYPE(char * *, void *); 

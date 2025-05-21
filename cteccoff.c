@@ -1,5 +1,5 @@
 /*
- *  COFF file handling for TCC
+ *  COFF file handling for CTEC
  * 
  *  Copyright (c) 2003, 2004 TK
  *  Copyright (c) 2004 Fabrice Bellard
@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "tcc.h"
+#include "ctec.h"
 
 #define MAXNSCNS 255		/* MAXIMUM NUMBER OF SECTIONS         */
 #define MAX_STR_TABLE 1000000
@@ -41,7 +41,7 @@ int FuncEntries[MAX_FUNCS];
 int OutputTheSection(Section * sect);
 short int GetCoffFlags(const char *s);
 void SortSymbolTable(void);
-Section *FindSection(TCCState * s1, const char *sname);
+Section *FindSection(CTECState * s1, const char *sname);
 
 int C67_main_entry_point;
 
@@ -74,9 +74,9 @@ typedef struct {
     unsigned short dummy4;
 } AUXEF;
 
-ST_FUNC int tcc_output_coff(TCCState *s1, FILE *f)
+ST_FUNC int ctec_output_coff(CTECState *s1, FILE *f)
 {
-    Section *tcc_sect;
+    Section *ctec_sect;
     SCNHDR *coff_sec;
     int file_pointer;
     char *Coff_str_table, *pCoff_str_table;
@@ -118,19 +118,19 @@ ST_FUNC int tcc_output_coff(TCCState *s1, FILE *f)
 
     for (i = 1; i < s1->nb_sections; i++) {
 	coff_sec = &section_header[i];
-	tcc_sect = s1->sections[i];
+	ctec_sect = s1->sections[i];
 
-	if (OutputTheSection(tcc_sect)) {
+	if (OutputTheSection(ctec_sect)) {
 	    NSectionsToOutput++;
 
-	    if (CoffTextSectionNo == -1 && tcc_sect == stext)
+	    if (CoffTextSectionNo == -1 && ctec_sect == stext)
 		CoffTextSectionNo = NSectionsToOutput;	// rem which coff sect number the .text sect is
 
-	    strcpy(coff_sec->s_name, tcc_sect->name);	/* section name */
+	    strcpy(coff_sec->s_name, ctec_sect->name);	/* section name */
 
-	    coff_sec->s_paddr = tcc_sect->sh_addr;	/* physical address */
-	    coff_sec->s_vaddr = tcc_sect->sh_addr;	/* virtual address */
-	    coff_sec->s_size = tcc_sect->data_offset;	/* section size */
+	    coff_sec->s_paddr = ctec_sect->sh_addr;	/* physical address */
+	    coff_sec->s_vaddr = ctec_sect->sh_addr;	/* virtual address */
+	    coff_sec->s_size = ctec_sect->data_offset;	/* section size */
 	    coff_sec->s_scnptr = 0;	/* file ptr to raw data for section */
 	    coff_sec->s_relptr = 0;	/* file ptr to relocation */
 	    coff_sec->s_lnnoptr = 0;	/* file ptr to line numbers */
@@ -151,9 +151,9 @@ ST_FUNC int tcc_output_coff(TCCState *s1, FILE *f)
 
     for (i = 1; i < s1->nb_sections; i++) {
 	coff_sec = &section_header[i];
-	tcc_sect = s1->sections[i];
+	ctec_sect = s1->sections[i];
 
-	if (OutputTheSection(tcc_sect)) {
+	if (OutputTheSection(ctec_sect)) {
 	    // put raw data
 	    coff_sec->s_scnptr = file_pointer;	/* file ptr to raw data for section */
 	    file_pointer += coff_sec->s_size;
@@ -165,9 +165,9 @@ ST_FUNC int tcc_output_coff(TCCState *s1, FILE *f)
 
     for (i = 1; i < s1->nb_sections; i++) {
 	coff_sec = &section_header[i];
-	tcc_sect = s1->sections[i];
+	ctec_sect = s1->sections[i];
 
-	if (OutputTheSection(tcc_sect)) {
+	if (OutputTheSection(ctec_sect)) {
 	    // put relocations data
 	    if (coff_sec->s_nreloc > 0) {
 		coff_sec->s_relptr = file_pointer;	/* file ptr to relocation */
@@ -181,12 +181,12 @@ ST_FUNC int tcc_output_coff(TCCState *s1, FILE *f)
 
     for (i = 1; i < s1->nb_sections; i++) {
 	coff_sec = &section_header[i];
-	tcc_sect = s1->sections[i];
+	ctec_sect = s1->sections[i];
 
 	coff_sec->s_nlnno = 0;
 	coff_sec->s_lnnoptr = 0;
 
-	if (s1->do_debug && tcc_sect == stext) {
+	if (s1->do_debug && ctec_sect == stext) {
 	    // count how many line nos data
 
 	    // also find association between source file name and function
@@ -330,9 +330,9 @@ ST_FUNC int tcc_output_coff(TCCState *s1, FILE *f)
     // write section headers
     for (i = 1; i < s1->nb_sections; i++) {
 	coff_sec = &section_header[i];
-	tcc_sect = s1->sections[i];
+	ctec_sect = s1->sections[i];
 
-	if (OutputTheSection(tcc_sect)) {
+	if (OutputTheSection(ctec_sect)) {
 	    fwrite(coff_sec, sizeof(SCNHDR), 1, f);
 	}
     }
@@ -340,22 +340,22 @@ ST_FUNC int tcc_output_coff(TCCState *s1, FILE *f)
     // write raw data
     for (i = 1; i < s1->nb_sections; i++) {
 	coff_sec = &section_header[i];
-	tcc_sect = s1->sections[i];
+	ctec_sect = s1->sections[i];
 
-	if (OutputTheSection(tcc_sect)) {
-	    fwrite(tcc_sect->data, tcc_sect->data_offset, 1, f);
+	if (OutputTheSection(ctec_sect)) {
+	    fwrite(ctec_sect->data, ctec_sect->data_offset, 1, f);
 	}
     }
 
     // write relocation data
     for (i = 1; i < s1->nb_sections; i++) {
 	coff_sec = &section_header[i];
-	tcc_sect = s1->sections[i];
+	ctec_sect = s1->sections[i];
 
-	if (OutputTheSection(tcc_sect)) {
+	if (OutputTheSection(ctec_sect)) {
 	    // put relocations data
 	    if (coff_sec->s_nreloc > 0) {
-		fwrite(tcc_sect->reloc,
+		fwrite(ctec_sect->reloc,
 		       coff_sec->s_nreloc * sizeof(struct reloc), 1, f);
 	    }
 	}
@@ -372,9 +372,9 @@ ST_FUNC int tcc_output_coff(TCCState *s1, FILE *f)
 
     for (i = 1; i < s1->nb_sections; i++) {
 	coff_sec = &section_header[i];
-	tcc_sect = s1->sections[i];
+	ctec_sect = s1->sections[i];
 
-	if (s1->do_debug && tcc_sect == stext) {
+	if (s1->do_debug && ctec_sect == stext) {
 	    // count how many line nos data
 
 
@@ -514,7 +514,7 @@ ST_FUNC int tcc_output_coff(TCCState *s1, FILE *f)
 	int nstr;
 	int n = 0;
 
-	Coff_str_table = (char *) tcc_malloc(MAX_STR_TABLE);
+	Coff_str_table = (char *) ctec_malloc(MAX_STR_TABLE);
 	pCoff_str_table = Coff_str_table;
 	nstr = 0;
 
@@ -533,7 +533,7 @@ ST_FUNC int tcc_output_coff(TCCState *s1, FILE *f)
 	    } else {
 		if (pCoff_str_table - Coff_str_table + strlen(name) >
 		    MAX_STR_TABLE - 1)
-		    tcc_error("String table too large");
+		    ctec_error("String table too large");
 
 		csym._n._n_n._n_zeroes = 0;
 		csym._n._n_n._n_offset =
@@ -563,7 +563,7 @@ ST_FUNC int tcc_output_coff(TCCState *s1, FILE *f)
 		}
 
 		if (k >= nFuncs) {
-		    tcc_error("debug info can't find function: %s", name);
+		    ctec_error("debug info can't find function: %s", name);
 		}
 		// put a Function Name
 
@@ -679,7 +679,7 @@ ST_FUNC int tcc_output_coff(TCCState *s1, FILE *f)
 	// then write the strings
 	fwrite(Coff_str_table, i, 1, f);
 
-	tcc_free(Coff_str_table);
+	ctec_free(Coff_str_table);
     }
 
     return 0;
@@ -696,7 +696,7 @@ void SortSymbolTable(void)
     Elf32_Sym *p, *p2, *NewTable;
     char *name, *name2;
 
-    NewTable = (Elf32_Sym *) tcc_malloc(nb_syms * sizeof(Elf32_Sym));
+    NewTable = (Elf32_Sym *) ctec_malloc(nb_syms * sizeof(Elf32_Sym));
 
     p = (Elf32_Sym *) symtab_section->data;
 
@@ -730,7 +730,7 @@ void SortSymbolTable(void)
 		    }
 
 		    if (k >= nFuncs) {
-                        tcc_error("debug (sort) info can't find function: %s", name2);
+                        ctec_error("debug (sort) info can't find function: %s", name2);
 		    }
 
 		    if (strcmp(AssociatedFile[k], name) == 0) {
@@ -757,7 +757,7 @@ void SortSymbolTable(void)
     }
 
     if (n != nb_syms)
-	tcc_error("Internal Compiler error, debug info");
+	ctec_error("Internal Compiler error, debug info");
 
     // copy it all back
 
@@ -766,7 +766,7 @@ void SortSymbolTable(void)
 	*p++ = NewTable[i];
     }
 
-    tcc_free(NewTable);
+    ctec_free(NewTable);
 }
 
 
@@ -842,7 +842,7 @@ short int GetCoffFlags(const char *s)
 	return 0;
 }
 
-Section *FindSection(TCCState * s1, const char *sname)
+Section *FindSection(CTECState * s1, const char *sname)
 {
     Section *s;
     int i;
@@ -854,11 +854,11 @@ Section *FindSection(TCCState * s1, const char *sname)
 	    return s;
     }
 
-    tcc_error("could not find section %s", sname);
+    ctec_error("could not find section %s", sname);
     return 0;
 }
 
-ST_FUNC int tcc_load_coff(TCCState * s1, int fd)
+ST_FUNC int ctec_load_coff(CTECState * s1, int fd)
 {
 // tktk TokenSym *ts;
 
@@ -872,39 +872,39 @@ ST_FUNC int tcc_load_coff(TCCState * s1, int fd)
 
     f = fdopen(fd, "rb");
     if (!f) {
-	tcc_error("Unable to open .out file for input");
+	ctec_error("Unable to open .out file for input");
     }
 
     if (fread(&file_hdr, FILHSZ, 1, f) != 1)
-	tcc_error("error reading .out file for input");
+	ctec_error("error reading .out file for input");
 
     if (fread(&o_filehdr, sizeof(o_filehdr), 1, f) != 1)
-	tcc_error("error reading .out file for input");
+	ctec_error("error reading .out file for input");
 
     // first read the string table
 
     if (fseek(f, file_hdr.f_symptr + file_hdr.f_nsyms * SYMESZ, SEEK_SET))
-	tcc_error("error reading .out file for input");
+	ctec_error("error reading .out file for input");
 
     if (fread(&str_size, sizeof(int), 1, f) != 1)
-	tcc_error("error reading .out file for input");
+	ctec_error("error reading .out file for input");
 
 
-    Coff_str_table = (char *) tcc_malloc(str_size);
+    Coff_str_table = (char *) ctec_malloc(str_size);
 
     if (fread(Coff_str_table, str_size - 4, 1, f) != 1)
-	tcc_error("error reading .out file for input");
+	ctec_error("error reading .out file for input");
 
     // read/process all the symbols
 
     // seek back to symbols
 
     if (fseek(f, file_hdr.f_symptr, SEEK_SET))
-	tcc_error("error reading .out file for input");
+	ctec_error("error reading .out file for input");
 
     for (i = 0; i < file_hdr.f_nsyms; i++) {
 	if (fread(&csym, SYMESZ, 1, f) != 1)
-	    tcc_error("error reading .out file for input");
+	    ctec_error("error reading .out file for input");
 
 	if (csym._n._n_n._n_zeroes == 0) {
 	    name = Coff_str_table + csym._n._n_n._n_offset - 4;
@@ -933,13 +933,13 @@ ST_FUNC int tcc_load_coff(TCCState * s1, int fd)
 	    if (name[0] == '_' && strcmp(name, "_main") != 0)
 		name++;
 
-	    tcc_add_symbol(s1, name, (void*)(uintptr_t)csym.n_value);
+	    ctec_add_symbol(s1, name, (void*)(uintptr_t)csym.n_value);
 	}
 	// skip any aux records
 
 	if (csym.n_numaux == 1) {
 	    if (fread(&csym, SYMESZ, 1, f) != 1)
-		tcc_error("error reading .out file for input");
+		ctec_error("error reading .out file for input");
 	    i++;
 	}
     }

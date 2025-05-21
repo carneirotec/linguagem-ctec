@@ -132,7 +132,7 @@ seh_except:
     push %eax
     call _exit
 
-// msvcrt wants scopetables alinhado and in read-only segment (using .text)
+// msvcrt wants scopetables aligned and in read-only segment (using .text)
 .align 4
 seh_scopetable:
     .long -1

@@ -1,5 +1,5 @@
 /*
- *  TCC runtime library para arm64.
+ *  CTEC runtime library para arm64.
  *
  *  Copyright (c) 2015 Edmund Grimley Evans
  *

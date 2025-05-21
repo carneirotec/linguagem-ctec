@@ -20,7 +20,7 @@ externo "C" {
 #fim_se
 
 #se_não_definido _CRTIMP
-#defina _CRTIMP __declspec(importe_dll)
+#defina _CRTIMP __declspec(dllimport)
 #fim_se
 
 #inclua <sys/types.h>

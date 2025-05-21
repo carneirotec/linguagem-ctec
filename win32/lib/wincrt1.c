@@ -60,12 +60,12 @@ inteiro _twinstart(vazio)
     exit(go_winmain(__argc > 1 ? __targv[1] : NULL));
 }
 
-inteiro _runtwinmain(inteiro argc, /* as tcc passed in */ caractere **argv)
+inteiro _runtwinmain(inteiro argc, /* as ctec passed in */ caractere **argv)
 {
 #se_definido UNICODE
     _startupinfo start_info = {0};
     __tgetmainargs(&__argc, &__targv, &_tenviron, 0, &start_info);
-    /* may be wrong when tcc has received wildcards (*.c) */
+    /* may be wrong when ctec has received wildcards (*.c) */
     se (argc < __argc)
         __targv += __argc - argc, __argc = argc;
 #senão

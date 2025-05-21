@@ -1,4 +1,4 @@
-/* TCC runtime library. 
+/* CTEC runtime library. 
    Parts of this code are (c) 2002 Fabrice Bellard 
 
    Copyright (C) 1987, 1988, 1992, 1994, 1995 Free Software Foundation, Inc.
@@ -48,7 +48,7 @@ defina_tipo união
 } DWunion;
 
 defina_tipo longo duplo XFtype;
-#defina WORD_SIZE (tamanho_de (Wtype) * BITS_PER_UNIT)
+#defina WORD_SIZE (sizeof (Wtype) * BITS_PER_UNIT)
 #defina HIGH_WORD_COEFF (((UDWtype) 1) << WORD_SIZE)
 
 /* the following deal with IEEE single-precision numbers */
@@ -109,7 +109,7 @@ união float_long {
 /* XXX: we don't support several builtin supports para now */
 #se !definido __x86_64__ && !definido __arm__
 
-/* XXX: use gcc/tcc intrinsic ? */
+/* XXX: use gcc/ctec intrinsic ? */
 #se definido __i386__
 #defina sub_ddmmss(sh, sl, ah, al, bh, bl) \
   __asm__ ("subl %5,%1\n\tsbbl %3,%0"					\
@@ -421,7 +421,7 @@ sem_sinal longo longo __umoddi3(sem_sinal longo longo u, sem_sinal longo longo v
     retorne w;
 }
 
-/* XXX: fix tcc's code generator to faça this instead */
+/* XXX: fix ctec's code generator to faça this instead */
 longo longo __ashrdi3(longo longo a, inteiro b)
 {
 #se_definido __TINYC__
@@ -440,7 +440,7 @@ longo longo __ashrdi3(longo longo a, inteiro b)
 #fim_se
 }
 
-/* XXX: fix tcc's code generator to faça this instead */
+/* XXX: fix ctec's code generator to faça this instead */
 sem_sinal longo longo __lshrdi3(sem_sinal longo longo a, inteiro b)
 {
 #se_definido __TINYC__
@@ -459,7 +459,7 @@ sem_sinal longo longo __lshrdi3(sem_sinal longo longo a, inteiro b)
 #fim_se
 }
 
-/* XXX: fix tcc's code generator to faça this instead */
+/* XXX: fix ctec's code generator to faça this instead */
 longo longo __ashldi3(longo longo a, inteiro b)
 {
 #se_definido __TINYC__
@@ -480,7 +480,7 @@ longo longo __ashldi3(longo longo a, inteiro b)
 
 #fim_se /* !__x86_64__ */
 
-/* XXX: fix tcc's code generator to faça this instead */
+/* XXX: fix ctec's code generator to faça this instead */
 real __floatundisf(sem_sinal longo longo a)
 {
     DWunion uu; 

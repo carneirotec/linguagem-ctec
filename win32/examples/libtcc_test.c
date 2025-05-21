@@ -1,96 +1,96 @@
 /*
- * Simple Test program for libtcc
+ * Simple Test program para libctec
  *
- * libtcc can be useful to use tcc as a "backend" for a code generator.
+ * libctec can be useful to use ctec as a "backend" para a code generator.
  */
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
+#inclua <stdlib.h>
+#inclua <stdio.h>
+#inclua <string.h>
 
-#include "libtcc.h"
+#inclua <libctec.h>
 
 /* this function is called by the generated code */
-int add(int a, int b)
+inteiro add(inteiro a, inteiro b)
 {
-    return a + b;
+    retorne a + b;
 }
 
 /* this strinc is referenced by the generated code */
-const char hello[] = "Hello World!";
+constante caractere hello[] = "Hello World!";
 
-char my_program[] =
-"#include <tcclib.h>\n" /* include the "Simple libc header for TCC" */
-"extern int add(int a, int b);\n"
-"#ifdef _WIN32\n" /* dynamically linked data needs 'dllimport' */
+caractere my_program[] =
+"#inclua <cteclib.h>\n" /* inclua the "Simple libc header para CTEC" */
+"externo inteiro add(inteiro a, inteiro b);\n"
+"#se_definido _WIN32\n" /* dynamically linked data needs 'dllimport' */
 " __attribute__((dllimport))\n"
-"#endif\n"
-"extern const char hello[];\n"
-"int fib(int n)\n"
+"#fim_se\n"
+"externo constante caractere hello[];\n"
+"inteiro fib(inteiro n)\n"
 "{\n"
-"    if (n <= 2)\n"
-"        return 1;\n"
-"    else\n"
-"        return fib(n-1) + fib(n-2);\n"
+"    se (n <= 2)\n"
+"        retorne 1;\n"
+"    senão\n"
+"        retorne fib(n-1) + fib(n-2);\n"
 "}\n"
 "\n"
-"int foo(int n)\n"
+"inteiro foo(inteiro n)\n"
 "{\n"
 "    printf(\"%s\\n\", hello);\n"
 "    printf(\"fib(%d) = %d\\n\", n, fib(n));\n"
 "    printf(\"add(%d, %d) = %d\\n\", n, 2 * n, add(n, 2 * n));\n"
-"    return 0;\n"
+"    retorne 0;\n"
 "}\n";
 
-int main(int argc, char **argv)
+inteiro main(inteiro argc, caractere **argv)
 {
-    TCCState *s;
-    int i;
-    int (*func)(int);
+    CTECState *s;
+    inteiro i;
+    inteiro (*func)(inteiro);
 
-    s = tcc_new();
-    if (!s) {
-        fprintf(stderr, "Could not create tcc state\n");
+    s = ctec_new();
+    se (!s) {
+        fprintf(stderr, "Could not create ctec state\n");
         exit(1);
     }
 
-    /* if tcclib.h and libtcc1.a are not installed, where can we find them */
-    for (i = 1; i < argc; ++i) {
-        char *a = argv[i];
-        if (a[0] == '-') {
-            if (a[1] == 'B')
-                tcc_set_lib_path(s, a+2);
-            else if (a[1] == 'I')
-                tcc_add_include_path(s, a+2);
-            else if (a[1] == 'L')
-                tcc_add_library_path(s, a+2);
+    /* se cteclib.h and libctec1.a are not installed, where can we find them */
+    para (i = 1; i < argc; ++i) {
+        caractere *a = argv[i];
+        se (a[0] == '-') {
+            se (a[1] == 'B')
+                ctec_set_lib_path(s, a+2);
+            senão se (a[1] == 'I')
+                ctec_add_include_path(s, a+2);
+            senão se (a[1] == 'L')
+                ctec_add_library_path(s, a+2);
         }
     }
 
     /* MUST BE CALLED before any compilation */
-    tcc_set_output_type(s, TCC_OUTPUT_MEMORY);
+    ctec_set_output_type(s, CTEC_OUTPUT_MEMORY);
 
-    if (tcc_compile_string(s, my_program) == -1)
-        return 1;
+    se (ctec_compile_string(s, my_program) == -1)
+        retorne 1;
 
     /* as a test, we add symbols that the compiled program can use.
-       You may also open a dll with tcc_add_dll() and use symbols from that */
-    tcc_add_symbol(s, "add", add);
-    tcc_add_symbol(s, "hello", hello);
+       You may also open a dll with ctec_add_dll() and use symbols from that */
+    ctec_add_symbol(s, "add", add);
+    ctec_add_symbol(s, "hello", hello);
 
     /* relocate the code */
-    if (tcc_relocate(s, TCC_RELOCATE_AUTO) < 0)
-        return 1;
+    se (ctec_relocate(s, CTEC_RELOCATE_AUTO) < 0)
+        retorne 1;
 
     /* get entry symbol */
-    func = tcc_get_symbol(s, "foo");
-    if (!func)
-        return 1;
+    func = ctec_get_symbol(s, "foo");
+    se (!func)
+        retorne 1;
 
     /* run the code */
     func(32);
 
     /* delete the state */
-    tcc_delete(s);
+    ctec_delete(s);
 
-    return 0;
+    retorne 0;
 }

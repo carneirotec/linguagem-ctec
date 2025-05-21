@@ -1,5 +1,5 @@
 /*
- *  x86-64 code generator for TCC
+ *  x86-64 code generator for CTEC
  *
  *  Copyright (c) 2008 Shinichiro Hamaji
  *
@@ -25,7 +25,7 @@
 /* number of available registers */
 #define NB_REGS         25
 #define NB_ASM_REGS     16
-#define CONFIG_TCC_ASM
+#define CONFIG_CTEC_ASM
 
 /* a register can belong to several classes. The classes must be
    sorted from more general to more precise (see gv2() code which does
@@ -105,7 +105,7 @@ enum {
 /******************************************************/
 #else /* ! TARGET_DEFS_ONLY */
 /******************************************************/
-#include "tcc.h"
+#include "ctec.h"
 #include <assert.h>
 
 ST_DATA const int reg_classes[NB_REGS] = {
@@ -265,8 +265,8 @@ ST_FUNC void gen_addrpc32(int r, Sym *sym, int c)
 /* output got address with relocation */
 static void gen_gotpcrel(int r, Sym *sym, int c)
 {
-#ifdef TCC_TARGET_PE
-    tcc_error("internal error: no GOT on PE: %s %x %x | %02x %02x %02x\n",
+#ifdef CTEC_TARGET_PE
+    ctec_error("internal error: no GOT on PE: %s %x %x | %02x %02x %02x\n",
         get_tok_str(sym->v, NULL), c, r,
         cur_text_section->data[ind-3],
         cur_text_section->data[ind-2],
@@ -345,7 +345,7 @@ void load(int r, SValue *sv)
     int v, t, ft, fc, fr;
     SValue v1;
 
-#ifdef TCC_TARGET_PE
+#ifdef CTEC_TARGET_PE
     SValue v2;
     sv = pe_getimport(sv, &v2);
 #endif
@@ -354,11 +354,11 @@ void load(int r, SValue *sv)
     ft = sv->type.t & ~VT_DEFSIGN;
     fc = sv->c.i;
     if (fc != sv->c.i && (fr & VT_SYM))
-      tcc_error("64 bit addend in load");
+      ctec_error("64 bit addend in load");
 
     ft &= ~(VT_VOLATILE | VT_CONSTANT);
 
-#ifndef TCC_TARGET_PE
+#ifndef CTEC_TARGET_PE
     /* we use indirect access via got */
     if ((fr & VT_VALMASK) == VT_CONST && (fr & VT_SYM) &&
         (fr & VT_LVAL) && !(sv->sym->type.t & VT_STATIC)) {
@@ -404,7 +404,7 @@ void load(int r, SValue *sv)
 	/* Like GCC we can load from small enough properly sized
 	   structs and unions as well.
 	   XXX maybe move to generic operand handling, but should
-	   occur only with asm, so tccasm.c might also be a better place */
+	   occur only with asm, so ctecasm.c might also be a better place */
 	if ((ft & VT_BTYPE) == VT_STRUCT) {
 	    int align;
 	    switch (type_size(&sv->type, &align)) {
@@ -413,7 +413,7 @@ void load(int r, SValue *sv)
 		case 4: ft = VT_INT; break;
 		case 8: ft = VT_LLONG; break;
 		default:
-		    tcc_error("invalid aggregate type for register load");
+		    ctec_error("invalid aggregate type for register load");
 		    break;
 	    }
 	}
@@ -451,7 +451,7 @@ void load(int r, SValue *sv)
     } else {
         if (v == VT_CONST) {
             if (fr & VT_SYM) {
-#ifdef TCC_TARGET_PE
+#ifdef CTEC_TARGET_PE
                 orex(1,0,r,0x8d);
                 o(0x05 + REG_VALUE(r) * 8); /* lea xx(%rip), r */
                 gen_addrpc32(fr, sv->sym, fc);
@@ -544,7 +544,7 @@ void store(int r, SValue *v)
     /* store the REX prefix in this variable when PIC is enabled */
     int pic = 0;
 
-#ifdef TCC_TARGET_PE
+#ifdef CTEC_TARGET_PE
     SValue v2;
     v = pe_getimport(v, &v2);
 #endif
@@ -553,11 +553,11 @@ void store(int r, SValue *v)
     ft = v->type.t;
     fc = v->c.i;
     if (fc != v->c.i && (fr & VT_SYM))
-      tcc_error("64 bit addend in store");
+      ctec_error("64 bit addend in store");
     ft &= ~(VT_VOLATILE | VT_CONSTANT);
     bt = ft & VT_BTYPE;
 
-#ifndef TCC_TARGET_PE
+#ifndef CTEC_TARGET_PE
     /* we need to access the variable via got */
     if (fr == VT_CONST && (v->r & VT_SYM)) {
         /* mov xx(%rip), %r11 */
@@ -627,7 +627,7 @@ static void gcall_or_jmp(int is_jmp)
         /* constant case */
         if (vtop->r & VT_SYM) {
             /* relocation case */
-#ifdef TCC_TARGET_PE
+#ifdef CTEC_TARGET_PE
             greloca(cur_text_section, vtop->sym, ind + 1, R_X86_64_PC32, (int)(vtop->c.i-4));
 #else
             greloca(cur_text_section, vtop->sym, ind + 1, R_X86_64_PLT32, (int)(vtop->c.i-4));
@@ -648,8 +648,8 @@ static void gcall_or_jmp(int is_jmp)
     }
 }
 
-#if defined(CONFIG_TCC_BCHECK)
-#ifndef TCC_TARGET_PE
+#if defined(CONFIG_CTEC_BCHECK)
+#ifndef CTEC_TARGET_PE
 static addr_t func_bound_offset;
 static unsigned long func_bound_ind;
 #endif
@@ -698,7 +698,7 @@ ST_FUNC void gen_bounded_ptr_deref(void)
     Sym *sym;
 
     size = 0;
-    /* XXX: put that code in generic part of tcc */
+    /* XXX: put that code in generic part of ctec */
     if (!is_float(vtop->type.t)) {
         if (vtop->r & VT_LVAL_BYTE)
             size = 1;
@@ -715,7 +715,7 @@ ST_FUNC void gen_bounded_ptr_deref(void)
     case 12: func = TOK___bound_ptr_indir12; break;
     case 16: func = TOK___bound_ptr_indir16; break;
     default:
-        tcc_error("unhandled size when dereferencing bounded pointer");
+        ctec_error("unhandled size when dereferencing bounded pointer");
         func = 0;
         break;
     }
@@ -732,7 +732,7 @@ ST_FUNC void gen_bounded_ptr_deref(void)
 }
 #endif
 
-#ifdef TCC_TARGET_PE
+#ifdef CTEC_TARGET_PE
 
 #define REGN 4
 static const uint8_t arg_regs[REGN] = {
@@ -875,8 +875,8 @@ void gfunc_call(int nb_args)
             struct_size += size;
         } else {
             if (is_sse_float(vtop->type.t)) {
-		if (tcc_state->nosse)
-		  tcc_error("SSE disabled");
+		if (ctec_state->nosse)
+		  ctec_error("SSE disabled");
                 gv(RC_XMM0); /* only use one float register */
                 if (arg >= REGN) {
                     /* movq %xmm0, j*8(%rsp) */
@@ -994,8 +994,8 @@ void gfunc_prolog(CType *func_type)
             if (reg_param_index < REGN) {
                 /* save arguments passed by register */
                 if ((bt == VT_FLOAT) || (bt == VT_DOUBLE)) {
-		    if (tcc_state->nosse)
-		      tcc_error("SSE disabled");
+		    if (ctec_state->nosse)
+		      ctec_error("SSE disabled");
                     o(0xd60f66); /* movq */
                     gen_modrm(reg_param_index, VT_LOCAL, NULL, addr);
                 } else {
@@ -1268,8 +1268,8 @@ void gfunc_call(int nb_args)
 	}
     }
 
-    if (nb_sse_args && tcc_state->nosse)
-      tcc_error("SSE disabled but floating point arguments passed");
+    if (nb_sse_args && ctec_state->nosse)
+      ctec_error("SSE disabled but floating point arguments passed");
 
     /* fetch cpu flag before generating any code */
     if (vtop >= vstack && (vtop->r & VT_VALMASK) == VT_CMP)
@@ -1491,7 +1491,7 @@ void gfunc_prolog(CType *func_type)
         /* save all register passing arguments */
         for (i = 0; i < 8; i++) {
             loc -= 16;
-	    if (!tcc_state->nosse) {
+	    if (!ctec_state->nosse) {
 		o(0xd60f66); /* movq */
 		gen_modrm(7 - i, VT_LOCAL, NULL, loc);
 	    }
@@ -1524,8 +1524,8 @@ void gfunc_prolog(CType *func_type)
         mode = classify_x86_64_arg(type, NULL, &size, &align, &reg_count);
         switch (mode) {
         case x86_64_mode_sse:
-	    if (tcc_state->nosse)
-	        tcc_error("SSE disabled but floating point arguments used");
+	    if (ctec_state->nosse)
+	        ctec_error("SSE disabled but floating point arguments used");
             if (sse_param_index + reg_count <= 8) {
                 /* save arguments passed by register */
                 loc -= reg_count * 8;
@@ -1571,9 +1571,9 @@ void gfunc_prolog(CType *func_type)
                  VT_LOCAL | VT_LVAL, param_addr);
     }
 
-#ifdef CONFIG_TCC_BCHECK
+#ifdef CONFIG_CTEC_BCHECK
     /* leave some room for bound checking code */
-    if (tcc_state->do_bounds_check) {
+    if (ctec_state->do_bounds_check) {
         func_bound_offset = lbounds_section->data_offset;
         func_bound_ind = ind;
         oad(0xb8, 0); /* lbound section pointer */
@@ -1588,8 +1588,8 @@ void gfunc_epilog(void)
 {
     int v, saved_ind;
 
-#ifdef CONFIG_TCC_BCHECK
-    if (tcc_state->do_bounds_check
+#ifdef CONFIG_CTEC_BCHECK
+    if (ctec_state->do_bounds_check
 	&& func_bound_offset != lbounds_section->data_offset)
     {
         addr_t saved_ind;
@@ -2223,7 +2223,7 @@ ST_FUNC void gen_vla_sp_restore(int addr) {
     gen_modrm64(0x8b, TREG_RSP, VT_LOCAL, NULL, addr);
 }
 
-#ifdef TCC_TARGET_PE
+#ifdef CTEC_TARGET_PE
 /* Save result of gen_vla_alloc onto the stack */
 ST_FUNC void gen_vla_result(int addr) {
     /* mov %rax,addr(%rbp)*/
@@ -2233,7 +2233,7 @@ ST_FUNC void gen_vla_result(int addr) {
 
 /* Subtract from the stack pointer, and push the resulting value onto the stack */
 ST_FUNC void gen_vla_alloc(CType *type, int align) {
-#ifdef TCC_TARGET_PE
+#ifdef CTEC_TARGET_PE
     /* alloca does more than just adjust %rsp on Windows */
     vpush_global_sym(&func_old_type, TOK_alloca);
     vswap(); /* Move alloca ref past allocation size */
