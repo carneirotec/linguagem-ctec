@@ -810,8 +810,8 @@ void array_test()
 #ifdef C99_MACROS
     printf("sizeof(__func__) = %d\n", sizeof(__func__));
 #endif
-    printf("sizeof tab %d\n", sizeof(tab));
-    printf("sizeof tab2 %d\n", sizeof tab2);
+    printf("tamanho_de tab %d\n", sizeof(tab));
+    printf("tamanho_de tab2 %d\n", sizeof tab2);
     tab[0] = 1;
     tab[1] = 2;
     tab[2] = 3;
@@ -1856,7 +1856,7 @@ void init_test(void)
 	cix[0].b[1].a, cix[0].b[1].b,
 	cix[0].b[2].a, cix[0].b[2].b);
     printf("cix2: %d %d\n", cix21.b[2], cix22.b[5]);
-    printf("sizeof cix20 %d, cix21 %d, sizeof cix22 %d\n", sizeof cix20, sizeof cix21, sizeof cix22);
+    printf("tamanho_de cix20 %d, cix21 %d, sizeof cix22 %d\n", sizeof cix20, sizeof cix21, sizeof cix22);
 
     printf("arrtype1: %d %d %d\n", sinit19[0], sinit20[0], sinit20[1]);
     printf("arrtype2: %d %d\n", sizeof(sinit19), sizeof(sinit20));
@@ -2175,7 +2175,7 @@ void prefix ## call(void)\
 {\
     printf("float: " FLOAT_FMT, prefix ## retf(42.123456789));\
     printf("double: %f\n", prefix ## retd(42.123456789));\
-    printf("long double: %Lf\n", prefix ## retld(42.123456789));\
+    printf("longo double: %Lf\n", prefix ## retld(42.123456789));\
     printf("strto%s: %f\n", #prefix, (double)strto ## prefix("1.2", NULL));\
 }\
 \
@@ -2872,7 +2872,7 @@ void sizeof_test(void)
     printf("sizeof( (struct {int i; int j;}){4,5} ) = %d\n",
 	   sizeof( (struct {int i; int j;}){4,5} ));
     /* And as direct sizeof argument (as unary expression): */
-    printf("sizeof (struct {short i; short j;}){4,5} = %d\n",
+    printf("tamanho_de (struct {short i; short j;}){4,5} = %d\n",
 	   sizeof (struct {short i; short j;}){4,5} );
 
     /* sizeof(x && y) should be sizeof(int), even if constant
@@ -2922,9 +2922,9 @@ void statement_expr_test(void)
     }
     printf("a=%d\n", a);
     
-    /* Test that syctecls aren't freed prematurely.
+    /* Test that symbols aren't freed prematurely.
        With SYM_DEBUG valgrind will show a read from a freed
-       symbol, and tcc will show an (invalid) warning on the initialization
+       symbol, and ctec will show an (invalid) warning on the initialization
        of 'ptr' below, if symbols are popped after the stmt expr.  */
     void *v = (void*)39;
     typeof(({
@@ -3527,9 +3527,9 @@ void builtin_test(void)
     COMPAT_TYPE(int *, void *);
     COMPAT_TYPE(int *, const int *);
     COMPAT_TYPE(char *, unsigned char *);
-    COMPAT_TYPE(char *, sigctec char *);
+    COMPAT_TYPE(char *, signed char *);
     COMPAT_TYPE(char *, char *);
-/* space is needed because tcc preprocessor introduces a space between each token */
+/* space is needed because ctec preprocessor introduces a space between each token */
     COMPAT_TYPE(char * *, void *); 
 #endif
     printf("res = %d\n", __builtin_constant_p(1));

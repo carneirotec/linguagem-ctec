@@ -19,7 +19,7 @@ externo "C" {
 #fim_se
 
 #se_não_definido _CRTIMP
-#defina _CRTIMP __declspec(dllimport)
+#defina _CRTIMP __declspec(importe_dll)
 #fim_se
 
 #se_não_definido __TINYC__ /* gr */

@@ -30,7 +30,7 @@ __CRT_INLINE __MINGW_ATTRIB_NORETURN vazio __cdecl _Exit(inteiro status)
 
 #diretiva push_macro("abort")
 #não_definido abort
-  vazio __cdecl __declspec(noreturn) abort(vazio);
+  vazio __cdecl __declspec(sem_retorno) abort(vazio);
 #diretiva pop_macro("abort")
 
 #fim_se
@@ -48,8 +48,8 @@ externo vazio __cdecl _assert(constante caractere *, constante caractere *, sem_
 #fim_se
 
 #se_não_definido assert
-//#defina assert(_Expression) (vazio)((!!(_Expression)) || (_wassert(_CRT_WIDE(#_Expression),_CRT_WIDE(__FILE__),__LINE__),0))
-#defina assert(e) ((e) ? (vazio)0 : _assert(#e, __FILE__, __LINE__))
+//#defina assert(_Expression) (vazio)((!!(_Expression)) || (_wassert(_CRT_WIDE(#_Expression),_CRT_WIDE(__ARQUIVO__),__LINHA__),0))
+#defina assert(e) ((e) ? (vazio)0 : _assert(#e, __ARQUIVO__, __LINHA__))
 #fim_se
 
 #fim_se

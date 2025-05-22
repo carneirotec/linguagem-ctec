@@ -1,6 +1,6 @@
 /* -------------------------------------------------------------- */
 /*
- *  CTEC - Tiny C Compiler
+ *  CTEC - Compilador Carneiro Tec
  *
  *  ctectools.c - extra tools and and -m32/64 support
  *
@@ -407,7 +407,7 @@ the_end:
 
 /* -------------------------------------------------------------- */
 /*
- *  CTEC - Tiny C Compiler
+ *  CTEC - Compilador Carneiro Tec
  *
  *  Copyright (c) 2001-2004 Fabrice Bellard
  *

@@ -48,7 +48,7 @@ defina_tipo união
 } DWunion;
 
 defina_tipo longo duplo XFtype;
-#defina WORD_SIZE (sizeof (Wtype) * BITS_PER_UNIT)
+#defina WORD_SIZE (tamanho_de (Wtype) * BITS_PER_UNIT)
 #defina HIGH_WORD_COEFF (((UDWtype) 1) << WORD_SIZE)
 
 /* the following deal with IEEE single-precision numbers */

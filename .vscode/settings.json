@@ -1,11 +1,8 @@
 {
     "files.associations": {
-        "bit": "c",
-        "concepts": "c",
-        "cstdio": "c",
+        "windows.h": "c",
         "cwchar": "c",
-        "type_traits": "c",
-        "new": "c",
-        "typeinfo": "c"
+        "limits": "c",
+        "type_traits": "c"
     }
 }

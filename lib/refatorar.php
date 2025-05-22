@@ -41,6 +41,8 @@ $substituicoes = [
     "auto" => "automático",
     "inline" => "em_linha",
     "restrict" => "restrito",
+
+    "_Generic" => "_Genérico",
     
     "float" => "real",
     "double" => "duplo",
@@ -51,6 +53,42 @@ $substituicoes = [
     "typedef" => "defina_tipo",
     "default" => "padrão",
     "enum" => "enumeração",
+    "sizeof" => "tamanho_de",
+    "typeof" => "tipo_de",
+    "asm" => "assembler",
+
+    "__LINE__" => "__LINHA__",
+    "__FILE__" => "__ARQUIVO__",
+    "__DATE__" => "__DATA__",
+    "__TIME__" => "__HORA__",
+    "__FUNCTION__" => "__FUNÇÃO__",
+    "__VA_ARGS__" => "__VARIÁVEIS_ARGS__",
+    "__COUNTER__" => "__CONTADOR__",
+
+    "__FUNC__" => "__função__",
+
+    "__NAN__" => "__não_é_número__",
+    "__SNAN__" => "__não_é_número_sinalizado__",
+    "__INF__" => "__infinito__",
+
+    "section" => "sessão",
+    "aligned" => "alinhado",
+    "packed" => "empacotado",
+    "weak" => "fraco",
+    "alias" => "pseudônimo",
+    "unused" => "não_usado",
+    "cdecl" => "declaração",
+    "stdcall" => "chamada_convêncional",
+    "fastcall" => "chamada_rápida",
+    "regparm" => "parâmetro_registrador",
+    
+    "__mode__" => "__modo__",
+    "__word__" => "__palavra__",
+    
+    "dllexport" => "exporte_dll",
+    "dllimport" => "importe_dll",
+    "noreturn" => "sem_retorno",
+    "visibility" => "visibilidade",
 ];
 
 

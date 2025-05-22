@@ -56,8 +56,8 @@ int main()
 	i = _Generic(ti, const unsigned char *:1, const char *:4, char *:3,
 		     const signed char *:2);
 	printf("%d\n", i);
-	printf("%s\n", _Generic(i + 2L, long: "long", int: "int",
-				long long: "long long"));
+	printf("%s\n", _Generic(i + 2L, long: "longo", int: "inteiro",
+				long long: "longo longo"));
 	i = _Generic(l, long: 1, int: 2);
 	printf("%d\n", i);
 	return 0;

@@ -1,5 +1,5 @@
 /*
- *  CTECPE.C - PE file output for the Tiny C Compiler
+ *  CTECPE.C - PE file output for the Compilador Carneiro Tec
  *
  *  Copyright (c) 2005-2007 grischka
  *

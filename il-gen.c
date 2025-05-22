@@ -163,10 +163,10 @@ static void il_type_to_str(char *buf, int buf_size,
     bt = t & VT_BTYPE;
     buf[0] = '\0';
     if (t & VT_UNSIGNED)
-        pstrcat(buf, buf_size, "unsigned ");
+        pstrcat(buf, buf_size, "sem_sinal ");
     switch(bt) {
     case VT_VOID:
-        tstr = "void";
+        tstr = "vazio";
         goto add_tstr;
     case VT_BOOL:
         tstr = "bool";

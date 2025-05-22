@@ -1,5 +1,5 @@
 /*
- *  CTEC - Tiny C Compiler
+ *  CTEC - Compilador Carneiro Tec
  * 
  *  Copyright (c) 2001-2004 Fabrice Bellard
  *
@@ -25,7 +25,7 @@
 #include "ctectools.c"
 
 static const char help[] =
-    "Tiny C Compiler "CTEC_VERSION" - Copyright (C) 2001-2006 Fabrice Bellard\n"
+    "Compilador Carneiro Tec "CTEC_VERSION" - Copyright (C) 2001-2006 Fabrice Bellard\n"
     "Usage: ctec [options...] [-o outfile] [-c] infile(s)...\n"
     "       ctec [options...] -run infile [arguments...]\n"
     "General options:\n"
@@ -77,7 +77,7 @@ static const char help[] =
     ;
 
 static const char help2[] =
-    "Tiny C Compiler "CTEC_VERSION" - More Options\n"
+    "Compilador Carneiro Tec "CTEC_VERSION" - More Options\n"
     "Special options:\n"
     "  -P -P1                        with -E: no/alternative #line output\n"
     "  -dD -dM                       with -E: output #define directives\n"

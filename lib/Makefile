@@ -1,5 +1,5 @@
 #
-# Tiny C Compiler Makefile for libctec1.a
+# Compilador Carneiro Tec Makefile for libctec1.a
 #
 
 TOP = ..

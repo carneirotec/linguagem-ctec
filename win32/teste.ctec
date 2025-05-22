@@ -1,0 +1,6 @@
+#inclua <stdio.h>
+
+inteiro main(){
+	printf("Deus seja louvado!");
+	retorne 0;
+}

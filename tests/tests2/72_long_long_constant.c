@@ -14,6 +14,6 @@ int main()
         return 2;
     }
     else
-        printf("long long constant test ok.\n");
+        printf("longo long constant test ok.\n");
     return 0;
 }

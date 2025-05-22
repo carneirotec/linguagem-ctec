@@ -49,10 +49,10 @@ externo "C" {
 
 
 #se_definido _WIN64
-#defina MAX_NATURAL_ALIGNMENT sizeof(ULONGLONG)
+#defina MAX_NATURAL_ALIGNMENT tamanho_de(ULONGLONG)
 #defina MEMORY_ALLOCATION_ALIGNMENT 16
 #senão
-#defina MAX_NATURAL_ALIGNMENT sizeof(DWORD)
+#defina MAX_NATURAL_ALIGNMENT tamanho_de(DWORD)
 #defina MEMORY_ALLOCATION_ALIGNMENT 8
 #fim_se
 
@@ -80,17 +80,17 @@ externo "C" {
 #inclua <basetsd.h>
 
 #se definido(_X86_) || definido(__ia64__) || definido(__x86_64)
-#defina DECLSPEC_IMPORT __declspec(dllimport)
+#defina DECLSPEC_IMPORT __declspec(importe_dll)
 #senão
 #defina DECLSPEC_IMPORT
 #fim_se
 
 #se_não_definido DECLSPEC_NORETURN
-#defina DECLSPEC_NORETURN __declspec(noreturn)
+#defina DECLSPEC_NORETURN __declspec(sem_retorno)
 #fim_se
 
 #se_não_definido DECLSPEC_ALIGN
-#defina DECLSPEC_ALIGN(x) __attribute__ ((aligned(x)))
+#defina DECLSPEC_ALIGN(x) __attribute__ ((alinhado(x)))
 #fim_se
 
 #se_não_definido SYSTEM_CACHE_ALIGNMENT_SIZE
@@ -202,7 +202,7 @@ externo "C" {
   defina_tipo LONG *PLONG;
 
   defina_tipo vazio *HANDLE;
-#defina DECLARE_HANDLE(name) estrutura name##__ { inteiro unused; }; defina_tipo estrutura name##__ *name
+#defina DECLARE_HANDLE(name) estrutura name##__ { inteiro não_usado; }; defina_tipo estrutura name##__ *name
   defina_tipo HANDLE *PHANDLE;
 
   defina_tipo BYTE FCHAR;
@@ -415,10 +415,10 @@ defina_tipo DWORD LCID;
 #defina MAXDWORD 0xffffffff
 
 #defina FIELD_OFFSET(type,field) ((LONG)(LONG_PTR)&(((type *)0)->field))
-#defina RTL_FIELD_SIZE(type,field) (sizeof(((type *)0)->field))
+#defina RTL_FIELD_SIZE(type,field) (tamanho_de(((type *)0)->field))
 #defina RTL_SIZEOF_THROUGH_FIELD(type,field) (FIELD_OFFSET(type,field) + RTL_FIELD_SIZE(type,field))
-#defina RTL_CONTAINS_FIELD(Struct,Size,Field) ((((PCHAR)(&(Struct)->Field)) + sizeof((Struct)->Field)) <= (((PCHAR)(Struct))+(Size)))
-#defina RTL_NUMBER_OF_V1(A) (sizeof(A)/sizeof((A)[0]))
+#defina RTL_CONTAINS_FIELD(Struct,Size,Field) ((((PCHAR)(&(Struct)->Field)) + tamanho_de((Struct)->Field)) <= (((PCHAR)(Struct))+(Size)))
+#defina RTL_NUMBER_OF_V1(A) (tamanho_de(A)/tamanho_de((A)[0]))
 #defina RTL_NUMBER_OF_V2(A) RTL_NUMBER_OF_V1(A)
 
 #se_definido ENABLE_RTL_NUMBER_OF_V2
@@ -440,7 +440,7 @@ defina_tipo DWORD LCID;
 #defina RTL_CONST_CAST(type) (type)
 #fim_se
 
-#defina RTL_BITS_OF(sizeOfArg) (sizeof(sizeOfArg) *8)
+#defina RTL_BITS_OF(sizeOfArg) (tamanho_de(sizeOfArg) *8)
 #defina RTL_BITS_OF_FIELD(type,field) (RTL_BITS_OF(RTL_FIELD_TYPE(type,field)))
 #defina CONTAINING_RECORD(address,type,field) ((type *)((PCHAR)(address) - (ULONG_PTR)(&((type *)0)->field)))
 
@@ -1334,7 +1334,7 @@ defina_tipo DWORD LCID;
     BYTE Reserved4[96];
   } XMM_SAVE_AREA32,*PXMM_SAVE_AREA32;
 
-#defina LEGACY_SAVE_AREA_LENGTH sizeof(XMM_SAVE_AREA32)
+#defina LEGACY_SAVE_AREA_LENGTH tamanho_de(XMM_SAVE_AREA32)
 
   defina_tipo DECLSPEC_ALIGN(16) estrutura _CONTEXT {
     DWORD64 P1Home;
@@ -2096,7 +2096,7 @@ defina_tipo DWORD LCID;
 #defina SID_MAX_SUB_AUTHORITIES (15)
 #defina SID_RECOMMENDED_SUB_AUTHORITIES (1)
 
-#defina SECURITY_MAX_SID_SIZE (sizeof(SID) - sizeof(DWORD) + (SID_MAX_SUB_AUTHORITIES *sizeof(DWORD)))
+#defina SECURITY_MAX_SID_SIZE (tamanho_de(SID) - tamanho_de(DWORD) + (SID_MAX_SUB_AUTHORITIES *tamanho_de(DWORD)))
 
     defina_tipo enumeração _SID_NAME_USE {
       SidTypeUser = 1,SidTypeGroup,SidTypeDomain,SidTypeAlias,SidTypeWellKnownGroup,SidTypeDeletedAccount,SidTypeInvalid,SidTypeUnknown,SidTypeComputer
@@ -2479,7 +2479,7 @@ defina_tipo DWORD LCID;
 #defina SECURITY_DESCRIPTOR_REVISION (1)
 #defina SECURITY_DESCRIPTOR_REVISION1 (1)
 
-#defina SECURITY_DESCRIPTOR_MIN_LENGTH (sizeof(SECURITY_DESCRIPTOR))
+#defina SECURITY_DESCRIPTOR_MIN_LENGTH (tamanho_de(SECURITY_DESCRIPTOR))
 
     defina_tipo WORD SECURITY_DESCRIPTOR_CONTROL,*PSECURITY_DESCRIPTOR_CONTROL;
 
@@ -2681,8 +2681,8 @@ defina_tipo DWORD LCID;
       TOKEN_AUDIT_POLICY_ELEMENT Policy[ANYSIZE_ARRAY];
     } TOKEN_AUDIT_POLICY,*PTOKEN_AUDIT_POLICY;
 
-#defina PER_USER_AUDITING_POLICY_SIZE(p) (sizeof(TOKEN_AUDIT_POLICY) + (((p)->PolicyCount > ANYSIZE_ARRAY) ? (sizeof(TOKEN_AUDIT_POLICY_ELEMENT) *((p)->PolicyCount - ANYSIZE_ARRAY)) : 0))
-#defina PER_USER_AUDITING_POLICY_SIZE_BY_COUNT(C) (sizeof(TOKEN_AUDIT_POLICY) + (((C) > ANYSIZE_ARRAY) ? (sizeof(TOKEN_AUDIT_POLICY_ELEMENT) *((C) - ANYSIZE_ARRAY)) : 0))
+#defina PER_USER_AUDITING_POLICY_SIZE(p) (tamanho_de(TOKEN_AUDIT_POLICY) + (((p)->PolicyCount > ANYSIZE_ARRAY) ? (tamanho_de(TOKEN_AUDIT_POLICY_ELEMENT) *((p)->PolicyCount - ANYSIZE_ARRAY)) : 0))
+#defina PER_USER_AUDITING_POLICY_SIZE_BY_COUNT(C) (tamanho_de(TOKEN_AUDIT_POLICY) + (((C) > ANYSIZE_ARRAY) ? (tamanho_de(TOKEN_AUDIT_POLICY_ELEMENT) *((C) - ANYSIZE_ARRAY)) : 0))
 
 #defina TOKEN_SOURCE_LENGTH 8
 

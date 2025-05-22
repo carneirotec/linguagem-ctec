@@ -316,8 +316,8 @@ externo "C" {
   externo inteiro __cdecl __fpclassifyl (longo duplo);
 
 /* Implemented at ctec/ctec_libm.h */
-#defina fpclassify(x) (sizeof (x) == sizeof (real) ? __fpclassifyf (x)	  \
-  : sizeof (x) == sizeof (duplo) ? __fpclassify (x) \
+#defina fpclassify(x) (tamanho_de (x) == tamanho_de (real) ? __fpclassifyf (x)	  \
+  : tamanho_de (x) == tamanho_de (duplo) ? __fpclassify (x) \
   : __fpclassifyl (x))
 
   /* 7.12.3.2 */
@@ -341,8 +341,8 @@ externo "C" {
   externo inteiro __cdecl __signbitl (longo duplo);
 
 /* Implemented at ctec/ctec_libm.h */
-#defina signbit(x) (sizeof (x) == sizeof (real) ? __signbitf (x)	\
-  : sizeof (x) == sizeof (duplo) ? __signbit (x)	\
+#defina signbit(x) (tamanho_de (x) == tamanho_de (real) ? __signbitf (x)	\
+  : tamanho_de (x) == tamanho_de (duplo) ? __signbit (x)	\
   : __signbitl (x))
 
   externo duplo __cdecl exp2(duplo);

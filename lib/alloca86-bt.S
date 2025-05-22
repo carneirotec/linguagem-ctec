@@ -42,6 +42,6 @@ p6:
 
 /* mark stack as nonexecutable */
 #se definido __ELF__ && definido __linux__
-    .section    .note.GNU-stack,"",@progbits
+    .sessão    .note.GNU-stack,"",@progbits
 #fim_se
 /* ---------------------------------------------- */

@@ -1,67 +1,67 @@
 /*
- * Simple Test program para libctec
+ * Simple Test program for libctec
  *
- * libctec can be useful to use ctec as a "backend" para a code generator.
+ * libctec can be useful to use ctec as a "backend" for a code generator.
  */
-#inclua <stdlib.h>
-#inclua <stdio.h>
-#inclua <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 
-#inclua <libctec.h>
+#include "libctec.h"
 
 /* this function is called by the generated code */
-inteiro add(inteiro a, inteiro b)
+int add(int a, int b)
 {
-    retorne a + b;
+    return a + b;
 }
 
 /* this strinc is referenced by the generated code */
-constante caractere hello[] = "Hello World!";
+const char hello[] = "Hello World!";
 
-caractere my_program[] =
-"#inclua <cteclib.h>\n" /* inclua the "Simple libc header para CTEC" */
-"externo inteiro add(inteiro a, inteiro b);\n"
-"#se_definido _WIN32\n" /* dynamically linked data needs 'dllimport' */
+char my_program[] =
+"#include <cteclib.h>\n" /* include the "Simple libc header for CTEC" */
+"extern int add(int a, int b);\n"
+"#ifdef _WIN32\n" /* dynamically linked data needs 'dllimport' */
 " __attribute__((dllimport))\n"
-"#fim_se\n"
-"externo constante caractere hello[];\n"
-"inteiro fib(inteiro n)\n"
+"#endif\n"
+"extern const char hello[];\n"
+"int fib(int n)\n"
 "{\n"
-"    se (n <= 2)\n"
-"        retorne 1;\n"
-"    senão\n"
-"        retorne fib(n-1) + fib(n-2);\n"
+"    if (n <= 2)\n"
+"        return 1;\n"
+"    else\n"
+"        return fib(n-1) + fib(n-2);\n"
 "}\n"
 "\n"
-"inteiro foo(inteiro n)\n"
+"int foo(int n)\n"
 "{\n"
 "    printf(\"%s\\n\", hello);\n"
 "    printf(\"fib(%d) = %d\\n\", n, fib(n));\n"
 "    printf(\"add(%d, %d) = %d\\n\", n, 2 * n, add(n, 2 * n));\n"
-"    retorne 0;\n"
+"    return 0;\n"
 "}\n";
 
-inteiro main(inteiro argc, caractere **argv)
+int main(int argc, char **argv)
 {
     CTECState *s;
-    inteiro i;
-    inteiro (*func)(inteiro);
+    int i;
+    int (*func)(int);
 
     s = ctec_new();
-    se (!s) {
+    if (!s) {
         fprintf(stderr, "Could not create ctec state\n");
         exit(1);
     }
 
-    /* se cteclib.h and libctec1.a are not installed, where can we find them */
-    para (i = 1; i < argc; ++i) {
-        caractere *a = argv[i];
-        se (a[0] == '-') {
-            se (a[1] == 'B')
+    /* if cteclib.h and libctec1.a are not installed, where can we find them */
+    for (i = 1; i < argc; ++i) {
+        char *a = argv[i];
+        if (a[0] == '-') {
+            if (a[1] == 'B')
                 ctec_set_lib_path(s, a+2);
-            senão se (a[1] == 'I')
+            else if (a[1] == 'I')
                 ctec_add_include_path(s, a+2);
-            senão se (a[1] == 'L')
+            else if (a[1] == 'L')
                 ctec_add_library_path(s, a+2);
         }
     }
@@ -69,8 +69,8 @@ inteiro main(inteiro argc, caractere **argv)
     /* MUST BE CALLED before any compilation */
     ctec_set_output_type(s, CTEC_OUTPUT_MEMORY);
 
-    se (ctec_compile_string(s, my_program) == -1)
-        retorne 1;
+    if (ctec_compile_string(s, my_program) == -1)
+        return 1;
 
     /* as a test, we add symbols that the compiled program can use.
        You may also open a dll with ctec_add_dll() and use symbols from that */
@@ -78,13 +78,13 @@ inteiro main(inteiro argc, caractere **argv)
     ctec_add_symbol(s, "hello", hello);
 
     /* relocate the code */
-    se (ctec_relocate(s, CTEC_RELOCATE_AUTO) < 0)
-        retorne 1;
+    if (ctec_relocate(s, CTEC_RELOCATE_AUTO) < 0)
+        return 1;
 
     /* get entry symbol */
     func = ctec_get_symbol(s, "foo");
-    se (!func)
-        retorne 1;
+    if (!func)
+        return 1;
 
     /* run the code */
     func(32);
@@ -92,5 +92,5 @@ inteiro main(inteiro argc, caractere **argv)
     /* delete the state */
     ctec_delete(s);
 
-    retorne 0;
+    return 0;
 }

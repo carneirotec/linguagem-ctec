@@ -1,6 +1,6 @@
 # --------------------------------------------------------------------------
 #
-# Tiny C Compiler Makefile
+# Compilador Carneiro Tec Makefile
 #
 
 ifndef TOP
@@ -189,11 +189,11 @@ $(X)%.o : %.c $(LIBCTEC_INC)
 # additional dependencies
 $(X)ctec.o : ctectools.c
 
-# Host Tiny C Compiler
+# Host Compilador Carneiro Tec
 ctec$(EXESUF): ctec.o $(LIBCTEC)
 	$(CC) -o $@ $^ $(LIBS) $(LDFLAGS) $(LINK_LIBCTEC)
 
-# Cross Tiny C Compilers
+# Cross Compiladores Carneiro Tec
 %-ctec$(EXESUF): FORCE
 	@$(MAKE) --no-print-directory $@ CROSS_TARGET=$* ONE_SOURCE=$(or $(ONE_SOURCE),yes)
 
@@ -243,7 +243,7 @@ ctec-doc.html: ctec-doc.texi
 
 ctec.1: ctec-doc.texi
 	$(TOPSRC)/texi2pod.pl $< ctec.pod \
-	&& pod2man --section=1 --center="Tiny C Compiler" --release="$(VERSION)" ctec.pod >tmp.1 \
+	&& pod2man --section=1 --center="Compilador Carneiro Tec" --release="$(VERSION)" ctec.pod >tmp.1 \
 	&& mv tmp.1 $@ || rm -f tmp.1
 
 ctec-doc.info: ctec-doc.texi
