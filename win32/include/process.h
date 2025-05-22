@@ -38,7 +38,7 @@ externo "C" {
 
 #diretiva push_macro("abort")
 #não_definido abort
-  vazio __cdecl __declspec(sem_retorno) abort(vazio);
+  vazio __cdecl __declspec(noreturn) abort(vazio);
 #diretiva pop_macro("abort")
 
 #fim_se
@@ -96,10 +96,10 @@ externo "C" {
   vazio __cdecl __security_init_cookie(vazio);
 #se (definido(_X86_) && !definido(__x86_64))
   vazio __fastcall __security_check_cookie(uintptr_t _StackCookie);
-  __declspec(sem_retorno) vazio __cdecl __report_gsfailure(vazio);
+  __declspec(noreturn) vazio __cdecl __report_gsfailure(vazio);
 #senão
   vazio __cdecl __security_check_cookie(uintptr_t _StackCookie);
-  __declspec(sem_retorno) vazio __cdecl __report_gsfailure(uintptr_t _StackCookie);
+  __declspec(noreturn) vazio __cdecl __report_gsfailure(uintptr_t _StackCookie);
 #fim_se
   externo uintptr_t __security_cookie;
 

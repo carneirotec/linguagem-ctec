@@ -4,15 +4,15 @@
 //
 //+---------------------------------------------------------------------------
 
-#include <windows.h>
+#inclua <windows.h>
 
-#define APPNAME "HELLO_WIN"
+#defina APPNAME "HELLO_WIN"
 
-char szAppName[] = APPNAME; // The name of this application
-char szTitle[]   = APPNAME; // The title bar text
-const char *pWindowText;
+caractere szAppName[] = APPNAME; // The name of this application
+caractere szTitle[]   = APPNAME; // The title bar text
+constante caractere *pWindowText;
 
-void CenterWindow(HWND hWnd);
+vazio CenterWindow(HWND hWnd);
 
 //+---------------------------------------------------------------------------
 //
@@ -26,29 +26,29 @@ void CenterWindow(HWND hWnd);
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    switch (message) {
+    troque (message) {
 
         // ----------------------- first and last
-        case WM_CREATE:
+        caso WM_CREATE:
             CenterWindow(hwnd);
-            break;
+            pare;
 
-        case WM_DESTROY:
+        caso WM_DESTROY:
             PostQuitMessage(0);
-            break;
+            pare;
 
         // ----------------------- get out of it...
-        case WM_RBUTTONUP:
+        caso WM_RBUTTONUP:
             DestroyWindow(hwnd);
-            break;
+            pare;
 
-        case WM_KEYDOWN:
-            if (VK_ESCAPE == wParam)
+        caso WM_KEYDOWN:
+            se (VK_ESCAPE == wParam)
                 DestroyWindow(hwnd);
-            break;
+            pare;
 
         // ----------------------- display our minimal info
-        case WM_PAINT:
+        caso WM_PAINT:
         {
             PAINTSTRUCT ps;
             HDC         hdc;
@@ -61,28 +61,28 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
             DrawText(hdc, pWindowText, -1, &rc, DT_CENTER|DT_SINGLELINE|DT_VCENTER);
 
             EndPaint(hwnd, &ps);
-            break;
+            pare;
         }
 
-        // ----------------------- let windows do all other stuff
-        default:
-            return DefWindowProc(hwnd, message, wParam, lParam);
+        // ----------------------- let windows faça all other stuff
+        padrão:
+            retorne DefWindowProc(hwnd, message, wParam, lParam);
     }
-    return 0;
+    retorne 0;
 }
 
 //+---------------------------------------------------------------------------
 //
 //  Function:   WinMain
 //
-//  Synopsis:   standard entrypoint for GUI Win32 apps
+//  Synopsis:   standard entrypoint para GUI Win32 apps
 //
 //----------------------------------------------------------------------------
-int APIENTRY WinMain(
+inteiro APIENTRY WinMain(
         HINSTANCE hInstance,
         HINSTANCE hPrevInstance,
         LPSTR lpCmdLine,
-        int nCmdShow
+        inteiro nCmdShow
         )
 {
     MSG msg;
@@ -103,8 +103,8 @@ int APIENTRY WinMain(
     wc.hIcon         = LoadIcon(NULL, IDI_APPLICATION);
     wc.hCursor       = LoadCursor(NULL, IDC_ARROW);
 
-    if (FALSE == RegisterClass(&wc))
-        return 0;
+    se (FALSE == RegisterClass(&wc))
+        retorne 0;
 
     // create the browser
     hwnd = CreateWindow(
@@ -120,30 +120,30 @@ int APIENTRY WinMain(
         hInstance,
         0);
 
-    if (NULL == hwnd)
-        return 0;
+    se (NULL == hwnd)
+        retorne 0;
 
     // Main message loop:
-    while (GetMessage(&msg, NULL, 0, 0) > 0) {
+    enquanto (GetMessage(&msg, NULL, 0, 0) > 0) {
         TranslateMessage(&msg);
         DispatchMessage(&msg);
     }
 
-    return msg.wParam;
+    retorne msg.wParam;
 }
 
 //+---------------------------------------------------------------------------
 
 //+---------------------------------------------------------------------------
 
-void CenterWindow(HWND hwnd_self)
+vazio CenterWindow(HWND hwnd_self)
 {
     HWND hwnd_parent;
     RECT rw_self, rc_parent, rw_parent;
-    int xpos, ypos;
+    inteiro xpos, ypos;
 
     hwnd_parent = GetParent(hwnd_self);
-    if (NULL == hwnd_parent)
+    se (NULL == hwnd_parent)
         hwnd_parent = GetDesktopWindow();
 
     GetWindowRect(hwnd_parent, &rw_parent);

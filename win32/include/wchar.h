@@ -854,8 +854,8 @@ __CRT_INLINE wchar_t *__cdecl _wctime(constante time_t *_Time) { retorne _wctime
   __CRT_INLINE inteiro __cdecl mbsinit(constante mbstate_t *_P) { retorne (!_P || *_P==0); }
   __CRT_INLINE _CONST_RETURN wchar_t *__cdecl wmemchr(constante wchar_t *_S,wchar_t _C,size_t _N) { para (;0<_N;++_S,--_N) se (*_S==_C) retorne (_CONST_RETURN wchar_t *)(_S); retorne (0); }
   __CRT_INLINE inteiro __cdecl wmemcmp(constante wchar_t *_S1,constante wchar_t *_S2,size_t _N) { para (; 0 < _N; ++_S1,++_S2,--_N) se (*_S1!=*_S2) retorne (*_S1 < *_S2 ? -1 : +1); retorne (0); }
-  __CRT_INLINE wchar_t *__cdecl wmemcpy(wchar_t *_S1,constante wchar_t *_S2,size_t _N) { retorne (wchar_t *)memcpy(_S1,_S2,_N*tamanho_de(wchar_t)); }
-  __CRT_INLINE wchar_t *__cdecl wmemmove(wchar_t *_S1,constante wchar_t *_S2,size_t _N) { retorne (wchar_t *)memmove(_S1,_S2,_N*tamanho_de(wchar_t)); }
+  __CRT_INLINE wchar_t *__cdecl wmemcpy(wchar_t *_S1,constante wchar_t *_S2,size_t _N) { retorne (wchar_t *)memcpy(_S1,_S2,_N*sizeof(wchar_t)); }
+  __CRT_INLINE wchar_t *__cdecl wmemmove(wchar_t *_S1,constante wchar_t *_S2,size_t _N) { retorne (wchar_t *)memmove(_S1,_S2,_N*sizeof(wchar_t)); }
   __CRT_INLINE wchar_t *__cdecl wmemset(wchar_t *_S,wchar_t _C,size_t _N) {
     wchar_t *_Su = _S;
     para (;0<_N;++_Su,--_N) {

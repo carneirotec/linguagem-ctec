@@ -43,7 +43,7 @@ externo "C" {
 #defina _wP_tmpdir L"\\"
 #fim_se
 
-#defina L_tmpnam (tamanho_de(_P_tmpdir) + 12)
+#defina L_tmpnam (sizeof(_P_tmpdir) + 12)
 
 #se_definido _POSIX_
 #defina L_ctermid 9

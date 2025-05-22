@@ -289,11 +289,11 @@ externo "C" {
   errno_t __cdecl _get_winminor(sem_sinal inteiro *_Value);
 #se_não_definido _countof
 #se_não_definido __cplusplus
-#defina _countof(_Array) (tamanho_de(_Array) / tamanho_de(_Array[0]))
+#defina _countof(_Array) (sizeof(_Array) / sizeof(_Array[0]))
 #senão
   externo "C++" {
     template <typename _CountofType,size_t _SizeOfArray> caractere (*__countof_helper(UNALIGNED _CountofType (&_Array)[_SizeOfArray]))[_SizeOfArray];
-#defina _countof(_Array) tamanho_de(*__countof_helper(_Array))
+#defina _countof(_Array) sizeof(*__countof_helper(_Array))
   }
 #fim_se
 #fim_se
@@ -311,7 +311,7 @@ externo "C" {
 
 #diretiva push_macro("abort")
 #não_definido abort
-  vazio __cdecl __declspec(sem_retorno) abort(vazio);
+  vazio __cdecl __declspec(noreturn) abort(vazio);
 #diretiva pop_macro("abort")
 
 #fim_se
