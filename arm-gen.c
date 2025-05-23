@@ -1885,7 +1885,7 @@ void gen_opf(int op)
 	  case TOK_UGE:
 	  case TOK_ULE:
 	  case TOK_UGT:
-            ctec_error("sem_sinal comparison on floats?");
+            ctec_error("unsigned comparison on floats?");
 	    break;
 	  case TOK_LT:
             op=TOK_Nset;

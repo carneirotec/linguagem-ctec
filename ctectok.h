@@ -37,7 +37,7 @@
      DEF(TOK_RESTRICT3, "__restrict__")
      DEF(TOK_EXTENSION, "__extension__") /* gcc keyword */
 
-     DEF(TOK_GENERIC, "_Genérico")
+     DEF(TOK_GENERIC, "_Generic")
 
      DEF(TOK_FLOAT, "real")
      DEF(TOK_DOUBLE, "duplo")
@@ -61,7 +61,7 @@
      DEF(TOK_ASM2, "__asm")
      DEF(TOK_ASM3, "__asm__")
 
-#ifdef TCC_TARGET_ARM64
+#ifdef CTEC_TARGET_ARM64
      DEF(TOK_UINT128, "__uint128_t")
 #endif
 
@@ -73,10 +73,10 @@
      DEF(TOK_INCLUDE_NEXT, "inclua_próximo")
      DEF(TOK_IFDEF, "se_definido")
      DEF(TOK_IFNDEF, "se_não_definido")
-     DEF(TOK_ELIF, "senão")
+     DEF(TOK_ELIF, "senão_se")
      DEF(TOK_ENDIF, "fim_se")
      DEF(TOK_DEFINED, "definido")
-     DEF(TOK_UNDEF, "indefina")
+     DEF(TOK_UNDEF, "não_definido")
      DEF(TOK_ERROR, "erro")
      DEF(TOK_WARNING, "aviso")
      DEF(TOK_LINE, "linha")
@@ -144,18 +144,18 @@
      DEF(TOK_builtin_return_address, "__builtin_return_address")
      DEF(TOK_builtin_expect, "__builtin_expect")
      /*DEF(TOK_builtin_va_list, "__builtin_va_list")*/
-#if defined TCC_TARGET_PE && defined TCC_TARGET_X86_64
+#if defined CTEC_TARGET_PE && defined CTEC_TARGET_X86_64
      DEF(TOK_builtin_va_start, "__builtin_va_start")
-#elif defined TCC_TARGET_X86_64
+#elif defined CTEC_TARGET_X86_64
      DEF(TOK_builtin_va_arg_types, "__builtin_va_arg_types")
-#elif defined TCC_TARGET_ARM64
+#elif defined CTEC_TARGET_ARM64
      DEF(TOK___va_start, "__va_start")
      DEF(TOK___va_arg, "__va_arg")
 #endif
 
 /* pragma */
      DEF(TOK_pack, "pack")
-#if !defined(TCC_TARGET_I386) && !defined(TCC_TARGET_X86_64)
+#if !defined(CTEC_TARGET_I386) && !defined(CTEC_TARGET_X86_64)
      /* already defined for assembler */
      DEF(TOK_ASM_push, "push")
      DEF(TOK_ASM_pop, "pop")
@@ -168,7 +168,7 @@
      DEF(TOK_option, "option")
 
 /* builtin functions or variables */
-#ifndef TCC_ARM_EABI
+#ifndef CTEC_ARM_EABI
      DEF(TOK_memcpy, "memcpy")
      DEF(TOK_memmove, "memmove")
      DEF(TOK_memset, "memset")
@@ -181,7 +181,7 @@
      DEF(TOK___ashldi3, "__ashldi3")
      DEF(TOK___floatundisf, "__floatundisf")
      DEF(TOK___floatundidf, "__floatundidf")
-# ifndef TCC_ARM_VFP
+# ifndef CTEC_ARM_VFP
      DEF(TOK___floatundixf, "__floatundixf")
      DEF(TOK___fixunsxfdi, "__fixunsxfdi")
 # endif
@@ -189,8 +189,8 @@
      DEF(TOK___fixunsdfdi, "__fixunsdfdi")
 #endif
 
-#if defined TCC_TARGET_ARM
-# ifdef TCC_ARM_EABI
+#if defined CTEC_TARGET_ARM
+# ifdef CTEC_ARM_EABI
      DEF(TOK_memcpy, "__aeabi_memcpy")
      DEF(TOK_memcpy4, "__aeabi_memcpy4")
      DEF(TOK_memcpy8, "__aeabi_memcpy8")
@@ -220,7 +220,7 @@
      DEF(TOK___udivsi3, "__udivsi3")
      DEF(TOK___floatdisf, "__floatdisf")
      DEF(TOK___floatdidf, "__floatdidf")
-#  ifndef TCC_ARM_VFP
+#  ifndef CTEC_ARM_VFP
      DEF(TOK___floatdixf, "__floatdixf")
      DEF(TOK___fixunssfsi, "__fixunssfsi")
      DEF(TOK___fixunsdfsi, "__fixunsdfsi")
@@ -232,7 +232,7 @@
 # endif
 #endif
 
-#if defined TCC_TARGET_C67
+#if defined CTEC_TARGET_C67
      DEF(TOK__divi, "_divi")
      DEF(TOK__divu, "_divu")
      DEF(TOK__divf, "_divf")
@@ -241,20 +241,20 @@
      DEF(TOK__remu, "_remu")
 #endif
 
-#if defined TCC_TARGET_I386
+#if defined CTEC_TARGET_I386
      DEF(TOK___fixsfdi, "__fixsfdi")
      DEF(TOK___fixdfdi, "__fixdfdi")
      DEF(TOK___fixxfdi, "__fixxfdi")
 #endif
 
-#if defined TCC_TARGET_I386 || defined TCC_TARGET_X86_64
+#if defined CTEC_TARGET_I386 || defined CTEC_TARGET_X86_64
      DEF(TOK_alloca, "alloca")
 #endif
 
-#if defined TCC_TARGET_PE
+#if defined CTEC_TARGET_PE
      DEF(TOK___chkstk, "__chkstk")
 #endif
-#ifdef TCC_TARGET_ARM64
+#ifdef CTEC_TARGET_ARM64
      DEF(TOK___arm64_clear_cache, "__arm64_clear_cache")
      DEF(TOK___addtf3, "__addtf3")
      DEF(TOK___subtf3, "__subtf3")
@@ -281,7 +281,7 @@
 #endif
 
 /* bound checking symbols */
-#ifdef CONFIG_TCC_BCHECK
+#ifdef CONFIG_CTEC_BCHECK
      DEF(TOK___bound_ptr_add, "__bound_ptr_add")
      DEF(TOK___bound_ptr_indir1, "__bound_ptr_indir1")
      DEF(TOK___bound_ptr_indir2, "__bound_ptr_indir2")
@@ -292,7 +292,7 @@
      DEF(TOK___bound_main_arg, "__bound_main_arg")
      DEF(TOK___bound_local_new, "__bound_local_new")
      DEF(TOK___bound_local_delete, "__bound_local_delete")
-# ifdef TCC_TARGET_PE
+# ifdef CTEC_TARGET_PE
      DEF(TOK_malloc, "malloc")
      DEF(TOK_free, "free")
      DEF(TOK_realloc, "realloc")
@@ -334,10 +334,10 @@
  DEF_ASMDIR(endr)
  DEF_ASMDIR(org)
  DEF_ASMDIR(quad)
-#if defined(TCC_TARGET_I386)
+#if defined(CTEC_TARGET_I386)
  DEF_ASMDIR(code16)
  DEF_ASMDIR(code32)
-#elif defined(TCC_TARGET_X86_64)
+#elif defined(CTEC_TARGET_X86_64)
  DEF_ASMDIR(code64)
 #endif
  DEF_ASMDIR(short)
@@ -345,6 +345,6 @@
  DEF_ASMDIR(int)
  DEF_ASMDIR(section)            /* must be last directive */
 
-#if defined TCC_TARGET_I386 || defined TCC_TARGET_X86_64
+#if defined CTEC_TARGET_I386 || defined CTEC_TARGET_X86_64
 #include "i386-tok.h"
 #endif

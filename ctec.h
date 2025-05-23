@@ -1,5 +1,5 @@
 /*
- *  CTEC - Compilador Carneiro Tec
+ *  CTEC - Tiny C Compiler
  *
  *  Copyright (c) 2001-2004 Fabrice Bellard
  *

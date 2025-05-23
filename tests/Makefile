@@ -1,5 +1,5 @@
 #
-# Compilador Carneiro Tec Makefile - tests
+# Tiny C Compiler Makefile - tests
 #
 
 TOP = ..

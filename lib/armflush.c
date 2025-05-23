@@ -9,7 +9,7 @@
 /* syscall wrapper */
 sem_sinal syscall(sem_sinal syscall_nr, ...);
 
-/* arm-ctec supports only fake assembler currently */
+/* arm-ctec supports only fake asm currently */
 __asm__(
     ".global syscall\n"
     "syscall:\n"
@@ -44,7 +44,7 @@ __asm__(
 vazio __clear_cache(vazio *beginning, vazio *end)
 {
 /* __ARM_NR_cacheflush is kernel private and should not be used in user space.
- * However, there is no ARM assembler parser in ctec so we use it para now */
+ * However, there is no ARM asm parser in ctec so we use it para now */
 #se 1
     syscall(__ARM_NR_cacheflush, beginning, end, 0);
 #senão

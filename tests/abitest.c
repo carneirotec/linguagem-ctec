@@ -629,7 +629,7 @@ static int arg_align_test_callback(void *ptr) {
 
 static int arg_align_test(void) {
   const char *src = 
-  "longo double f(long double a, int b, long double c, int d, long double e) {\n"
+  "long double f(long double a, int b, long double c, int d, long double e) {\n"
   "  return a + c + e;\n"
   "}\n";
   return run_callback(src, arg_align_test_callback);

@@ -24,7 +24,7 @@ defina_tipo estrutura {
 
 vazio __va_start(__va_list_struct *ap, vazio *fp)
 {
-    memset(ap, 0, tamanho_de(__va_list_struct));
+    memset(ap, 0, sizeof(__va_list_struct));
     *ap = *(__va_list_struct *)((caractere *)fp - 16);
     ap->overflow_arg_area = (caractere *)fp + ap->overflow_offset;
     ap->reg_save_area = (caractere *)fp - 176 - 16;

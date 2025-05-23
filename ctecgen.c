@@ -1,5 +1,5 @@
 /*
- *  CTEC - Compilador Carneiro Tec
+ *  CTEC - Tiny C Compiler
  * 
  *  Copyright (c) 2001-2004 Fabrice Bellard
  *
@@ -2861,68 +2861,68 @@ static void type_to_str(char *buf, int buf_size,
     buf[0] = '\0';
 
     if (t & VT_EXTERN)
-        pstrcat(buf, buf_size, "externo ");
+        pstrcat(buf, buf_size, "extern ");
     if (t & VT_STATIC)
-        pstrcat(buf, buf_size, "estático ");
+        pstrcat(buf, buf_size, "static ");
     if (t & VT_TYPEDEF)
-        pstrcat(buf, buf_size, "defina_tipo ");
+        pstrcat(buf, buf_size, "typedef ");
     if (t & VT_INLINE)
-        pstrcat(buf, buf_size, "em_linha ");
+        pstrcat(buf, buf_size, "inline ");
     if (t & VT_VOLATILE)
-        pstrcat(buf, buf_size, "volátil ");
+        pstrcat(buf, buf_size, "volatile ");
     if (t & VT_CONSTANT)
-        pstrcat(buf, buf_size, "constante ");
+        pstrcat(buf, buf_size, "const ");
 
     if (((t & VT_DEFSIGN) && bt == VT_BYTE)
         || ((t & VT_UNSIGNED)
             && (bt == VT_SHORT || bt == VT_INT || bt == VT_LLONG)
             && !IS_ENUM(t)
             ))
-        pstrcat(buf, buf_size, (t & VT_UNSIGNED) ? "sem_sinal " : "sinalizado ");
+        pstrcat(buf, buf_size, (t & VT_UNSIGNED) ? "unsigned " : "signed ");
 
     buf_size -= strlen(buf);
     buf += strlen(buf);
 
     switch(bt) {
     case VT_VOID:
-        tstr = "vazio";
+        tstr = "void";
         goto add_tstr;
     case VT_BOOL:
-        tstr = "_Lógico";
+        tstr = "_Bool";
         goto add_tstr;
     case VT_BYTE:
-        tstr = "caractere";
+        tstr = "char";
         goto add_tstr;
     case VT_SHORT:
-        tstr = "curto";
+        tstr = "short";
         goto add_tstr;
     case VT_INT:
-        tstr = "inteiro";
+        tstr = "int";
         goto maybe_long;
     case VT_LLONG:
-        tstr = "longo longo";
+        tstr = "long long";
     maybe_long:
         if (t & VT_LONG)
-            tstr = "longo";
+            tstr = "long";
         if (!IS_ENUM(t))
             goto add_tstr;
-        tstr = "enumeração ";
+        tstr = "enum ";
         goto tstruct;
     case VT_FLOAT:
-        tstr = "real";
+        tstr = "float";
         goto add_tstr;
     case VT_DOUBLE:
-        tstr = "duplo";
+        tstr = "double";
         goto add_tstr;
     case VT_LDOUBLE:
-        tstr = "longo duplo";
+        tstr = "long double";
     add_tstr:
         pstrcat(buf, buf_size, tstr);
         break;
     case VT_STRUCT:
-        tstr = "estrutura ";
+        tstr = "struct ";
         if (IS_UNION(t))
-            tstr = "união ";
+            tstr = "union ";
     tstruct:
         pstrcat(buf, buf_size, tstr);
         v = type->ref->v & ~SYM_STRUCT;
@@ -2954,9 +2954,9 @@ static void type_to_str(char *buf, int buf_size,
         }
         pstrcpy(buf1, sizeof(buf1), "*");
         if (t & VT_CONSTANT)
-            pstrcat(buf1, buf_size, "constante ");
+            pstrcat(buf1, buf_size, "const ");
         if (t & VT_VOLATILE)
-            pstrcat(buf1, buf_size, "volátil ");
+            pstrcat(buf1, buf_size, "volatile ");
         if (varstr)
             pstrcat(buf1, sizeof(buf1), varstr);
         type_to_str(buf, buf_size, &s->type, buf1);
@@ -4799,7 +4799,7 @@ ST_FUNC void unary(void)
         if (t == TOK_SIZEOF) {
             if (!(type.t & VT_VLA)) {
                 if (size < 0)
-                    ctec_error("tamanho_de applied to an incomplete type");
+                    ctec_error("sizeof applied to an incomplete type");
                 vpushs(size);
             } else {
                 vla_runtime_type_size(&type, &align);
@@ -6702,7 +6702,7 @@ static void decl_initializer(CType *type, Section *sec, unsigned long c,
                     nb = n - len;
                 if (!size_only) {
                     if (cstr_len > nb)
-                        ctec_warning("initializer-string for array is too longo");
+                        ctec_warning("initializer-string for array is too long");
                     /* in order to go faster for common case (char
                        string in global variable, we handle it
                        specifically */

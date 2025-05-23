@@ -1565,7 +1565,7 @@ void load(int r, SValue * sv)
 	    load(r, &v1);
 	    fr = r;
 	} else if ((ft & VT_BTYPE) == VT_LDOUBLE) {
-	    ctec_error("longo double not supported");
+	    ctec_error("long double not supported");
 	} else if ((ft & VT_TYPE) == VT_BYTE) {
 	    size = 1;
 	} else if ((ft & VT_TYPE) == (VT_BYTE | VT_UNSIGNED)) {
@@ -1719,7 +1719,7 @@ void store(int r, SValue * v)
     /* XXX: incorrect if float reg to reg */
 
     if (bt == VT_LDOUBLE) {
-	ctec_error("longo double not supported");
+	ctec_error("long double not supported");
     } else {
 	if (bt == VT_SHORT)
 	    size = 2;
@@ -1894,9 +1894,9 @@ void gfunc_call(int nb_args)
 
 
 	    if ((vtop->type.t & VT_BTYPE) == VT_LLONG) {
-		ctec_error("longo long not supported");
+		ctec_error("long long not supported");
 	    } else if ((vtop->type.t & VT_BTYPE) == VT_LDOUBLE) {
-		ctec_error("longo double not supported");
+		ctec_error("long double not supported");
 	    } else if ((vtop->type.t & VT_BTYPE) == VT_DOUBLE) {
 		size = 8;
 	    } else {
@@ -2300,7 +2300,7 @@ void gen_opf(int op)
 
 
     if ((ft & VT_BTYPE) == VT_LDOUBLE)
-	ctec_error("longo doubles not supported");
+	ctec_error("long doubles not supported");
 
     if (op >= TOK_ULT && op <= TOK_GT) {
 
@@ -2452,7 +2452,7 @@ void gen_cvt_ftoi(int t)
     r = vtop->r;
 
     if (t != VT_INT)
-	ctec_error("longo long not supported");
+	ctec_error("long long not supported");
     else {
 	if ((vtop->type.t & VT_BTYPE) == VT_DOUBLE) {
 	    C67_DPTRUNC(r, r);

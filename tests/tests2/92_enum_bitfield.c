@@ -44,7 +44,7 @@ int convert_like_real (tree convs)
     default:
       break;
     };
-   printf("sem_sinal enum bit-fields broken\n");
+   printf("unsigned enum bit-fields broken\n");
 }
 
 int main()

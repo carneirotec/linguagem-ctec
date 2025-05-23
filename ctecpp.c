@@ -1,5 +1,5 @@
 /*
- *  CTEC - Compilador Carneiro Tec
+ *  CTEC - Tiny C Compiler
  * 
  *  Copyright (c) 2001-2004 Fabrice Bellard
  *
@@ -2299,7 +2299,7 @@ static void parse_number(const char *p)
             break;
         if (q >= token_buf + STRING_MAX_SIZE) {
         num_too_long:
-            ctec_error("number too longo");
+            ctec_error("number too long");
         }
         *q++ = ch;
         ch = *p++;

@@ -1,5 +1,5 @@
 /*
- *  CTEC - Compilador Carneiro Tec
+ *  CTEC - Tiny C Compiler
  *
  *  Copyright (c) 2001-2004 Fabrice Bellard
  *
@@ -1564,7 +1564,7 @@ static const FlagDef options_W[] = {
 };
 
 static const FlagDef options_f[] = {
-    { offsetof(CTECState, char_is_unsigned), 0, "unsigned-char" },
+    { offsetof(CTECState, char_is_unsigned), 0, "sem_sinal-char" },
     { offsetof(CTECState, char_is_unsigned), FD_INVERT, "signed-char" },
     { offsetof(CTECState, nocommon), FD_INVERT, "common" },
     { offsetof(CTECState, leading_underscore), 0, "leading-underscore" },

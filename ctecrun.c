@@ -1,5 +1,5 @@
 /*
- *  CTEC - Compilador Carneiro Tec - Support for -run switch
+ *  CTEC - Tiny C Compiler - Support for -run switch
  *
  *  Copyright (c) 2001-2004 Fabrice Bellard
  *
